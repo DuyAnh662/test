@@ -2,15 +2,16 @@
 <html lang="vi">
 <head>
   <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-D2NN99RH6B"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-D2NN99RH6B');
-  </script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D2NN99RH6B"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-D2NN99RH6B');
+</script>
   <meta charset="UTF-8">
-  <title>Bảng Thông Báo BTVN - 18/9/2025</title>
+  <title>Bảng Thông Báo BTVN - 22/9/2025</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -119,55 +120,264 @@
     #toggleMode:hover {
       background: #004c99;
     }
+    /* 🎓 Style cho TKB */
+#tkbContainer {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
 
-    /* 🚨 Report button */
-    #reportBtn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #ff4d4d;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 14px;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
-      transition: background 0.3s;
-    }
-    #reportBtn:hover {
-      background: #cc0000;
-    }
+#tkbContainer h2 {
+  color: #0066cc;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#tkbContainer table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+#tkbContainer th, 
+#tkbContainer td {
+  border: 1px solid #ddd;
+  padding: 8px 10px;
+  text-align: left;
+}
+
+#tkbContainer th {
+  background: #f0f8ff;
+  color: #0066cc;
+}
+
+#tkbContainer tr:nth-child(even) {
+  background: #fafafa;
+}
+
+/* 🌙 Dark mode cho TKB */
+body.dark #tkbContainer {
+  background: #1e1e1e;
+  box-shadow: 0 4px 12px rgba(255,255,255,0.1);
+}
+
+body.dark #tkbContainer h2 {
+  color: #66b2ff;
+}
+
+body.dark #tkbContainer th {
+  background: #1e2a38;
+  color: #66b2ff;
+}
+
+body.dark #tkbContainer td, 
+body.dark #tkbContainer tr:nth-child(even) {
+  background: #2a2a2a;
+  border-color: #444;
+}
+#showFullBtn {
+  background: #0066cc;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+  transition: background 0.3s;
+}
+#showFullBtn:hover {
+  background: #004c99;
+}
+
+body.dark #showFullBtn {
+  background: #3399ff;
+}
+body.dark #showFullBtn:hover {
+  background: #1a75ff;
+}
   </style>
 </head>
 <body>
-  <!-- Nút Dark/Light -->
+  <!-- Thời khóa biểu -->
+<div id="tkbContainer">
+  <h2>📅 Thời khóa biểu ngày mai</h2>
+  <div id="todayTKB">Đang tải...</div>
+  <button id="showFullBtn">📖 Xem toàn bộ TKB</button>
+  <div id="fullTKB" style="display:none; margin-top:12px;"></div>
+</div>
   <button id="toggleMode">🌙 Dark Mode</button>
-
-  <!-- Nội dung -->
   <div class="container">
-    <h1>📢 Thông báo BTVN [NEW 13:15 - 18/9/2025]</h1>
-    <!-- ... Toàn bộ nội dung thông báo của bạn ở đây ... -->
+    <h1>📢 Thông báo BTVN [NEW 12:00 - 22/9/2025]</h1>
+
+    <h2>📘 Địa lí</h2>
+    <ul>
+      <li>Tìm hiểu dạng địa hình Các-xtơ và học thuộc(Chưa rõ là có cần học thuộc không!)</li>
+    </ul>
+
+    <h2>➗ Toán học</h2>
+    <strong>Hình:</strong>
+    <ul>
+      <li>Học định nghĩa về hình thang, hình thang cân(SGK-52; 53)</li>
+    </ul>
+    <strong>Số:</strong>
+    <ul>
+      <li>1.14 đến 1.17 Sách toán tập 1 [trang 16]</li>
+      <li>Học thuộc quy tắc cộng, trừ đa thức [SGK-15]</li>
+    </ul>
+
+    <h2>✍ Ngữ văn</h2>
+    <ul>
+      <li>Viết kết nói với đọc SGK-24</li>
+    </ul>
+
+    <h2>🧬 Sinh học</h2>
+    <ul>
+      <li>Học phần I và II</li>
+      <li>Đọc trước Quá trình tiêu hóa ở người</li>
+    </ul>
+
+    <h2>🏠 GDĐP</h2>
+    <ul>
+      <li>Chưa có bài</li>
+    </ul>
+
+    <h2>📜 Lịch sử</h2>
+    <ul>
+      <li>Làm bài 1 phần Luyện tập và vận dụng[SGK-14]. Lưu ý nhỏ: làm ra vở cương!</li>
+    </ul>
+
+    <h2>🔬 Vật lý</h2>
+    <ul>
+      <li>Học thuộc công thức, khái niệm về trọng lượng riêng</li>
+    </ul>
+
+    <h2>🤝 HĐTN, HN</h2>
+    <ul>
+      <li>Vẽ tranh hoặc làm thơ chủ đề bất kì đối với thơ tranh chủ đề truyền thống trường tốt đẹp[thứ sáu nộp]</li>
+    </ul>
+
+    <h2>🎨 Mĩ thuật</h2>
+    <ul>
+      <li>Vẽ xong bài cô đã cho trên lớp</li>
+    </ul>
+
+    <h2>⚗ Hóa học</h2>
+    <ul>
+      <li>Hiện chưa rõ</li>
+    </ul>
+
+    <h2>Tiếng Anh (Global success)</h2>
+    <ul>
+      <li>Viết 12 từ mới mỗi từ 20 lần mỗi dòng hai lần</li>
+    </ul>
+
+    <h2>👥 Công dân</h2>
+    <ul>
+      <li>Học phần 3 khung vàng (SGK - trang 8)</li>
+      <li>Làm bài 1 đến 4 (SGK trang 8 và 9)</li>
+    </ul>
+
+    <h2>🔧 Công nghệ</h2>
+    <ul>
+      <li>Chưa có bài</li>
+    </ul>
+
+    <h2>🎶 Âm nhạc (Cánh diều)</h2>
+    <ul>
+      <li>Học bài hát bài "khúc ca bốn mùa"</li>
+    </ul>
+
+    <h2>💻 Tin học</h2>
+    <ul>
+      <li>Học hết các thế hệ máy tính</li>
+      <li>Làm hết bài tập trong SGK-6; 8</li>
+    </ul>
+
+    <div class="note">
+      <p><strong>LƯU Ý:</strong></p>
+      <ul>
+        <li>Muốn báo lỗi hoặc góp ý vui lòng nhập bấm nút report nhập thông tin bạn muốn báo(Hãy để tên bạn ở cuối và đóng ngoặc ghi đó là góp ý hay báo lỗi ở đầu tiên)</li>
+        <li>Thường hoạt động: 11h50 – 13h00; 17h00 – 20h45</li>
+        <li>Thông tin có thể chưa chính xác, vui lòng kiểm tra lại</li>
+        <li>Mục đích: tốt cho mọi người → nếu sai sót xin báo lại, không chửi tục</li>
+        <li>Bạn đọc hay không là quyền của bạn, không vừa ý vui lòng tìm nguồn khác</li>
+        <li>Sách không ghi cách diều hay kết nối chi thức thì nặc định nó là kết nối chi thức</li>
+      </ul>
+    </div>
+
+    <div class="changelog">
+      <strong>Changelog (V2.3):</strong>
+      <ul>
+        <li>Cập nhật môn Toán học[Số]</li>
+        <li>Cập nhật Lịch sử</li>
+        <li>Cập nhật môn Địa lí</li>
+        <li>Cập nhật môn Tiếng Anh</li>
+      </ul>
+    </div>
 
     <div class="footer">
-      <p>By ChatGBT[Web] and Vũ Duy Anh</p>
+      <p>By ChatGBT[Web], Vũ Duy Anh và Nguyễn văn Hoàng Bách</p>
       <p>— HẾT —</p>
     </div>
   </div>
+<!-- 🚨 Nút Report -->
+<button id="reportBtn" style="
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+">🚨 Report</button>
 
-  <!-- Nút Report -->
-  <button id="reportBtn">🚨 Report</button>
+<script>
+  const API_URL = "https://script.google.com/macros/s/AKfycbw5sjUwJfwRtKBQQu5FgYrmgSjoQ22vvnmlv99H7YJHTVgVZRXm1vWB7fFJg8B2O2M7/exec"; // 👈 dán link API Google Apps Script vào đây
+
+  document.getElementById("reportBtn").addEventListener("click", async () => {
+    const msg = prompt("❗ Nhập lỗi(góp ý) bạn muốn báo:");
+    if (msg && msg.trim() !== "") {
+      await fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify({ text: msg })
+      });
+      alert("✅ Đã gửi báo lỗi(góp ý), cảm ơn bạn!");
+    } else {
+      alert("⚠️ Bạn chưa nhập nội dung!");
+    }
+  });
+
+  // 👉 Hàm xem danh sách báo lỗi (in ra Console)
+  async function showReports() {
+    const res = await fetch(API_URL);
+    const data = await res.json();
+    console.log("📋 Danh sách báo lỗi:");
+    data.forEach((r, i) => {
+      console.log(`${i+1}. [${r.time}] ${r.text}`);
+    });
+  }
+</script>
 
   <script>
     const btn = document.getElementById("toggleMode");
 
-    // 🌟 Kiểm tra theme đã lưu
+    // 🌟 Khi mở web, kiểm tra localStorage để áp dụng chế độ trước đó
     if (localStorage.getItem("theme") === "dark") {
       document.body.classList.add("dark");
       btn.textContent = "☀️ Light Mode";
     }
 
-    // Bấm nút đổi theme
+    // Bấm nút để đổi chế độ + lưu vào localStorage
     btn.addEventListener("click", () => {
       document.body.classList.toggle("dark");
       if (document.body.classList.contains("dark")) {
@@ -178,40 +388,85 @@
         localStorage.setItem("theme", "light");
       }
     });
-
-    // 🚨 Nút Report
-    const reportBtn = document.getElementById("reportBtn");
-
-    reportBtn.addEventListener("click", () => {
-      const msg = prompt("❗ Nhập lỗi bạn muốn báo:");
-      if (msg && msg.trim() !== "") {
-        let reports = JSON.parse(localStorage.getItem("reports") || "[]");
-        reports.push({ text: msg, time: new Date().toLocaleString() });
-        localStorage.setItem("reports", JSON.stringify(reports));
-        alert("✅ Đã gửi báo lỗi, cảm ơn bạn!");
-      } else {
-        alert("⚠️ Bạn chưa nhập nội dung!");
-      }
-    });
-
-    // Hàm xem báo lỗi trong Console
-    window.showReports = function() {
-      let reports = JSON.parse(localStorage.getItem("reports") || "[]");
-      if (reports.length === 0) {
-        console.log("📭 Chưa có báo lỗi nào.");
-      } else {
-        console.log("📋 Danh sách báo lỗi:");
-        reports.forEach((r, i) => {
-          console.log(`${i+1}. [${r.time}] ${r.text}`);
-        });
-      }
-    }
-
-    // Hàm xoá hết báo lỗi
-    window.clearReports = function() {
-      localStorage.removeItem("reports");
-      console.log("🗑️ Đã xoá toàn bộ báo lỗi!");
-    }
   </script>
+<script>
+(function(){
+  // ====== THỜI KHÓA BIỂU (sửa theo lớp bạn) ======
+  const TKB = {
+    0: ["Chủ nhật: Nghỉ / Tự học"],
+    1: ["HĐTN,HN", "LS&ĐL - Sử", "Anh", "LS&ĐL - Địa", "Toán - Số"],
+    2: ["Văn", "Anh", "Công nghệ", "HĐTN,HN", "GDTC"],
+    3: ["Văn", "Toán - Hình", "KHTN - Lý", "NT - Mĩ thuật", "KHTN - Sinh"],
+    4: ["Toán - Số", "Tin", "LS&ĐL - Sử", "Âm nhạc", "Anh"],
+    5: ["GDĐP", "Văn", "HĐTN,HN", "Toán", "Công dân"],
+    6: ["KHTN - Sinh", "GDTC", "Văn", "KHTN - Hóa", "Nghỉ"]
+  };
+
+  const dayNames = {
+    0: "Chủ Nhật",
+    1: "Thứ Hai",
+    2: "Thứ Ba",
+    3: "Thứ Tư",
+    4: "Thứ Năm",
+    5: "Thứ Sáu",
+    6: "Thứ Bảy"
+  };
+
+  // Lấy ngày và giờ theo VN
+  const now = new Date().toLocaleString("en-US", { timeZone: "Asia/Ho_Chi_Minh" });
+  const d = new Date(now);
+  let day = d.getDay();
+  let hour = d.getHours();
+
+  // Nếu trước 7h sáng thì coi như ngày hôm trước
+  if (hour < 7) {
+    day = (day - 1 + 7) % 7; 
+  }
+
+  // Logic chọn ngày hiển thị
+  let showDay;
+  if (day === 5) {          // Thứ Sáu → hiển thị TKB Thứ Bảy
+    showDay = 6;
+  } else if (day === 0) {   // Chủ Nhật → hiển thị TKB Thứ Hai
+    showDay = 1;
+  } else {                  // Các ngày khác → hiển thị ngày mai
+    showDay = (day + 1) % 7;
+  }
+
+  // Render TKB
+  const container = document.getElementById("todayTKB");
+  let html = `<p>Hôm nay: ${dayNames[day]}, ${d.toLocaleDateString("vi-VN")} — Hiển thị TKB ${dayNames[showDay]}</p>
+  ❗Lưu ý nhỏ: Sau 7 giờ sáng thời khóa biểu sẽ đổi`;
+  html += `<table border="1" cellpadding="6" style="border-collapse:collapse; margin-top:10px;">
+            <tr><th>Tiết</th><th>Môn / Nội dung</th></tr>`;
+  TKB[showDay].forEach((mon, i) => {
+    html += `<tr><td>${i+1}</td><td>${mon}</td></tr>`;
+  });
+  html += `</table>`;
+  container.innerHTML = html;
+
+  // Nút hiện toàn bộ TKB
+  document.getElementById("showFullBtn").addEventListener("click", function(){
+    const full = document.getElementById("fullTKB");
+    if(full.style.display === "none"){
+      let fullHtml = "";
+      for(let k=1;k<=6;k++){
+        fullHtml += `<h3>${dayNames[k]}</h3><table border="1" cellpadding="6" style="border-collapse:collapse; margin-bottom:10px;">
+                      <tr><th>Tiết</th><th>Môn / Nội dung</th></tr>`;
+        TKB[k].forEach((mon,i)=>{
+          fullHtml += `<tr><td>${i+1}</td><td>${mon}</td></tr>`;
+        });
+        fullHtml += `</table>`;
+      }
+      full.innerHTML = fullHtml;
+      full.style.display = "block";
+      this.textContent = "❌ Ẩn toàn bộ TKB";
+    } else {
+      full.style.display = "none";
+      this.textContent = "📅 Xem toàn bộ TKB";
+    }
+  });
+})();
+</script>
 </body>
 </html>
