@@ -198,6 +198,69 @@
     }
     .inline-note { margin-top:10px; display:block; color: rgba(0,0,0,.6); }
     body.dark .inline-note { color: rgba(255,255,255,.6); }
+    .changelog {
+  background-color: #1e293b; /* nền xanh đậm */
+  color: #e2e8f0; /* màu chữ sáng */
+  border-radius: 10px;
+  padding: 15px 20px;
+  margin: 20px 0;
+  border-left: 5px solid #60a5fa; /* viền xanh nhạt bên trái */
+  font-family: Arial, sans-serif;
+}
+
+.changelog h3 {
+  margin-top: 0;
+  color: #ffffff; /* tiêu đề trắng */
+}
+
+.changelog ul {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+.changelog li {
+  margin: 6px 0;
+  color: #93c5fd; /* chữ xanh nhạt */
+}
+.changelog {
+  border-radius: 10px;
+  padding: 15px 20px;
+  margin: 20px 0;
+  font-family: Arial, sans-serif;
+  transition: background .25s, color .25s;
+}
+
+/* Light mode (mặc định) */
+body:not(.dark) .changelog {
+  background: #f8fafc;
+  color: #1e293b;
+  border-left: 5px solid #2563eb;
+}
+
+body:not(.dark) .changelog h3,
+body:not(.dark) .changelog strong {
+  color: #111827;
+}
+
+body:not(.dark) .changelog li {
+  color: #2563eb;
+}
+
+/* Dark mode */
+body.dark .changelog {
+  background: #1e293b;
+  color: #e2e8f0;
+  border-left: 5px solid #60a5fa;
+}
+
+body.dark .changelog h3,
+body.dark .changelog strong {
+  color: #ffffff;
+}
+
+body.dark .changelog li {
+  color: #93c5fd;
+}
 
   </style>
 </head>
