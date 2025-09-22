@@ -206,14 +206,14 @@ body.dark #showFullBtn:hover {
 <body>
   <!-- Thời khóa biểu -->
 <div id="tkbContainer">
-  <h2>📅 Thời khóa biểu ngày mai</h2>
+  <h2>📅 Thời khóa biểu và lịch trực ngày mai</h2>
   <div id="todayTKB">Đang tải...</div>
   <button id="showFullBtn">📖 Xem toàn bộ TKB</button>
   <div id="fullTKB" style="display:none; margin-top:12px;"></div>
 </div>
   <button id="toggleMode">🌙 Dark Mode</button>
   <div class="container">
-    <h1>📢 Thông báo BTVN [NEW 12:00 - 22/9/2025]</h1>
+    <h1>📢 Thông báo BTVN [NEW 02:00 - 22/9/2025]</h1>
 
     <h2>📘 Địa lí</h2>
     <ul>
@@ -312,12 +312,14 @@ body.dark #showFullBtn:hover {
     </div>
 
     <div class="changelog">
-      <strong>Changelog (V2.3):</strong>
+      <strong>Changelog (V2.3.1):</strong>
       <ul>
         <li>Cập nhật môn Toán học[Số]</li>
         <li>Cập nhật Lịch sử</li>
         <li>Cập nhật môn Địa lí</li>
         <li>Cập nhật môn Tiếng Anh</li>
+        <li>Cập nhật tính năng thông báo lịch trực[Beta]</li>
+        <li>Cập nhật 07:00 TKB và LT mới đổi</li>
       </ul>
     </div>
 
@@ -342,7 +344,7 @@ body.dark #showFullBtn:hover {
 ">🚨 Report</button>
 
 <script>
-  const API_URL = "https://script.google.com/macros/s/AKfycbw5sjUwJfwRtKBQQu5FgYrmgSjoQ22vvnmlv99H7YJHTVgVZRXm1vWB7fFJg8B2O2M7/exec"; // 👈 dán link API Google Apps Script vào đây
+  const API_URL = "https://script.google.com/macros/s/AKfycbw5sjUwJfwRtKBQQu5FgYrmgSjoQ22vvnmlv99H7YJHTVgVZRXm1vWB7fFJg8B2O2M7/exec";
 
   document.getElementById("reportBtn").addEventListener("click", async () => {
     const msg = prompt("❗ Nhập lỗi(góp ý) bạn muốn báo:");
@@ -391,7 +393,7 @@ body.dark #showFullBtn:hover {
   </script>
 <script>
 (function(){
-  // ====== THỜI KHÓA BIỂU (sửa theo lớp bạn) ======
+  // ====== THỜI KHÓA BIỂU ======
   const TKB = {
     0: ["Chủ nhật: Nghỉ / Tự học"],
     1: ["HĐTN,HN", "LS&ĐL - Sử", "Anh", "LS&ĐL - Địa", "Toán - Số"],
@@ -400,6 +402,17 @@ body.dark #showFullBtn:hover {
     4: ["Toán - Số", "Tin", "LS&ĐL - Sử", "Âm nhạc", "Anh"],
     5: ["GDĐP", "Văn", "HĐTN,HN", "Toán", "Công dân"],
     6: ["KHTN - Sinh", "GDTC", "Văn", "KHTN - Hóa", "Nghỉ"]
+  };
+
+  // ====== LỊCH TRỰC ======
+  let Truc = JSON.parse(localStorage.getItem("lichTruc")) || {
+    0: "Chủ nhật: Không trực",
+    1: "Tổ 2",
+    2: "Tổ 3",
+    3: "Tổ 4",
+    4: "Tổ 1",
+    5: "Tổ 2",
+    6: "Tổ 3",
   };
 
   const dayNames = {
@@ -433,37 +446,53 @@ body.dark #showFullBtn:hover {
     showDay = (day + 1) % 7;
   }
 
-  // Render TKB
+  // Render TKB + Trực ngày mai
   const container = document.getElementById("todayTKB");
   let html = `<p>Hôm nay: ${dayNames[day]}, ${d.toLocaleDateString("vi-VN")} — Hiển thị TKB ${dayNames[showDay]}</p>
-  ❗Lưu ý nhỏ: Sau 7 giờ sáng thời khóa biểu sẽ đổi`;
+  ❗Lưu ý nhỏ: Sau 7 giờ sáng thời khóa biểu & lịch trực sẽ đổi và tính năng thông báo lịch trực đang là phiên bản beta có thể sẽ lỗi`;
+
   html += `<table border="1" cellpadding="6" style="border-collapse:collapse; margin-top:10px;">
             <tr><th>Tiết</th><th>Môn / Nội dung</th></tr>`;
   TKB[showDay].forEach((mon, i) => {
     html += `<tr><td>${i+1}</td><td>${mon}</td></tr>`;
   });
   html += `</table>`;
+
+  html += `<p style="margin-top:15px;"><b>Ngày mai trực: ${Truc[showDay]}</b></p>`;
   container.innerHTML = html;
 
-  // Nút hiện toàn bộ TKB
+  // Nút hiện toàn bộ TKB + lịch trực
   document.getElementById("showFullBtn").addEventListener("click", function(){
     const full = document.getElementById("fullTKB");
     if(full.style.display === "none"){
       let fullHtml = "";
+
+      // Thời khóa biểu cả tuần + trực
+      fullHtml += `<h2>📅 Thời khóa biểu cả tuần</h2>`;
       for(let k=1;k<=6;k++){
         fullHtml += `<h3>${dayNames[k]}</h3><table border="1" cellpadding="6" style="border-collapse:collapse; margin-bottom:10px;">
                       <tr><th>Tiết</th><th>Môn / Nội dung</th></tr>`;
         TKB[k].forEach((mon,i)=>{
           fullHtml += `<tr><td>${i+1}</td><td>${mon}</td></tr>`;
         });
-        fullHtml += `</table>`;
+        fullHtml += `</table><p><b>Ngày đó trực: <span class="editable" data-day="${k}">${Truc[k]}</span></b></p>`;
       }
+
+      // Bảng trực riêng
+      fullHtml += `<h2>🧹 Lịch trực cả tuần</h2>
+                   <table border="1" cellpadding="6" style="border-collapse:collapse; margin-top:10px;">
+                     <tr><th>Ngày</th><th>Tổ trực</th></tr>`;
+      for(let k=1;k<=6;k++){
+        fullHtml += `<tr><td>${dayNames[k]}</td><td class="editable" data-day="${k}">${Truc[k]}</td></tr>`;
+      }
+      fullHtml += `</table>`;
+
       full.innerHTML = fullHtml;
       full.style.display = "block";
-      this.textContent = "❌ Ẩn toàn bộ TKB";
+      this.textContent = "❌ Ẩn toàn bộ TKB & Lịch trực";
     } else {
       full.style.display = "none";
-      this.textContent = "📅 Xem toàn bộ TKB";
+      this.textContent = "📅 Xem toàn bộ TKB & Lịch trực";
     }
   });
 })();
