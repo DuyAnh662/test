@@ -480,7 +480,6 @@
       });
       html += `</tbody></table>`;
       html += `<p style="margin-top:10px;"><b>Lịch trực: </b> <span id="todayTruc">${truc[showDay]}</span>`;
-      html += ` <button class="save-truc" id="editTrucBtn" title="Chỉnh trực (lưu)">&nbsp;✎ Sửa trực&nbsp;</button></p>`;
 
       container.innerHTML = html;
 
@@ -494,7 +493,6 @@
         }
       });
     }
-
     // full week + inline chỉnh trực của từng ngày
     document.getElementById('showFullBtn').addEventListener('click', function(){
       const full = document.getElementById('fullTKB');
@@ -510,7 +508,6 @@
         html += `<table><thead><tr><th>Tiết</th><th>Môn</th></tr></thead><tbody>`;
         (TKB[k] || []).forEach((m,i)=> html += `<tr><td>${i+1}</td><td>${m}</td></tr>`);
         html += `</tbody></table>`;
-        html += `<p style="margin:6px 0 12px;"><b>Trực: </b> <span class="editable-truc" data-day="${k}">${truc[k]}</span> <button class="save-truc" data-day="${k}">Lưu</button></p>`;
       }
 
       // một bảng riêng cho lịch trực
