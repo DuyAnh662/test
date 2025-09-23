@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-92KE83JEYM"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-92KE83JEYM');
+</script>
   <meta charset="utf-8" />
   <title>Bảng Thông Báo BTVN - 22/9/2025</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -271,7 +280,7 @@ body.dark .changelog li {
     <div class="menu-panel" id="menuPanel" role="menu" aria-hidden="true">
       <button id="menuDark">🌙 Chuyển Dark/Light</button>
       <button id="menuReport">🚨 Report</button>
-      <button id="menuPopup">🔔 Bật lại thông báo</button>
+      <button id="menuPopup">❗Bật lại Lưu ý</button>
     </div>
   </div>
 
@@ -292,10 +301,10 @@ body.dark .changelog li {
   <div class="wrap">
     <!-- BTVN -->
     <div class="card">
-      <h1>📢 Thông báo BTVN [NEW 02:00 - 22/9/2025]</h1>
+      <h1>📢 Thông báo BTVN [NEW 12:20 - 22/9/2025]</h1>
 
       <h2>📘 Địa lí</h2>
-      <ul><li>Tìm hiểu dạng địa hình Các-xtơ và học thuộc(Chưa rõ là có cần học thuộc không!)</li></ul>
+      <ul><li>Tìm hiểu dạng địa hình Các-xtơ và học thuộc</li></ul>
 
       <h2>➗ Toán học</h2>
       <strong>Hình:</strong>
@@ -307,7 +316,7 @@ body.dark .changelog li {
       </ul>
 
       <h2>✍ Ngữ văn</h2>
-      <ul><li>Viết kết nối với đọc SGK-24</li></ul>
+      <ul><li>Làm hết bài THTV(SGK-24; 25)[Nếu trên lớp chưa làm]</li><li>Đọc, soạn bài "Ta đi tới"(SGK-25>28)</ul>
 
       <h2>🧬 Sinh học</h2>
       <ul><li>Học phần I và II</li><li>Đọc trước Quá trình tiêu hóa</li></ul>
@@ -316,7 +325,7 @@ body.dark .changelog li {
       <ul><li>Chưa có bài</li></ul>
 
       <h2>📜 Lịch sử</h2>
-      <ul><li>Làm bài 1 phần Luyện tập và vận dụng [SGK-14]. Lưu ý nhỏ: làm ra vở cương!</li></ul>
+      <ul><li>Làm bài 1 phần Luyện tập và vận dụng [SGK-14]. Lưu ý nhỏ: làm ra vở cương!</li><li>Học thuộc bảng ở phần 1 Cách mạng tư sản Anh</li></ul>
 
       <h2>🔬 Vật lý</h2>
       <ul><li>Học công thức, khái niệm về trọng lượng riêng</li></ul>
@@ -348,7 +357,7 @@ body.dark .changelog li {
       <div class="note">
         <strong>LƯU Ý:</strong>
         <ul>
-        <li>Muốn báo lỗi hoặc góp ý vui lòng nhập bấm nút report nhập thông tin bạn muốn báo(Hãy để tên bạn ở cuối và đóng ngoặc ghi đó là góp ý hay báo lỗi ở đầu tiên)</li>
+        <li>Muốn báo lỗi hoặc góp ý vui lòng nhập bấm nút menu rồi bấm report nhập thông tin bạn muốn báo(Hãy để tên bạn ở cuối và đóng ngoặc ghi đó là góp ý hay báo lỗi ở đầu tiên)</li>
         <li>Thường hoạt động: 11h50 – 13h00; 17h00 – 20h45</li>
         <li>Thông tin có thể chưa chính xác, vui lòng kiểm tra lại</li>
         <li>Mục đích: tốt cho mọi người → nếu sai sót xin báo lại, không chửi tục</li>
@@ -358,18 +367,11 @@ body.dark .changelog li {
       </div>
 
       <div class="changelog" style="margin-top:14px;">
-        <strong>Changelog (V2.3.2)</strong>
+        <strong>Changelog (V2.4)</strong>
         <ul>
-          <li>Cập nhật Toán học [Số]</li>
+          <li>Cập nhật Ngữ văn</li>
+          <li>Cập nhật Tiếng anh</li>
           <li>Cập nhật Lịch sử</li>
-          <li>Cập nhật Địa lí</li>
-          <li>Cập nhật Tiếng Anh</li>
-          <li>Thêm thông báo lịch trực [Beta]</li>
-          <li>Thêm 07:00 TKB và LT mới đổi</li>
-          <li>Sửa vài thứ khác</li>
-          <li>Sửa đổi giao diện gọn hơn cho web PC</li>
-          <li>Sửa đổi lịch trực nhật và TKB sẽ ở dưới cùng khi dùng điện thoại</li>
-          <li>Sửa đổi vị trí các nút</li>
         </ul>
       </div>
     </div>
@@ -384,9 +386,6 @@ body.dark .changelog li {
       <div id="fullTKB" style="display:none; margin-top:14px;"></div>
     </div>
   </div>
-
-  <!-- report fixed -->
-  <button id="reportFixed">🚨 Report</button>
 
   <script>
     /* -------------------------
@@ -466,8 +465,9 @@ body.dark .changelog li {
       }
     }
     menuReport.addEventListener('click', doReport);
-    reportFixed.addEventListener('click', doReport);
-
+if (reportFixed) {
+  reportFixed.addEventListener('click', doReport);
+}
     // Show popup from menu
     document.getElementById('menuPopup').addEventListener('click', () => {
       openPopup(true);
@@ -584,23 +584,6 @@ body.dark .changelog li {
       full.innerHTML = html;
       full.style.display = 'block';
       this.textContent = '❌ Ẩn toàn bộ';
-
-      // make editable spans clickable -> prompt edit
-      full.querySelectorAll('.editable-truc').forEach(el=>{
-        el.style.cursor = 'pointer';
-        el.addEventListener('click', ()=>{
-          const day = el.dataset.day;
-          const val = prompt("Sửa lịch trực cho " + dayNames[day], truc[day]);
-          if (val !== null){
-            truc[day] = val;
-            localStorage.setItem('lichTruc', JSON.stringify(truc));
-            // cập nhật UI (cả phần full và today)
-            el.textContent = val;
-            renderTodayTKB();
-          }
-        });
-      });
-
       // save buttons
       full.querySelectorAll('.save-truc').forEach(btn=>{
         btn.addEventListener('click', ()=>{
