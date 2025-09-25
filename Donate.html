@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Cảm ơn bạn</title>
+<style>
+  body {
+    margin:0; 
+    height:100vh; 
+    display:flex; 
+    align-items:center; 
+    justify-content:center; 
+    background:linear-gradient(135deg,#0f172a,#1e293b);
+    color:#f1f5f9;
+    font-family: Arial, sans-serif;
+  }
+  .box {
+    text-align:center;
+    background:rgba(255,255,255,0.05);
+    padding:30px 40px;
+    border-radius:16px;
+    box-shadow:0 8px 25px rgba(0,0,0,0.4);
+  }
+  h1 {margin:0 0 15px; font-size:22px; color:#38bdf8;}
+  .count {
+    font-size:48px;
+    font-weight:bold;
+    margin:10px 0;
+    color:#fbbf24;
+  }
+  .btn {
+    margin-top:20px;
+    padding:10px 20px;
+    background:#38bdf8;
+    color:#0f172a;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold;
+    transition:0.3s;
+  }
+  .btn:hover {
+    background:#0ea5e9;
+    transform:scale(1.05);
+  }
+</style>
+</head>
+<body>
+  <div class="box">
+    <h1>💖 Cảm ơn bạn vô ^_^</h1>
+    <h1>Đừng ngại cho tui một gói mì nhé!</h1>
+    <p>Trang sẽ tự chuyển hướng sau:</p>
+    <div class="count" id="countdown">10</div>
+
+    <!-- Nút quay lại trang chính -->
+    <button class="btn" onclick="goHome()">⬅️ Quay lại trang chính</button>
+  </div>
+
+<script>
+  // thời gian đếm ngược (giây)
+  let time = 10;
+
+  // URL cố định muốn chuyển đến
+  const targetUrl = "https://loot-link.com/s?haqqvDxQ"; 
+
+  const countdownEl = document.getElementById("countdown");
+  countdownEl.textContent = time;
+
+  const timer = setInterval(() => {
+    time--;
+    countdownEl.textContent = time;
+    if(time <= 0){
+      clearInterval(timer);
+      window.location.href = targetUrl; // chuyển hướng
+    }
+  },1000);
+
+  // hàm quay lại trang chính
+  function goHome(){
+    window.location.href = "index.html"; // sửa thành link trang chính của bạn
+  }
+</script>
+</body>
+</html>
