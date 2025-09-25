@@ -11,7 +11,7 @@
   gtag('config', 'G-92KE83JEYM');
 </script>
   <meta charset="utf-8" />
-  <title>Bảng Thông Báo BTVN - 22/9/2025</title>
+  <title>Bảng Thông Báo BTVN - 25/9/2025</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
     :root {
@@ -270,6 +270,132 @@ body.dark .changelog strong {
 body.dark .changelog li {
   color: #93c5fd;
 }
+.menu-panel a.donate-btn {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  text-align: left;
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 600;
+}
+.menu-panel a.donate-btn:hover {
+  background: rgba(0,0,0,.04);
+}
+body.dark .menu-panel a.donate-btn:hover {
+  background: rgba(255,255,255,.08);
+}
+/* Popup đẹp hơn */
+.popup-card {
+  width: 420px;
+  max-width: calc(100% - 40px);
+  background: var(--card);
+  color: var(--text);
+  padding: 22px 20px;
+  border-radius: 14px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.4);
+  position: relative;
+  border-top: 6px solid var(--accent);
+  animation: popupIn .3s ease;
+}
+
+/* hiệu ứng mở */
+@keyframes popupIn {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.popup-card h3 {
+  margin: 0 0 12px;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.popup-card h3::before {
+  content: "⚠️";
+}
+
+.popup-card ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.popup-card li {
+  margin: 6px 0;
+  line-height: 1.5;
+}
+
+.popup-card li strong {
+  color: var(--accent);
+}
+
+.popup-card .close {
+  position: absolute;
+  right: 12px; 
+  top: 10px;
+  cursor: pointer;
+  font-size: 18px;
+  opacity: .75;
+  transition: .2s;
+}
+.popup-card .close:hover { opacity: 1; transform: scale(1.1); }
+
+.popup-card .footer-check {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  opacity: .85;
+}
+/* Popup 3D đẹp hơn */
+.popup-card {
+  width: 420px;
+  max-width: calc(100% - 40px);
+  background: var(--card);
+  color: var(--text);
+  padding: 22px 20px;
+  border-radius: 14px;
+
+  /* Hiệu ứng 3D bằng nhiều lớp shadow */
+  box-shadow:
+    0 15px 25px rgba(0,0,0,0.35),
+    0 5px 10px rgba(0,0,0,0.2),
+    inset 0 1px 2px rgba(255,255,255,0.15);
+
+  position: relative;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-top: 6px solid var(--accent);
+
+  /* Gradient nhẹ để có cảm giác nổi */
+  background: linear-gradient(
+    145deg,
+    rgba(255,255,255,0.03),
+    rgba(0,0,0,0.15)
+  ), var(--card);
+
+  animation: popupIn .35s ease;
+  transform: translateY(0) scale(1);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+/* Hover rung động nhẹ */
+.popup-card:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow:
+    0 18px 30px rgba(0,0,0,0.4),
+    0 8px 15px rgba(0,0,0,0.25),
+    inset 0 1px 2px rgba(255,255,255,0.1);
+}
+
+@keyframes popupIn {
+  from { transform: translateY(-20px) scale(.95); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
 
   </style>
 </head>
@@ -281,6 +407,7 @@ body.dark .changelog li {
       <button id="menuDark">🌙 Chuyển Dark/Light</button>
       <button id="menuReport">🚨 Report</button>
       <button id="menuPopup">❗Bật lại Lưu ý</button>
+      <a href="Donate.html" target="_blank" class="donate-btn">❤️ Donate to us</a>
     </div>
   </div>
 
@@ -289,8 +416,9 @@ body.dark .changelog li {
     <div class="popup-card" id="popupCard">
       <div class="close" id="popupClose" title="Đóng">✕</div>
       <h3>❗Lưu ý</h3>
-      <p id="popupText">Được làm ra và phát triển bởi ChatGBT(Web), Vũ Duy Anh và Nguyễn Văn Hoàng Bách</p>
-      <p id="popupText">Trang web hiện đang trong giai đoạn phát triển Beta sẽ rất dễ để lại sai sót</p>
+      <p id="popupText">+Được làm ra và phát triển bởi ChatGBT(Web), Vũ Duy Anh và Nguyễn Văn Hoàng Bách</p>
+      <p id="popupText">+Trang web hiện đang trong giai đoạn phát triển Beta sẽ rất dễ để lại sai sót</p>
+      <p id="popupText">+Donate chúng toi nhé!^_^</p>
       <p style="margin-top:12px; text-align:left;">
         <label><input type="checkbox" id="dontShowToday"/> Không hiển thị lại hôm nay</label>
       </p>
@@ -301,34 +429,33 @@ body.dark .changelog li {
   <div class="wrap">
     <!-- BTVN -->
     <div class="card">
-      <h1>📢 Thông báo BTVN [NEW 12:20 - 22/9/2025]</h1>
+      <h1>📢 Thông báo BTVN [NEW 11:55 - 25/9/2025]</h1>
 
       <h2>📘 Địa lí</h2>
       <ul><li>Tìm hiểu dạng địa hình Các-xtơ và học thuộc</li></ul>
 
       <h2>➗ Toán học</h2>
       <strong>Hình:</strong>
-      <ul><li>Học định nghĩa hình thang, hình thang cân</li></ul>
+      <ul><li>Học định nghĩa (lí thuyết, tính chất) hình thang, hình thang cân</li><li>Làm bài 3.9 đến 3.12(SGK-56)</ul>
       <strong>Số:</strong>
       <ul>
-        <li>1.14 → 1.17 Sách toán tập 1 [SGK-52; 53]</li>
-        <li>Học thuộc quy tắc cộng, trừ đa thức [SGK-15]</li>
+        <li>1.18 → 1.123 Sách toán tập 1 [SGK-17; 18]</li>
       </ul>
 
       <h2>✍ Ngữ văn</h2>
-      <ul><li>Làm hết bài THTV(SGK-24; 25)[Nếu trên lớp chưa làm]</li><li>Đọc, soạn bài "Ta đi tới"(SGK-25>28)</ul>
+      <ul><li>Viết văn "Kể lại một chuyến đi tham quan khu di tích lịch sử văn hóa mà em nhớ nhất"</li></ul>
 
       <h2>🧬 Sinh học</h2>
-      <ul><li>Học phần I và II</li><li>Đọc trước Quá trình tiêu hóa</li></ul>
+      <ul><li>Có thể sẽ kiểm tra bài 32 một số bệnh về tiêu hóa</li></ul>
 
       <h2>🏠 GDĐP</h2>
       <ul><li>Chưa có bài</li></ul>
 
       <h2>📜 Lịch sử</h2>
-      <ul><li>Làm bài 1 phần Luyện tập và vận dụng [SGK-14]. Lưu ý nhỏ: làm ra vở cương!</li><li>Học thuộc bảng ở phần 1 Cách mạng tư sản Anh</li></ul>
+      <ul><li>Học thuộc phần 3</li></ul>
 
       <h2>🔬 Vật lý</h2>
-      <ul><li>Học công thức, khái niệm về trọng lượng riêng</li></ul>
+      <ul><li>Làm bài thày đã đọc trên lớp</li></ul>
 
       <h2>🤝 HĐTN, HN</h2>
       <ul><li>Vẽ tranh hoặc làm thơ chủ đề bất kì đối với thơ tranh chủ đề truyền thống trường tốt đẹp[thứ sáu nộp]</li></ul>
@@ -339,8 +466,8 @@ body.dark .changelog li {
       <h2>⚗ Hóa học</h2>
       <ul><li>Hiện chưa rõ</li></ul>
 
-      <h2>🇬🇧 Tiếng Anh</h2>
-      <ul><li>Viết 12 từ mới mỗi từ 20 lần mỗi dòng hai lần</li></ul>
+      <h2>🇬🇧 Tiếng Anh(Global success)</h2>
+      <ul><li>Làm nốt bài 4</li><li>Ôn lại cách công thức</li></ul>
 
       <h2>👥 Công dân</h2>
       <ul><li>Học phần 3 khung vàng(SGK - trang 8)</li><li>Làm bài 1 đến 4 (SGK trang 8 và 9)</li></ul>
@@ -348,11 +475,11 @@ body.dark .changelog li {
       <h2>🔧 Công nghệ</h2>
       <ul><li>Chưa có bài</li></ul>
 
-      <h2>🎶 Âm nhạc</h2>
-      <ul><li>Học bài hát "khúc ca bốn mùa"</li></ul>
+      <h2>🎶 Âm nhạc(Sách cánh diều)</h2>
+      <ul><li>Học bài hát "Bản làng tươi đẹp"(SGK-13)</li></ul>
 
       <h2>💻 Tin học</h2>
-      <ul><li>Học hết các thế hệ máy tính</li><li>Làm hết bài tập SGK-6; 8</li></ul>
+      <ul><li>Học hết Phần 1 hoặc 2 bài 2(chưa rõ)</li></ul>
 
       <div class="note">
         <strong>LƯU Ý:</strong>
@@ -367,11 +494,14 @@ body.dark .changelog li {
       </div>
 
       <div class="changelog" style="margin-top:14px;">
-        <strong>Changelog (V2.4)</strong>
+        <strong>Changelog (V2.6)</strong>
         <ul>
-          <li>Cập nhật Ngữ văn</li>
+          <li>Cập nhật Lịch sủ</li>
+          <li>Cập nhật Toán học (Đại số)</li>
+          <li>Cập nhật Tin học</li>
+          <li>Cập nhật Âm nhạc</li>
           <li>Cập nhật Tiếng anh</li>
-          <li>Cập nhật Lịch sử</li>
+          <li>Sửa một vài thứ khác</li>
         </ul>
       </div>
     </div>
@@ -395,12 +525,12 @@ body.dark .changelog li {
 
     const TKB = {
         0: ["Chủ nhật: Nghỉ / Tự học"],
-        1: ["HĐTN,HN", "LS&ĐL - Sử", "Anh", "LS&ĐL - Địa", "Toán - Số"],
-        2: ["Văn", "Anh", "Công nghệ", "HĐTN,HN", "GDTC"],
-        3: ["Văn", "Toán - Hình", "KHTN - Lý", "NT - Mĩ thuật", "KHTN - Sinh"],
-        4: ["Toán - Số", "Tin", "LS&ĐL - Sử", "Âm nhạc", "Anh"],
-        5: ["GDĐP", "Văn", "HĐTN,HN", "Toán", "Công dân"],
-        6: ["KHTN - Sinh", "GDTC", "Văn", "KHTN - Hóa", "Nghỉ"]
+        1: ["HĐTN,HN", "LS&ĐL - Sử", "Tiếng anh", "LS&ĐL - Địa lí", "Toán học - đại số"],
+        2: ["Văn học", "Tiếng anh", "Công nghệ", "HĐTN,HN", "GDTC"],
+        3: ["Văn học", "Toán học - Hình học", "KHTN - Vật lý", "NT - Mĩ thuật", "KHTN - Sinh học"],
+        4: ["Toán học - đại Số", "Tin học", "LS&ĐL - Lịch sử", "Âm nhạc", "Tiếng anh"],
+        5: ["GDĐP", "Văn học", "HĐTN,HN", "Toán học", "Giáo dục công dân"],
+        6: ["KHTN - Sinh học", "GDTC", "Văn học", "KHTN - Hóa học", "Nghỉ"]
     };
 
     // Lịch trực (có lưu localStorage nếu user chỉnh)
