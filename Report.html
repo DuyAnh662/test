@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Report lỗi / góp ý</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    body.light { background: #f3f4f6; color: #111; }
+    body.dark { background: #0f172a; color: #f1f5f9; }
+
+    .report-box {
+      background: rgba(255,255,255,0.9);
+      padding: 25px 30px;
+      border-radius: 14px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      width: 360px;
+      transition: background 0.3s, color 0.3s;
+      text-align: center;
+    }
+    body.dark .report-box {
+      background: rgba(30,41,59,0.95);
+      color: #f1f5f9;
+    }
+
+    h2 {
+      margin-top: 0;
+      margin-bottom: 12px;
+      color: #2563eb;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      justify-content: center;
+    }
+
+    textarea {
+      width: 100%;
+      height: 120px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      resize: none;
+      font-size: 14px;
+      margin-bottom: 12px;
+      transition: background 0.3s, color 0.3s, border 0.3s;
+      box-sizing: border-box;
+    }
+    body.dark textarea {
+      background: #1e293b;
+      color: #f1f5f9;
+      border: 1px solid #475569;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.3s;
+    }
+    .send-btn { background: #2563eb; color: white; }
+    .send-btn:hover { background: #1d4ed8; }
+    .back-btn { background: #6b7280; color: white; }
+    .back-btn:hover { background: #4b5563; }
+
+    .top-bar {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+    }
+    .toggle-btn {
+      background: #475569;
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.3s;
+    }
+    .toggle-btn:hover { background: #334155; }
+
+    /* Popup modal */
+    .modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      background: rgba(0,0,0,0.5);
+      z-index: 9999;
+    }
+    .modal-content {
+      background: white;
+      padding: 20px 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      text-align: center;
+      animation: popIn 0.3s ease;
+      max-width: 300px;
+    }
+    body.dark .modal-content {
+      background: #1e293b;
+      color: #f1f5f9;
+    }
+    .modal-content.success { border-left: 6px solid #16a34a; }
+    .modal-content.error { border-left: 6px solid #dc2626; }
+    .modal button {
+      margin-top: 15px;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      background: #2563eb;
+      color: #fff;
+      cursor: pointer;
+    }
+    .modal button:hover { background: #1d4ed8; }
+
+    @keyframes popIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-bar">
+    <button class="toggle-btn" id="toggleTheme">🌙 Dark Mode</button>
+  </div>
+
+  <div class="report-box">
+    <h2>📢 Gửi Report</h2>
+    <textarea id="message" placeholder="Nhập góp ý hoặc báo lỗi..."></textarea>
+    <button class="send-btn" onclick="sendReport()">Gửi Report</button>
+    <button class="back-btn" onclick="goHome()">⬅️ Quay lại trang chính</button>
+  </div>
+
+  <!-- Popup modal -->
+  <div id="modal" class="modal">
+    <div id="modalContent" class="modal-content">
+      <p id="modalMessage">Thông báo</p>
+      <button onclick="closeModal()">Đóng</button>
+    </div>
+  </div>
+
+<script>
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbze3eehTtQOscTcqBzOa8UBUikJHmsC67ddYKt6-8mJj_8LRBUSpm6Rxz_9JAMkIRH4/exec";
+
+  // ----- DARK MODE -----
+  function applyThemeFromStorage() {
+    const theme = localStorage.getItem("theme");
+    if (theme === "dark") {
+      document.body.classList.add("dark");
+      document.getElementById("toggleTheme").textContent = "☀️ Light Mode";
+    } else {
+      document.body.classList.add("light");
+      document.getElementById("toggleTheme").textContent = "🌙 Dark Mode";
+    }
+  }
+
+  function toggleMode(){
+    document.body.classList.toggle("dark");
+    document.body.classList.toggle("light");
+
+    if(document.body.classList.contains("dark")){
+      localStorage.setItem("theme","dark");
+      document.getElementById("toggleTheme").textContent = "☀️ Light Mode";
+    } else {
+      localStorage.setItem("theme","light");
+      document.getElementById("toggleTheme").textContent = "🌙 Dark Mode";
+    }
+  }
+  document.getElementById("toggleTheme").addEventListener("click", toggleMode);
+  applyThemeFromStorage();
+
+  // ----- Modal -----
+  function showModal(message, isError=false){
+    const modal = document.getElementById("modal");
+    const modalContent = document.getElementById("modalContent");
+    const modalMessage = document.getElementById("modalMessage");
+
+    modalMessage.textContent = message;
+    modalContent.className = "modal-content " + (isError ? "error" : "success");
+    modal.style.display = "flex";
+  }
+  function closeModal(){
+    document.getElementById("modal").style.display = "none";
+  }
+
+  // ----- Gửi report -----
+  async function sendReport(){
+    const msg = document.getElementById("message").value.trim();
+    if(!msg){
+      showModal("⚠️ Bạn chưa nhập nội dung!", true);
+      return;
+    }
+    try {
+      await fetch(SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify({ message: msg })
+      });
+      showModal("✅ Report đã được gửi!");
+      document.getElementById("message").value = "";
+    } catch(err){
+      showModal("❌ Lỗi khi gửi report!", true);
+    }
+  }
+
+  function goHome(){
+    window.location.href = "index.html";
+  }
+</script>
+</body>
+</html>
