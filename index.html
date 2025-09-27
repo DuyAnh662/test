@@ -15,7 +15,7 @@
         gtag('config', 'G-92KE83JEYM');
     </script>
     <meta charset="utf-8" />
-    <title>Bảng Thông Báo BTVN - 26/9/2025</title>
+    <title>Bảng Thông Báo BTVN - 27/9/2025</title>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <style>
         :root {
@@ -486,6 +486,31 @@
                 opacity: 1;
             }
         }
+
+/* Nút Report trong menu */
+.report-link {
+  display: block;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #ff4d4d, #ff1a1a);
+  text-decoration: none;
+  transition: all 0.25s ease;
+  position: relative;   /* Cho phép nổi */
+  z-index: 10;          /* Đè lên khung menu */
+}
+
+/* Hover: sáng hơn + nhấc lên */
+.report-link:hover {
+  background: linear-gradient(135deg, #ff6666, #ff3333);
+  box-shadow: 0 6px 15px rgba(255, 50, 50, 0.6);
+}
+
+/* Dark mode */
+body.dark .report-link {
+  background: linear-gradient(135deg, #ff3333, #cc0000);
+}
     </style>
 </head>
 
@@ -495,9 +520,9 @@
         <button class="menu-btn" id="menuBtn">☰ Menu</button>
         <div class="menu-panel" id="menuPanel" role="menu" aria-hidden="true">
             <button id="menuDark">🌙 Chuyển Dark/Light</button>
-            <button id="menuReport">🚨 Report</button>
             <button id="menuPopup">❗Bật lại Lưu ý</button>
             <a href="Donate.html" target="_blank" class="donate-btn">❤️ Donate to us</a>
+            <a href="Report.html" class="report-link">🚨 Report</a>
         </div>
     </div>
 
@@ -507,7 +532,6 @@
             <div class="close" id="popupClose" title="Đóng">✕</div>
             <h3>❗Lưu ý</h3>
             <p id="popupText">+Được làm ra và phát triển bởi ChatGBT(Web), Vũ Duy Anh và Nguyễn Văn Hoàng Bách</p>
-            <p id="popupText">+Trang web hiện đang trong giai đoạn phát triển Beta sẽ rất dễ để lại sai sót</p>
             <p id="popupText">+Donate chúng toi nhé!^_^</p>
             <p style="margin-top:12px; text-align:left;">
                 <label>
@@ -520,7 +544,7 @@
     <div class="wrap">
         <!-- BTVN -->
         <div class="card">
-            <h1>📢 Thông báo BTVN [NEW 11:45 - 26/9/2025]</h1>
+            <h1>📢 Thông báo BTVN [NEW 11:15 - 27/9/2025]</h1>
 
             <h2>📘 Địa lí</h2>
             <ul>
@@ -530,7 +554,7 @@
             <h2>➗ Toán học</h2>
             <strong>Hình:</strong>
             <ul>
-                <li>Làm nốt bài thầy cho trên lớp</li>
+                <li>Làm nốt bài 3.5(SGK-55)</li>
                 <li>Ôn lại bài cũ</ul>
             <strong>Số:</strong>
             <ul>
@@ -539,12 +563,14 @@
 
             <h2>✍ Ngữ văn</h2>
             <ul>
-                <li>Hiện không có</li>
+                <li>Làm bài cô đã cho ghi trên lớp</li>
+                <li>Đọc trước Tri thức ngữ văn bài 2(SGK-39→40)</li>
+                <li>Đọc trước tác phẩm "Thu điếu" của Nguyễn Khuyến (SGK-40→41)
             </ul>
 
             <h2>🧬 Sinh học</h2>
             <ul>
-                <li>Có thể sẽ kiểm tra bài 32 một số bệnh về tiêu hóa</li>
+                <li>Làm bài hoạt động 2(SGK-131) dựa vào bảng 32.3 và bảng 32.1; 32.2</li>
             </ul>
 
             <h2>🏠 GDĐP</h2>
@@ -564,7 +590,7 @@
 
             <h2>🤝 HĐTN, HN</h2>
             <ul>
-                <li>Vẽ tranh hoặc làm thơ chủ đề bất kì đối với thơ tranh chủ đề truyền thống trường tốt đẹp[thứ sáu nộp]</li>
+                <li>Vẽ tranh hoặc làm thơ chủ đề bất kì đối với thơ tranh chủ đề truyền thống trường tốt đẹp[Thứ sáu nộp]</li>
                 <li>Lưu ý nhỏ: làm ra giấy
             </ul>
 
@@ -575,18 +601,18 @@
 
             <h2>⚗ Hóa học</h2>
             <ul>
-                <li>Hiện chưa rõ</li>
+                <li>Học thuộc khái niệm biến đổi vật lý và khái niện biến đổi hóa học</li>
             </ul>
 
             <h2>🇬🇧 Tiếng Anh(Global success)</h2>
             <ul>
                 <li>Làm nốt bài 4(Sách trang 22)</li>
-                <li>Ôn lại cách công thức(Bài cũ cho nhớ)</li>
+                <li>Ôn lại cách công thức(Bài cũ, cho nhớ)</li>
             </ul>
 
             <h2>👥 Công dân</h2>
             <ul>
-                <li>Làm vận dụng bài 2</li>
+                <li>Làm vận dụng bài 1; 2(SGK-9)</li>
                 <li>Làm bài 1 đến 4 (SGK trang 8 và 9)[Nếu chưa làm xong]</li>
                 <li>Lưu ý nhỏ: Có thể sẽ chấm</li>
             </ul>
@@ -603,7 +629,7 @@
 
             <h2>💻 Tin học</h2>
             <ul>
-                <li>Học hết Phần 1 hoặc 2 bài 2(chưa rõ)</li>
+                <li>Học hết Phần 1 hoặc 2 bài 2(Chưa rõ)</li>
             </ul>
 
             <div class="note">
@@ -619,13 +645,10 @@
             </div>
 
             <div class="changelog" style="margin-top:14px;">
-                <strong>Changelog (V2.7)</strong>
+                <strong>Changelog (V2.8)</strong>
                 <ul>
-                    <li>Cập nhật GDCD</li>
-                    <li>Cập nhật Toán học (Hình học)</li>
-                    <li>Cập nhật Lịch sử</li>
-                    <li>Sửa HĐTN</li>
-                    <li>Sửa Tiếng Anh</li>
+                    <li>Cập nhật Sinh học</li>
+                    <li>Cập nhật Hóa học</li>
                     <li>Cập nhật Ngữ văn</li>
                     <li>Sửa một vài thứ khác</li>
                 </ul>
@@ -708,37 +731,6 @@
         // Report from menu & fixed button
         const menuReport = document.getElementById('menuReport');
         const reportFixed = document.getElementById('reportFixed');
-
-        async function doReport() {
-            const txt = prompt("❗Nhập nội dung báo lỗi / góp ý:");
-            if (!txt || !txt.trim()) {
-                alert("⚠️ Bạn chưa nhập nội dung.");
-                return;
-            }
-            try {
-                // gửi lên API nếu bạn có deploy; nếu không có thì thử-catch vẫn ok
-                await fetch(API_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        text: txt
-                    })
-                });
-                alert("✅ Đã gửi. Cảm ơn bạn!");
-            } catch (e) {
-                console.warn('Report failed (demo):', e);
-                alert("✅ (Demo) Đã ghi nhận: " + txt);
-            }
-        }
-        menuReport.addEventListener('click', doReport);
-        if (reportFixed) {
-            reportFixed.addEventListener('click', doReport);
-        }
-        // Show popup from menu
-        document.getElementById('menuPopup').addEventListener('click', () => {
-            openPopup(true);
-            menuPanel.style.display = 'none';
-        });
-
         /* -------------------------
            Popup logic (1 lần/ngày + "Không hiện hôm nay")
            ------------------------- */
