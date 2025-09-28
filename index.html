@@ -2,882 +2,1447 @@
 <html lang="vi">
 
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-92KE83JEYM"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-
-        gtag('config', 'G-92KE83JEYM');
-    </script>
-    <meta charset="utf-8" />
-    <title>Bảng Thông Báo BTVN - 27/9/2025</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <style>
-        :root {
-            --bg: #f0f8ff;
-            --card: #fff;
-            --text: #333;
-            --accent: #0066cc;
-            --note-bg: #fff3cd;
-            --note-border: #ff9900;
-        }
-        
-        body {
-            margin: 16px;
-            font-family: "Arial", sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            transition: background .25s, color .25s;
-        }
-        /* dark */
-        
-        body.dark {
-            --bg: #0f0f10;
-            --card: #161617;
-            --text: #e8eefc;
-            --accent: #66b2ff;
-            --note-bg: #3a2e00;
-            --note-border: #ffcc00;
-        }
-        /* Menu */
-        
-        .menu {
-            position: fixed;
-            top: 18px;
-            right: 18px;
-            z-index: 1200;
-        }
-        
-        .menu-btn {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, .15);
-        }
-        
-        .menu-panel {
-            display: none;
-            position: absolute;
-            top: 44px;
-            right: 0;
-            width: 210px;
-            background: var(--card);
-            border-radius: 8px;
-            box-shadow: 0 8px 28px rgba(0, 0, 0, .25);
-            overflow: hidden;
-        }
-        
-        .menu-panel button {
-            display: block;
-            width: 100%;
-            padding: 10px 12px;
-            border: none;
-            background: transparent;
-            text-align: left;
-            cursor: pointer;
-            color: var(--text);
-        }
-        
-        .menu-panel button:hover {
-            background: rgba(0, 0, 0, .04);
-        }
-        
-        body.dark .menu-panel button:hover {
-            background: rgba(255, 255, 255, .02);
-        }
-        /* popup */
-        
-        .popup {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, .45);
-            z-index: 1100;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .popup.open {
-            display: flex;
-        }
-        
-        .popup-card {
-            width: 360px;
-            max-width: calc(100% - 40px);
-            background: var(--card);
-            color: var(--text);
-            padding: 18px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, .35);
-            position: relative;
-        }
-        
-        .popup-card .close {
-            position: absolute;
-            right: 10px;
-            top: 8px;
-            cursor: pointer;
-            font-size: 18px;
-            opacity: .85;
-        }
-        /* layout: two column on wide screens */
-        
-        .wrap {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            max-width: 1200px;
-            margin: 80px auto 40px;
-        }
-        
-        @media(min-width:900px) {
-            .wrap {
-                flex-direction: row;
-                align-items: flex-start;
-            }
-        }
-        
-        .card {
-            background: var(--card);
-            color: var(--text);
-            padding: 18px;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, .12);
-        }
-        
-        .card.half {
-            width: 100%;
-        }
-        
-        @media(min-width:900px) {
-            .card.half {
-                width: 48%;
-            }
-        }
-        
-        h1 {
-            color: var(--accent);
-            margin: 6px 0 12px;
-            text-align: center;
-        }
-        
-        h2 {
-            margin: 10px 0;
-            color: var(--text);
-            border-left: 6px solid var(--accent);
-            padding-left: 10px;
-        }
-        
-        .note {
-            background: var(--note-bg);
-            border-left: 6px solid var(--note-border);
-            padding: 10px 12px;
-            border-radius: 8px;
-            color: inherit;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-        
-        th,
-        td {
-            border: 1px solid rgba(0, 0, 0, .15);
-            padding: 8px 10px;
-            text-align: left;
-        }
-        
-        th {
-            background: rgba(0, 0, 0, .04);
-            color: var(--accent);
-            font-weight: 700;
-        }
-        
-        tr:nth-child(even) td {
-            background: rgba(0, 0, 0, .03);
-        }
-        
-        body.dark th {
-            background: rgba(0, 0, 0, .22);
-        }
-        
-        body.dark tr:nth-child(even) td {
-            background: rgba(255, 255, 255, .02);
-        }
-        
-        body.dark td {
-            border-color: rgba(255, 255, 255, .06);
-        }
-        
-        #showFullBtn {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-top: 12px;
-        }
-        
-        #showFullBtn:hover {
-            opacity: .95;
-        }
-        /* report fixed */
-        
-        #reportFixed {
-            position: fixed;
-            right: 18px;
-            bottom: 18px;
-            background: #ff4d4d;
-            color: #fff;
-            padding: 10px 12px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, .2);
-            z-index: 1000;
-        }
-        /* small styling for "editable" */
-        
-        .editable {
-            padding: 4px 6px;
-            border-radius: 6px;
-            background: rgba(0, 0, 0, 0.02);
-            display: inline-block;
-            cursor: text;
-        }
-        
-        .save-truc {
-            display: inline-block;
-            margin-left: 8px;
-            padding: 4px 8px;
-            border-radius: 6px;
-            background: var(--accent);
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        
-        .inline-note {
-            margin-top: 10px;
-            display: block;
-            color: rgba(0, 0, 0, .6);
-        }
-        
-        body.dark .inline-note {
-            color: rgba(255, 255, 255, .6);
-        }
-        
-        .changelog {
-            background-color: #1e293b;
-            /* nền xanh đậm */
-            
-            color: #e2e8f0;
-            /* màu chữ sáng */
-            
-            border-radius: 10px;
-            padding: 15px 20px;
-            margin: 20px 0;
-            border-left: 5px solid #60a5fa;
-            /* viền xanh nhạt bên trái */
-            
-            font-family: Arial, sans-serif;
-        }
-        
-        .changelog h3 {
-            margin-top: 0;
-            color: #ffffff;
-            /* tiêu đề trắng */
-        }
-        
-        .changelog ul {
-            list-style-type: disc;
-            padding-left: 20px;
-        }
-        
-        .changelog li {
-            margin: 6px 0;
-            color: #93c5fd;
-            /* chữ xanh nhạt */
-        }
-        
-        .changelog {
-            border-radius: 10px;
-            padding: 15px 20px;
-            margin: 20px 0;
-            font-family: Arial, sans-serif;
-            transition: background .25s, color .25s;
-        }
-        /* Light mode (mặc định) */
-        
-        body:not(.dark) .changelog {
-            background: #f8fafc;
-            color: #1e293b;
-            border-left: 5px solid #2563eb;
-        }
-        
-        body:not(.dark) .changelog h3,
-        body:not(.dark) .changelog strong {
-            color: #111827;
-        }
-        
-        body:not(.dark) .changelog li {
-            color: #2563eb;
-        }
-        /* Dark mode */
-        
-        body.dark .changelog {
-            background: #1e293b;
-            color: #e2e8f0;
-            border-left: 5px solid #60a5fa;
-        }
-        
-        body.dark .changelog h3,
-        body.dark .changelog strong {
-            color: #ffffff;
-        }
-        
-        body.dark .changelog li {
-            color: #93c5fd;
-        }
-        
-        .menu-panel a.donate-btn {
-            display: block;
-            width: 100%;
-            padding: 10px 12px;
-            text-align: left;
-            text-decoration: none;
-            color: var(--text);
-            font-weight: 600;
-        }
-        
-        .menu-panel a.donate-btn:hover {
-            background: rgba(0, 0, 0, .04);
-        }
-        
-        body.dark .menu-panel a.donate-btn:hover {
-            background: rgba(255, 255, 255, .08);
-        }
-        /* Popup đẹp hơn */
-        
-        .popup-card {
-            width: 420px;
-            max-width: calc(100% - 40px);
-            background: var(--card);
-            color: var(--text);
-            padding: 22px 20px;
-            border-radius: 14px;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, .4);
-            position: relative;
-            border-top: 6px solid var(--accent);
-            animation: popupIn .3s ease;
-        }
-        /* hiệu ứng mở */
-        
-        @keyframes popupIn {
-            from {
-                transform: translateY(-20px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-        
-        .popup-card h3 {
-            margin: 0 0 12px;
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--accent);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        
-        .popup-card h3::before {
-            content: "⚠️";
-        }
-        
-        .popup-card ul {
-            margin: 0;
-            padding-left: 20px;
-        }
-        
-        .popup-card li {
-            margin: 6px 0;
-            line-height: 1.5;
-        }
-        
-        .popup-card li strong {
-            color: var(--accent);
-        }
-        
-        .popup-card .close {
-            position: absolute;
-            right: 12px;
-            top: 10px;
-            cursor: pointer;
-            font-size: 18px;
-            opacity: .75;
-            transition: .2s;
-        }
-        
-        .popup-card .close:hover {
-            opacity: 1;
-            transform: scale(1.1);
-        }
-        
-        .popup-card .footer-check {
-            margin-top: 14px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 14px;
-            opacity: .85;
-        }
-        /* Popup 3D đẹp hơn */
-        
-        .popup-card {
-            width: 420px;
-            max-width: calc(100% - 40px);
-            background: var(--card);
-            color: var(--text);
-            padding: 22px 20px;
-            border-radius: 14px;
-            /* Hiệu ứng 3D bằng nhiều lớp shadow */
-            
-            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.35), 0 5px 10px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.15);
-            position: relative;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-top: 6px solid var(--accent);
-            /* Gradient nhẹ để có cảm giác nổi */
-            
-            background: linear-gradient( 145deg, rgba(255, 255, 255, 0.03), rgba(0, 0, 0, 0.15)), var(--card);
-            animation: popupIn .35s ease;
-            transform: translateY(0) scale(1);
-            transition: transform .2s ease, box-shadow .2s ease;
-        }
-        /* Hover rung động nhẹ */
-        
-        .popup-card:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 18px 30px rgba(0, 0, 0, 0.4), 0 8px 15px rgba(0, 0, 0, 0.25), inset 0 1px 2px rgba(255, 255, 255, 0.1);
-        }
-        
-        @keyframes popupIn {
-            from {
-                transform: translateY(-20px) scale(.95);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0) scale(1);
-                opacity: 1;
-            }
-        }
-
-/* Nút Report trong menu */
-.report-link {
-  display: block;
-  padding: 10px 14px;
-  border-radius: 8px;
-  font-weight: 600;
-  color: #fff;
-  background: linear-gradient(135deg, #ff4d4d, #ff1a1a);
-  text-decoration: none;
-  transition: all 0.25s ease;
-  position: relative;   /* Cho phép nổi */
-  z-index: 10;          /* Đè lên khung menu */
-}
-
-/* Hover: sáng hơn + nhấc lên */
-.report-link:hover {
-  background: linear-gradient(135deg, #ff6666, #ff3333);
-  box-shadow: 0 6px 15px rgba(255, 50, 50, 0.6);
-}
-
-/* Dark mode */
-body.dark .report-link {
-  background: linear-gradient(135deg, #ff3333, #cc0000);
-}
-    </style>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-92KE83JEYM"></script>
+  <script>
+  window.dataLayer = window.dataLayer || [];
+  
+          function gtag() {
+              dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+  
+          gtag('config', 'G-92KE83JEYM');
+  </script>
+  <meta charset="utf-8" />
+  <title>Bảng Thông Báo BTVN - 27/9/2025</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+  :root {
+              /* Màu chủ đề mặc định (xanh dương) */
+              --theme-primary: #0066cc;
+              --theme-secondary: #4d94ff;
+              --theme-bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+              --theme-accent: #0066cc;
+              --theme-card: rgba(255, 255, 255, 0.7);
+              --theme-glass: rgba(255, 255, 255, 0.25);
+              --theme-border: rgba(255, 255, 255, 0.18);
+              
+              /* Các biến cơ bản */
+              --bg: #f0f8ff;
+              --card: var(--theme-card);
+              --text: #333;
+              --accent: var(--theme-accent);
+              --note-bg: rgba(255, 243, 205, 0.7);
+              --note-border: #ff9900;
+              --glass-bg: var(--theme-glass);
+              --glass-border: var(--theme-border);
+              
+              /* Giao diện thường */
+              --normal-card: #ffffff;
+              --normal-border: #e0e0e0;
+          }
+          
+          /* Chủ đề màu hồng */
+  body.theme-pink {
+              --theme-primary: #e91e63;
+              --theme-secondary: #f06292;
+              --theme-bg: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 100%);
+              --theme-accent: #e91e63;
+              --theme-card: rgba(255, 255, 255, 0.7);
+              --theme-glass: rgba(255, 255, 255, 0.25);
+              --theme-border: rgba(255, 255, 255, 0.18);
+              
+              /* Màu nhẹ hơn cho chế độ thường */
+              --normal-card: #fff5f8;
+              --normal-border: #f8bbd0;
+  }
+          
+          /* Chủ đề màu xanh dương */
+  body.theme-blue {
+              --theme-primary: #0066cc;
+              --theme-secondary: #4d94ff;
+              --theme-bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+              --theme-accent: #0066cc;
+              --theme-card: rgba(255, 255, 255, 0.7);
+              --theme-glass: rgba(255, 255, 255, 0.25);
+              --theme-border: rgba(255, 255, 255, 0.18);
+              
+              /* Màu nhẹ hơn cho chế độ thường */
+              --normal-card: #f5f9ff;
+              --normal-border: #c3d9f2;
+  }
+          
+          /* Chủ đề màu xanh lá */
+  body.theme-green {
+              --theme-primary: #4caf50;
+              --theme-secondary: #81c784;
+              --theme-bg: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+              --theme-accent: #4caf50;
+              --theme-card: rgba(255, 255, 255, 0.7);
+              --theme-glass: rgba(255, 255, 255, 0.25);
+              --theme-border: rgba(255, 255, 255, 0.18);
+              
+              /* Màu nhẹ hơn cho chế độ thường */
+              --normal-card: #f5faf5;
+              --normal-border: #c8e6c9;
+  }
+          
+          /* Chủ đề màu tươi (cam) */
+  body.theme-fresh {
+              --theme-primary: #ff9800;
+              --theme-secondary: #ffb74d;
+              --theme-bg: linear-gradient(135deg, #fff8e1 0%, #ffe0b2 100%);
+              --theme-accent: #ff9800;
+              --theme-card: rgba(255, 255, 255, 0.7);
+              --theme-glass: rgba(255, 255, 255, 0.25);
+              --theme-border: rgba(255, 255, 255, 0.18);
+              
+              /* Màu nhẹ hơn cho chế độ thường */
+              --normal-card: #fffbf0;
+              --normal-border: #ffe0b2;
+  }
+          
+          /* Chủ đề màu nhiều người thích nhất (tím) */
+  body.theme-popular {
+              --theme-primary: #9c27b0;
+              --theme-secondary: #ba68c8;
+              --theme-bg: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+              --theme-accent: #9c27b0;
+              --theme-card: rgba(255, 255, 255, 0.7);
+              --theme-glass: rgba(255, 255, 255, 0.25);
+              --theme-border: rgba(255, 255, 255, 0.18);
+              
+              /* Màu nhẹ hơn cho chế độ thường */
+              --normal-card: #faf5fb;
+              --normal-border: #e1bee7;
+  }
+          
+          /* Chủ đề màu trắng */
+  body.theme-white {
+              --theme-primary: #424242;
+              --theme-secondary: #616161;
+              --theme-bg: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
+              --theme-accent: #424242;
+              --theme-card: rgba(255, 255, 255, 0.8);
+              --theme-glass: rgba(255, 255, 255, 0.3);
+              --theme-border: rgba(0, 0, 0, 0.1);
+              
+              /* Màu cho chế độ thường */
+              --normal-card: #ffffff;
+              --normal-border: #e0e0e0;
+  }
+          
+          /* Chủ đề màu đen */
+  body.theme-black {
+              --theme-primary: #ffffff;
+              --theme-secondary: #e0e0e0;
+              --theme-bg: linear-gradient(135deg, #212121 0%, #424242 100%);
+              --theme-accent: #ffffff;
+              --theme-card: rgba(66, 66, 66, 0.8);
+              --theme-glass: rgba(66, 66, 66, 0.3);
+              --theme-border: rgba(255, 255, 255, 0.1);
+              
+              /* Màu cho chế độ thường */
+              --normal-card: #424242;
+              --normal-border: #616161;
+              
+              /* Điều chỉnh màu chữ cho chủ đề đen */
+              --text: #f5f5f5;
+          }
+          
+          body {
+              margin: 16px;
+              font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+              background: var(--theme-bg);
+              color: var(--text);
+              transition: background .3s, color .3s;
+              min-height: 100vh;
+              position: relative;
+              overflow-x: hidden;
+              will-change: background;
+          }
+          
+          /* Thêm hiệu ứng nền động */
+          body::before {
+              content: "";
+              position: fixed;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+              z-index: -1;
+              pointer-events: none;
+          }
+          
+          /* dark */
+          
+          body.dark {
+              --bg: #0f0f10;
+              --card: rgba(22, 22, 23, 0.7);
+              --text: #f0f0f0; /* Tăng độ sáng của chữ để dễ đọc hơn */
+              --accent: #66b2ff;
+              --note-bg: rgba(58, 46, 0, 0.7);
+              --note-border: #ffcc00;
+              --glass-bg: rgba(30, 30, 32, 0.25);
+              --glass-border: rgba(255, 255, 255, 0.08);
+          }
+          
+          body.dark::before {
+              background: linear-gradient(45deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 70%);
+          }
+          
+          /* Giao diện thường (không phải Liquid Glass) */
+          body.normal-mode:not(.dark) {
+              --card: var(--normal-card);
+              --glass-bg: var(--normal-card);
+              background: var(--theme-bg);
+          }
+          
+          body.normal-mode:not(.dark) .card {
+              backdrop-filter: none;
+              -webkit-backdrop-filter: none;
+              border: 1px solid var(--normal-border);
+              box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+          }
+          
+          body.normal-mode:not(.dark) .menu-btn,
+          body.normal-mode:not(.dark) .menu-panel,
+          body.normal-mode:not(.dark) .popup-card,
+          body.normal-mode:not(.dark) #showFullBtn,
+          body.normal-mode:not(.dark) table,
+          body.normal-mode:not(.dark) .changelog {
+              backdrop-filter: none;
+              -webkit-backdrop-filter: none;
+          }
+          
+          body.normal-mode:not(.dark) .menu-btn {
+              background: var(--normal-card);
+              border: 1px solid var(--normal-border);
+          }
+          
+          body.normal-mode:not(.dark) .menu-panel {
+              background: var(--normal-card);
+              border: 1px solid var(--normal-border);
+          }
+          
+          body.normal-mode:not(.dark) .popup-card {
+              background: var(--normal-card);
+              border: 1px solid var(--normal-border);
+          }
+          
+          body.normal-mode:not(.dark) #showFullBtn {
+              background: var(--normal-card);
+              border: 1px solid var(--normal-border);
+          }
+          
+          body.normal-mode:not(.dark) table {
+              background: var(--normal-card);
+              border: 1px solid var(--normal-border);
+          }
+          
+          body.normal-mode:not(.dark) .changelog {
+              background: var(--normal-card);
+              border: 1px solid var(--normal-border);
+          }
+          
+          /* Ẩn tùy chọn màu khi ở chế độ dark */
+          body.dark .color-theme-options {
+              display: none;
+          }
+          
+          /* Menu */
+          
+          .menu {
+              position: fixed;
+              top: 18px;
+              right: 18px;
+              z-index: 1200;
+          }
+          
+          .menu-btn {
+              background: var(--glass-bg);
+              backdrop-filter: blur(10px);
+              -webkit-backdrop-filter: blur(10px);
+              color: var(--text);
+              border: 1px solid var(--glass-border);
+              padding: 10px 16px;
+              border-radius: 16px;
+              cursor: pointer;
+              font-weight: 600;
+              box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+              transition: all 0.3s ease;
+          }
+          
+          .menu-btn:hover {
+              transform: translateY(-2px);
+              box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+              background: var(--accent);
+              color: white;
+          }
+          
+          .menu-panel {
+              display: none;
+              position: absolute;
+              top: 44px;
+              right: 0;
+              width: 240px;
+              background: var(--glass-bg);
+              backdrop-filter: blur(20px);
+              -webkit-backdrop-filter: blur(20px);
+              border-radius: 16px;
+              box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+              overflow: hidden;
+              border: 1px solid var(--glass-border);
+              transform-origin: top right;
+              animation: menuFadeIn 0.3s ease;
+          }
+          
+          @keyframes menuFadeIn {
+              from {
+                  opacity: 0;
+                  transform: scale(0.9) translateY(-10px);
+              }
+              to {
+                  opacity: 1;
+                  transform: scale(1) translateY(0);
+              }
+          }
+          
+          .menu-panel button {
+              display: block;
+              width: 100%;
+              padding: 12px 16px;
+              border: none;
+              background: transparent;
+              text-align: left;
+              cursor: pointer;
+              color: var(--text);
+              transition: all 0.2s ease;
+          }
+          
+          .menu-panel button:hover {
+              background: rgba(255, 255, 255, 0.1);
+              transform: translateX(4px);
+          }
+          
+          body.dark .menu-panel button:hover {
+              background: rgba(255, 255, 255, 0.05);
+          }
+          
+          /* Tùy chọn màu chủ đề */
+          .color-theme-options {
+              padding: 10px 16px;
+              border-top: 1px solid rgba(255, 255, 255, 0.1);
+              margin-top: 8px;
+          }
+          
+          .color-theme-title {
+              font-size: 14px;
+              font-weight: 600;
+              margin-bottom: 8px;
+              color: var(--text);
+              opacity: 0.8;
+          }
+          
+          .color-themes {
+              display: flex;
+              gap: 8px;
+              flex-wrap: wrap;
+          }
+          
+          .color-theme {
+              width: 28px;
+              height: 28px;
+              border-radius: 50%;
+              cursor: pointer;
+              border: 2px solid transparent;
+              transition: all 0.2s ease;
+          }
+          
+          .color-theme:hover {
+              transform: scale(1.1);
+          }
+          
+          .color-theme.active {
+              border-color: var(--text);
+              box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+          }
+          
+          .color-theme.pink {
+              background: #e91e63;
+          }
+          
+          .color-theme.blue {
+              background: #0066cc;
+          }
+          
+          .color-theme.green {
+              background: #4caf50;
+          }
+          
+          .color-theme.fresh {
+              background: #ff9800;
+          }
+          
+          .color-theme.popular {
+              background: #9c27b0;
+          }
+          
+          .color-theme.white {
+              background: #ffffff;
+              border: 1px solid #e0e0e0;
+          }
+          
+          .color-theme.black {
+              background: #212121;
+          }
+          
+          /* popup */
+          
+          .popup {
+              display: none;
+              position: fixed;
+              inset: 0;
+              background: rgba(0, 0, 0, 0.4);
+              backdrop-filter: blur(5px);
+              -webkit-backdrop-filter: blur(5px);
+              z-index: 1100;
+              align-items: center;
+              justify-content: center;
+              padding: 20px;
+          }
+          
+          .popup.open {
+              display: flex;
+              animation: fadeIn 0.3s ease;
+          }
+          
+          @keyframes fadeIn {
+              from { opacity: 0; }
+              to { opacity: 1; }
+          }
+          
+          .popup-card {
+              width: 420px;
+              max-width: 100%;
+              background: var(--glass-bg);
+              backdrop-filter: blur(20px);
+              -webkit-backdrop-filter: blur(20px);
+              color: var(--text);
+              padding: 24px;
+              border-radius: 20px;
+              box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+              position: relative;
+              border: 1px solid var(--glass-border);
+              animation: popupIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+              transform-origin: center;
+          }
+          
+          @keyframes popupIn {
+              from {
+                  transform: scale(0.8) translateY(20px);
+                  opacity: 0;
+              }
+              to {
+                  transform: scale(1) translateY(0);
+                  opacity: 1;
+              }
+          }
+          
+          .popup-card .close {
+              position: absolute;
+              right: 16px;
+              top: 16px;
+              cursor: pointer;
+              font-size: 20px;
+              opacity: .85;
+              width: 32px;
+              height: 32px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              border-radius: 50%;
+              transition: all 0.2s ease;
+              z-index: 10;
+          }
+          
+          .popup-card .close:hover {
+              opacity: 1;
+              background: rgba(255, 255, 255, 0.1);
+              transform: rotate(90deg);
+          }
+          /* layout: two column on wide screens */
+          
+          .wrap {
+              display: flex;
+              flex-direction: column;
+              gap: 24px;
+              max-width: 1200px;
+              margin: 80px auto 40px;
+              padding: 0 16px;
+          }
+          
+          @media(min-width:900px) {
+              .wrap {
+                  flex-direction: row;
+                  align-items: flex-start;
+              }
+          }
+          
+          .card {
+              background: var(--glass-bg);
+              backdrop-filter: blur(20px);
+              -webkit-backdrop-filter: blur(20px);
+              color: var(--text);
+              padding: 24px;
+              border-radius: 20px;
+              box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+              border: 1px solid var(--glass-border);
+              transition: all 0.3s ease;
+              transform: translateY(0);
+              will-change: transform;
+          }
+          
+          .card:hover {
+              transform: translateY(-5px);
+              box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+          }
+          
+          .card.half {
+              width: 100%;
+          }
+          
+          @media(min-width:900px) {
+              .card.half {
+                  width: 48%;
+              }
+          }
+          
+          h1 {
+              color: var(--accent);
+              margin: 6px 0 20px;
+              text-align: center;
+              font-weight: 700;
+              font-size: 28px;
+              text-shadow: 0 2px 10px rgba(0, 102, 204, 0.2);
+          }
+          
+          h2 {
+              margin: 16px 0;
+              color: var(--text);
+              border-left: 6px solid var(--accent);
+              padding-left: 12px;
+              font-weight: 600;
+          }
+          
+          .note {
+              background: var(--note-bg);
+              backdrop-filter: blur(10px);
+              -webkit-backdrop-filter: blur(10px);
+              border-left: 6px solid var(--note-border);
+              padding: 14px 16px;
+              border-radius: 12px;
+              color: inherit;
+              margin-top: 20px;
+              box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+          }
+          
+          table {
+              width: 100%;
+              border-collapse: separate;
+              border-spacing: 0;
+              margin-top: 16px;
+              border-radius: 12px;
+              overflow: hidden;
+              box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+          }
+          
+          th,
+          td {
+              border: none;
+              padding: 12px 16px;
+              text-align: left;
+          }
+          
+          th {
+              background: rgba(0, 0, 0, 0.04);
+              color: var(--accent);
+              font-weight: 700;
+          }
+          
+          tr:nth-child(even) td {
+              background: rgba(0, 0, 0, 0.02);
+          }
+          
+          body.dark th {
+              background: rgba(0, 0, 0, 0.2);
+          }
+          
+          body.dark tr:nth-child(even) td {
+              background: rgba(255, 255, 255, 0.02);
+          }
+          
+          body.dark td {
+              color: var(--text);
+          }
+          
+          #showFullBtn {
+              background: var(--glass-bg);
+              backdrop-filter: blur(10px);
+              -webkit-backdrop-filter: blur(10px);
+              color: var(--text);
+              border: 1px solid var(--glass-border);
+              padding: 10px 16px;
+              border-radius: 12px;
+              cursor: pointer;
+              margin-top: 16px;
+              font-weight: 600;
+              transition: all 0.3s ease;
+              box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+              will-change: transform;
+          }
+          
+          #showFullBtn:hover {
+              transform: translateY(-2px);
+              box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+              background: var(--accent);
+              color: white;
+          }
+          
+          body.normal-mode:not(.dark) #showFullBtn:hover {
+              background: var(--accent);
+              color: white;
+          }
+          
+          /* report fixed */
+          
+          #reportFixed {
+              position: fixed;
+              right: 18px;
+              bottom: 18px;
+              background: linear-gradient(135deg, #ff4d4d, #ff1a1a);
+              color: #fff;
+              padding: 12px 16px;
+              border-radius: 16px;
+              border: none;
+              cursor: pointer;
+              box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+              z-index: 1000;
+              font-weight: 600;
+              transition: all 0.3s ease;
+          }
+          
+          #reportFixed:hover {
+              transform: translateY(-3px);
+              box-shadow: 0 12px 24px rgba(255, 77, 77, 0.4);
+          }
+          /* small styling for "editable" */
+          
+          .editable {
+              padding: 6px 10px;
+              border-radius: 8px;
+              background: rgba(0, 0, 0, 0.03);
+              display: inline-block;
+              cursor: text;
+              transition: all 0.2s ease;
+          }
+          
+          .editable:hover {
+              background: rgba(0, 0, 0, 0.06);
+          }
+          
+          .save-truc {
+              display: inline-block;
+              margin-left: 8px;
+              padding: 6px 12px;
+              border-radius: 8px;
+              background: var(--accent);
+              color: white;
+              border: none;
+              cursor: pointer;
+              font-weight: 600;
+              transition: all 0.2s ease;
+          }
+          
+          .save-truc:hover {
+              background: #0052a3;
+              transform: translateY(-1px);
+          }
+          
+          .inline-note {
+              margin-top: 12px;
+              display: block;
+              color: rgba(0, 0, 0, .6);
+              font-size: 14px;
+          }
+          
+          body.dark .inline-note {
+              color: rgba(255, 255, 255, .7); /* Tăng độ sáng để dễ đọc hơn */
+          }
+          
+          .changelog {
+              background: var(--glass-bg);
+              backdrop-filter: blur(10px);
+              -webkit-backdrop-filter: blur(10px);
+              border-radius: 12px;
+              padding: 16px 20px;
+              margin: 20px 0;
+              font-family: inherit;
+              transition: background .25s, color .25s;
+              border: 1px solid var(--glass-border);
+          }
+          
+          /* Light mode (mặc định) */
+          
+          body:not(.dark) .changelog {
+              color: var(--text);
+              border-left: 5px solid var(--accent);
+          }
+          
+          body:not(.dark) .changelog h3,
+          body:not(.dark) .changelog strong {
+              color: var(--text);
+          }
+          
+          body:not(.dark) .changelog li {
+              color: var(--accent);
+          }
+          /* Dark mode */
+          
+          body.dark .changelog {
+              color: var(--text);
+              border-left: 5px solid var(--accent);
+          }
+          
+          body.dark .changelog h3,
+          body.dark .changelog strong {
+              color: var(--text);
+          }
+          
+          body.dark .changelog li {
+              color: #93c5fd;
+          }
+          
+          .menu-panel a.donate-btn {
+              display: block;
+              width: 100%;
+              padding: 12px 16px;
+              text-align: left;
+              text-decoration: none;
+              color: var(--text);
+              font-weight: 600;
+              transition: all 0.2s ease;
+          }
+          
+          .menu-panel a.donate-btn:hover {
+              background: rgba(255, 255, 255, 0.1);
+              transform: translateX(4px);
+          }
+          
+          body.dark .menu-panel a.donate-btn:hover {
+              background: rgba(255, 255, 255, 0.05);
+          }
+          
+          .popup-card h3 {
+              margin: 0 0 16px;
+              font-size: 22px;
+              font-weight: 700;
+              color: var(--accent);
+              display: flex;
+              align-items: center;
+              gap: 8px;
+          }
+          
+          .popup-card h3::before {
+              content: "⚠️";
+          }
+          
+          .popup-card ul {
+              margin: 0;
+              padding-left: 20px;
+          }
+          
+          .popup-card li {
+              margin: 8px 0;
+              line-height: 1.6;
+          }
+          
+          .popup-card li strong {
+              color: var(--accent);
+          }
+          
+          .popup-card .footer-check {
+              margin-top: 16px;
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              font-size: 14px;
+              opacity: .85;
+          }
+          
+          .report-link {
+              display: block;
+              padding: 12px 16px;
+              border-radius: 12px;
+              font-weight: 600;
+              color: #fff;
+              background: linear-gradient(135deg, #ff4d4d, #ff1a1a);
+              text-decoration: none;
+              transition: all 0.3s ease;
+              margin: 8px 16px;
+              position: relative;
+              z-index: 10;
+          }
+          
+          .report-link:hover {
+              background: linear-gradient(135deg, #ff6666, #ff3333);
+              box-shadow: 0 6px 15px rgba(255, 50, 50, 0.6);
+              transform: translateY(-2px);
+          }
+          
+          body.dark .report-link {
+              background: linear-gradient(135deg, #ff3333, #cc0000);
+          }
+          
+          /* Thêm hiệu ứng liquid cho các phần tử */
+          .liquid-effect {
+              position: relative;
+              overflow: hidden;
+          }
+          
+          .liquid-effect::before {
+              content: "";
+              position: absolute;
+              top: -50%;
+              left: -50%;
+              width: 200%;
+              height: 200%;
+              background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+              transform: scale(0);
+              transition: transform 0.6s ease;
+          }
+          
+          .liquid-effect:hover::before {
+              transform: scale(1);
+          }
+          
+          /* Hiệu ứng loading */
+          .loading {
+              display: inline-block;
+              width: 20px;
+              height: 20px;
+              border: 3px solid rgba(0, 102, 204, 0.3);
+              border-radius: 50%;
+              border-top-color: var(--accent);
+              animation: spin 1s ease-in-out infinite;
+          }
+          
+          @keyframes spin {
+              to { transform: rotate(360deg); }
+          }
+          
+          /* Thêm hiệu ứng cho các list items */
+          ul li {
+              margin: 8px 0;
+              padding-left: 8px;
+              position: relative;
+              transition: all 0.2s ease;
+          }
+          
+          ul li::before {
+              content: "•";
+              color: var(--accent);
+              font-weight: bold;
+              position: absolute;
+              left: -8px;
+              transition: all 0.2s ease;
+          }
+          
+          ul li:hover {
+              transform: translateX(4px);
+          }
+          
+          ul li:hover::before {
+              color: var(--accent);
+              transform: scale(1.2);
+          }
+          
+          /* Hiệu ứng cho tiêu đề */
+          h1, h2, h3 {
+              position: relative;
+              transition: all 0.3s ease;
+          }
+          
+          h1::after, h2::after, h3::after {
+              content: "";
+              position: absolute;
+              bottom: -2px;
+              left: 0;
+              width: 0;
+              height: 2px;
+              background: var(--accent);
+              transition: width 0.3s ease;
+          }
+          
+          h1:hover::after, h2:hover::after, h3:hover::after {
+              width: 100%;
+          }
+          
+          /* Thêm hiệu ứng glass cho các bảng */
+          table {
+              background: var(--glass-bg);
+              backdrop-filter: blur(10px);
+              -webkit-backdrop-filter: blur(10px);
+              border: 1px solid var(--glass-border);
+          }
+          
+          /* Hiệu ứng cho các nút trong bảng */
+          .editable-truc {
+              position: relative;
+              cursor: pointer;
+              padding: 4px 8px;
+              border-radius: 6px;
+              transition: all 0.2s ease;
+          }
+          
+          .editable-truc:hover {
+              background: rgba(0, 102, 204, 0.1);
+          }
+          
+          /* Hiệu ứng cho các liên kết */
+          a {
+              color: var(--accent);
+              text-decoration: none;
+              position: relative;
+              transition: all 0.2s ease;
+          }
+          
+          a::after {
+              content: "";
+              position: absolute;
+              bottom: -1px;
+              left: 0;
+              width: 0;
+              height: 1px;
+              background: var(--accent);
+              transition: width 0.3s ease;
+          }
+          
+          a:hover::after {
+              width: 100%;
+          }
+          
+          /* Hiệu ứng cho các input */
+          input[type="checkbox"] {
+              width: 18px;
+              height: 18px;
+              cursor: pointer;
+              position: relative;
+              top: 2px;
+              margin-right: 6px;
+          }
+          
+          /* Hiệu ứng cho các nút */
+          button {
+              transition: all 0.3s ease;
+          }
+          
+          /* Hiệu ứng cho các phần tử có class "note" */
+          .note {
+              position: relative;
+              overflow: hidden;
+          }
+          
+          .note::before {
+              content: "";
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+              pointer-events: none;
+          }
+          
+          /* Tối ưu hiệu suất */
+          .card, .menu-btn, .menu-panel, .popup-card, #showFullBtn, table, .changelog {
+              transform: translateZ(0);
+              backface-visibility: hidden;
+              perspective: 1000px;
+          }
+          
+          /* Tăng độ tương phản cho dark mode */
+          body.dark .card {
+              color: #f0f0f0; /* Tăng độ sáng của chữ */
+          }
+          
+          body.dark h2 {
+              color: #f0f0f0; /* Tăng độ sáng của tiêu đề */
+          }
+          
+          body.dark ul li {
+              color: #e0e0e0; /* Tăng độ sáng của danh sách */
+          }
+          
+          body.dark .inline-note {
+              color: #b0b0b0; /* Tăng độ sáng của ghi chú */
+          }
+          
+          body.dark .changelog li {
+              color: #a0c4ff; /* Màu xanh nhạt hơn cho dễ đọc */
+          }
+          
+          body.dark .popup-card {
+              color: #f0f0f0; /* Tăng độ sáng của chữ trong popup */
+          }
+          
+          body.dark .menu-panel button {
+              color: #f0f0f0; /* Tăng độ sáng của chữ trong menu */
+          }
+          
+          body.dark .menu-panel a.donate-btn {
+              color: #f0f0f0; /* Tăng độ sáng của liên kết donate */
+          }
+  </style>
 </head>
 
 <body>
-    <!-- MENU -->
-    <div class="menu" aria-hidden="false">
-        <button class="menu-btn" id="menuBtn">☰ Menu</button>
-        <div class="menu-panel" id="menuPanel" role="menu" aria-hidden="true">
-            <button id="menuDark">🌙 Chuyển Dark/Light</button>
-            <button id="menuPopup">❗Bật lại Lưu ý</button>
-            <a href="Donate.html" target="_blank" class="donate-btn">❤️ Donate to us</a>
-            <a href="Report.html" class="report-link">🚨 Report</a>
+  <!-- MENU -->
+  <div class="menu" aria-hidden="false">
+    <button class="menu-btn liquid-effect" id="menuBtn">☰ Menu</button>
+    <div class="menu-panel" id="menuPanel" role="menu" aria-hidden="true">
+      <button id="menuDark">🌙 Chuyển Dark/Light</button>
+      <button id="menuLiquid">✨ Chuyển Liquid Glass/Thường</button>
+      <button id="menuPopup">❗Bật bảng Lưu ý</button>
+      <a href="Donate.html" target="_blank" class="donate-btn">❤️ Donate to us</a>
+      <a href="Report.html" class="report-link">🚨 Report</a>
+      
+      <!-- Tùy chọn màu chủ đề -->
+      <div class="color-theme-options">
+        <div class="color-theme-title">Chọn màu chủ đề:</div>
+        <div class="color-themes">
+          <div class="color-theme pink" data-theme="pink" title="Hồng"></div>
+          <div class="color-theme blue" data-theme="blue" title="Xanh dương"></div>
+          <div class="color-theme green" data-theme="green" title="Xanh lá"></div>
+          <div class="color-theme fresh" data-theme="fresh" title="Màu tươi"></div>
+          <div class="color-theme popular" data-theme="popular" title="Màu nhiều người thích nhất"></div>
+          <div class="color-theme white" data-theme="white" title="Trắng"></div>
+          <div class="color-theme black" data-theme="black" title="Đen"></div>
         </div>
+      </div>
     </div>
-
-    <!-- POPUP -->
-    <div class="popup" id="popup">
-        <div class="popup-card" id="popupCard">
-            <div class="close" id="popupClose" title="Đóng">✕</div>
-            <h3>❗Lưu ý</h3>
-            <p id="popupText">+Được làm ra và phát triển bởi ChatGBT(Web), Vũ Duy Anh và Nguyễn Văn Hoàng Bách</p>
-            <p id="popupText">+Donate chúng toi nhé!^_^</p>
-            <p style="margin-top:12px; text-align:left;">
-                <label>
-                    <input type="checkbox" id="dontShowToday" /> Không hiển thị lại hôm nay</label>
-            </p>
-        </div>
+  </div>
+  <!-- POPUP -->
+  <div class="popup" id="popup">
+    <div class="popup-card liquid-effect" id="popupCard">
+      <div class="close" id="popupClose" title="Đóng">✕</div>
+      <h3>❗Lưu ý</h3>
+      <p id="popupText">+Được làm ra và phát triển bởi ChatGBT(Web), Vũ Duy Anh và Nguyễn Văn Hoàng Bách</p>
+      <p id="popupText">+Donate chúng toi nhé!^_^</p>
+      <p style="margin-top:12px; text-align:left;">
+        <label>
+          <input type="checkbox" id="dontShowToday" />Không hiển thị lại hôm nay</label>
+      </p>
     </div>
-
-    <!-- MAIN -->
-    <div class="wrap">
-        <!-- BTVN -->
-        <div class="card">
-            <h1>📢 Thông báo BTVN [NEW 11:15 - 27/9/2025]</h1>
-
-            <h2>📘 Địa lí</h2>
-            <ul>
-                <li>Tìm hiểu dạng địa hình Các-xtơ và học thuộc</li>
-            </ul>
-
-            <h2>➗ Toán học</h2>
-            <strong>Hình:</strong>
-            <ul>
-                <li>Làm nốt bài 3.5(SGK-55)</li>
-                <li>Ôn lại bài cũ</ul>
-            <strong>Số:</strong>
-            <ul>
-                <li>1.18 → 1.23 Sách toán tập 1 [SGK-17; 18]</li>
-            </ul>
-
-            <h2>✍ Ngữ văn</h2>
-            <ul>
-                <li>Làm bài cô đã cho ghi trên lớp</li>
-                <li>Đọc trước Tri thức ngữ văn bài 2(SGK-39→40)</li>
-                <li>Đọc trước tác phẩm "Thu điếu" của Nguyễn Khuyến (SGK-40→41)
-            </ul>
-
-            <h2>🧬 Sinh học</h2>
-            <ul>
-                <li>Làm bài hoạt động 2(SGK-131) dựa vào bảng 32.3 và bảng 32.1; 32.2</li>
-            </ul>
-
-            <h2>🏠 GDĐP</h2>
-            <ul>
-                <li>Chưa có bài</li>
-            </ul>
-
-            <h2>📜 Lịch sử</h2>
-            <ul>
-                <li>Hiện không có bài[Chưa rõ]</li>
-            </ul>
-
-            <h2>🔬 Vật lý</h2>
-            <ul>
-                <li>Làm bài thầy đã đọc trên lớp</li>
-            </ul>
-
-            <h2>🤝 HĐTN, HN</h2>
-            <ul>
-                <li>Vẽ tranh hoặc làm thơ chủ đề bất kì đối với thơ tranh chủ đề truyền thống trường tốt đẹp[Thứ sáu nộp]</li>
-                <li>Lưu ý nhỏ: làm ra giấy
-            </ul>
-
-            <h2>🎨 Mĩ thuật</h2>
-            <ul>
-                <li>Vẽ xong bài cô đã cho</li>
-            </ul>
-
-            <h2>⚗ Hóa học</h2>
-            <ul>
-                <li>Học thuộc khái niệm biến đổi vật lý và khái niện biến đổi hóa học</li>
-            </ul>
-
-            <h2>🇬🇧 Tiếng Anh(Global success)</h2>
-            <ul>
-                <li>Làm nốt bài 4(Sách trang 22)</li>
-                <li>Ôn lại cách công thức(Bài cũ, cho nhớ)</li>
-            </ul>
-
-            <h2>👥 Công dân</h2>
-            <ul>
-                <li>Làm vận dụng bài 1; 2(SGK-9)</li>
-                <li>Làm bài 1 đến 4 (SGK trang 8 và 9)[Nếu chưa làm xong]</li>
-                <li>Lưu ý nhỏ: Có thể sẽ chấm</li>
-            </ul>
-
-            <h2>🔧 Công nghệ</h2>
-            <ul>
-                <li>Chưa có bài</li>
-            </ul>
-
-            <h2>🎶 Âm nhạc(Sách cánh diều)</h2>
-            <ul>
-                <li>Học bài hát "Bản làng tươi đẹp"(SGK-13)</li>
-            </ul>
-
-            <h2>💻 Tin học</h2>
-            <ul>
-                <li>Học hết Phần 1 hoặc 2 bài 2(Chưa rõ)</li>
-            </ul>
-
-            <div class="note">
-                <strong>LƯU Ý:</strong>
-                <ul>
-                    <li>Muốn báo lỗi hoặc góp ý vui lòng nhập bấm nút menu rồi bấm report nhập thông tin bạn muốn báo(Hãy để tên bạn ở cuối và đóng ngoặc ghi đó là góp ý hay báo lỗi ở đầu tiên)</li>
-                    <li>Thường hoạt động: 11h50 – 13h00; 17h00 – 20h45</li>
-                    <li>Thông tin có thể chưa chính xác, vui lòng kiểm tra lại</li>
-                    <li>Mục đích: tốt cho mọi người → nếu sai sót xin báo lại, không chửi tục</li>
-                    <li>Bạn đọc hay không là quyền của bạn, không vừa ý vui lòng tìm nguồn khác</li>
-                    <li>Sách không ghi cách diều hay kết nối chi thức thì nặc định nó là kết nối chi thức</li>
-                </ul>
-            </div>
-
-            <div class="changelog" style="margin-top:14px;">
-                <strong>Changelog (V2.8)</strong>
-                <ul>
-                    <li>Cập nhật Sinh học</li>
-                    <li>Cập nhật Hóa học</li>
-                    <li>Cập nhật Ngữ văn</li>
-                    <li>Sửa một vài thứ khác</li>
-                </ul>
-            </div>
-        </div>
-        <!-- TKB card -->
-        <div class="card half" id="tkbCard">
-            <h2>📅 Thời khóa biểu và lịch trực nhật ngày mai</h2>
-
-            <div id="todayTKB">Đang tải...</div>
-
-            <button id="showFullBtn">📅 Xem toàn bộ TKB & Lịch trực</button>
-
-            <div id="fullTKB" style="display:none; margin-top:14px;"></div>
-        </div>
+  </div>
+  <!-- MAIN -->
+  <div class="wrap">
+    <!-- BTVN -->
+    <div class="card liquid-effect">
+      <h1>📢 Thông báo BTVN cho 29/9/2025</h1>
+      <h2>📘 Địa lí</h2>
+      <ul>
+        <li>Tìm hiểu dạng địa hình Các-xtơ và học thuộc</li>
+      </ul>
+      <h2>➗ Toán học</h2>
+      <strong>Hình:</strong>
+      <ul>
+        <li>Làm nốt bài 3.5(SGK-55)</li>
+        <li>Ôn lại bài cũ</ul>
+      <strong>Số:</strong>
+      <ul>
+        <li>1.18 → 1.23 Sách toán tập 1 [SGK-17; 18]</li>
+      </ul>
+      <h2>✍ Ngữ văn</h2>
+      <ul>
+        <li>Làm bài cô đã cho ghi trên lớp</li>
+        <li>Đọc trước Tri thức ngữ văn bài 2(SGK-39→40)</li>
+        <li>Đọc trước tác phẩm "Thu điếu" của Nguyễn Khuyến (SGK-40→41)</ul>
+      <h2>🧬 Sinh học</h2>
+      <ul>
+        <li>Làm bài hoạt động 2(SGK-131) dựa vào bảng 3.1→3.3</li>
+      </ul>
+      <h2>🏠 GDĐP</h2>
+      <ul>
+        <li>Chưa có bài</li>
+      </ul>
+      <h2>📜 Lịch sử</h2>
+      <ul>
+        <li>Hiện không có bài[Chưa rõ]</li>
+      </ul>
+      <h2>🔬 Vật lý</h2>
+      <ul>
+        <li>Làm bài thầy đã đọc trên lớp</li>
+      </ul>
+      <h2>🤝 HĐTN, HN</h2>
+      <ul>
+        <li>Vẽ tranh hoặc làm thơ chủ đề bất kì đối với thơ tranh chủ đề truyền thống trường tốt đẹp[Thứ sáu nộp]</li>
+        <li>Lưu ý nhỏ: làm ra giấy</ul>
+      <h2>🎨 Mĩ thuật</h2>
+      <ul>
+        <li>Vẽ xong bài cô đã cho</li>
+      </ul>
+      <h2>⚗ Hóa học</h2>
+      <ul>
+        <li>Học thuộc khái niệm biến đổi vật lý và khái niện biến đổi hóa học</li>
+      </ul>
+      <h2>🇬🇧 Tiếng Anh(Global success)</h2>
+      <ul>
+        <li>Làm nốt bài 4(Sách trang 22)</li>
+        <li>Ôn lại cách công thức(Bài cũ, cho nhớ)</li>
+      </ul>
+      <h2>👥 Công dân</h2>
+      <ul>
+        <li>Làm vận dụng bài 1; 2(SGK-9)</li>
+        <li>Làm bài 1 đến 4 (SGK trang 8 và 9)[Nếu chưa làm xong]</li>
+        <li>Lưu ý nhỏ: Có thể sẽ chấm</li>
+      </ul>
+      <h2>🔧 Công nghệ</h2>
+      <ul>
+        <li>Chưa có bài</li>
+      </ul>
+      <h2>🎶 Âm nhạc(Sách cánh diều)</h2>
+      <ul>
+        <li>Học bài hát "Bản làng tươi đẹp"(SGK-13)</li>
+      </ul>
+      <h2>💻 Tin học</h2>
+      <ul>
+        <li>Học hết Phần 1 hoặc 2 bài 2(Chưa rõ)</li>
+      </ul>
+      <div class="note">
+        <strong>LƯU Ý:</strong>
+        <ul>
+          <li>Muốn báo lỗi hoặc góp ý vui lòng nhập bấm nút menu rồi bấm report nhập thông tin bạn muốn báo(Hãy để tên bạn ở cuối và đóng ngoặc ghi đó là góp ý hay báo lỗi ở đầu tiên)</li>
+          <li>Thường hoạt động: 11h50 – 13h00; 17h00 – 20h45</li>
+          <li>Thông tin có thể chưa chính xác, vui lòng kiểm tra lại</li>
+          <li>Mục đích: tốt cho mọi người → nếu sai sót xin báo lại, không chửi tục</li>
+          <li>Bạn đọc hay không là quyền của bạn, không vừa ý vui lòng tìm nguồn khác</li>
+          <li>Sách không ghi cách diều hay kết nối chi thức thì nặc định nó là kết nối chi thức</li>
+        </ul>
+      </div>
+      <div class="changelog" style="margin-top:14px;">
+        <strong>Changelog (V2.8)</strong>
+        <ul>
+          <li>Cập nhật Sinh học</li>
+          <li>Cập nhật Hóa học</li>
+          <li>Cập nhật Ngữ văn</li>
+          <li>Cập nhật Lịch trực nhật</li>
+          <li>Sửa đổi một vài thứ khác</li>
+        </ul>
+      </div>
     </div>
-
-    <script>
-        /* -------------------------
-               Config / dữ liệu mặc định
-               ------------------------- */
-        const API_URL = "https://script.google.com/macros/s/AKfycbw5sjUwJfwRtKBQQu5FgYrmgSjoQ22vvnmlv99H7YJHTVgVZRXm1vWB7fFJg8B2O2M7/exec";
-
-        const TKB = {
-            0: ["Chủ nhật: Nghỉ / Tự học"],
-            1: ["HĐTN,HN(CC)", "LS&ĐL - lịch sử", "Tiếng anh", "LS&ĐL - Địa lí", "Toán học - đại số"],
-            2: ["Ngữ văn", "Tiếng anh", "Công nghệ", "HĐTN,HN", "GDTC"],
-            3: ["Ngữ văn", "Toán học - hình học", "KHTN - Vật lý", "NT - Mĩ thuật", "KHTN - Sinh học"],
-            4: ["Toán học - đại Số", "Tin học", "LS&ĐL - lịch sử", "Âm nhạc", "Tiếng anh"],
-            5: ["GDĐP", "Ngữ văn", "HĐTN,HN", "Toán học - hình học", "Giáo dục công dân"],
-            6: ["KHTN - Sinh học", "GDTC", "Ngữ văn", "KHTN - Hóa học", "Nghỉ"]
-        };
-
-        // Lịch trực (có lưu localStorage nếu user chỉnh)
-        let truc = JSON.parse(localStorage.getItem('lichTruc') || 'null') || {
-            0: "Chủ nhật: Không trực",
-            1: "Tổ 2",
-            2: "Tổ 3",
-            3: "Tổ 4",
-            4: "Tổ 1",
-            5: "Tổ 2",
-            6: "Tổ 3",
-        };
-
-        const dayNames = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
-
-        /* -------------------------
-           Menu
-           ------------------------- */
-        const menuBtn = document.getElementById('menuBtn');
-        const menuPanel = document.getElementById('menuPanel');
-
-        menuBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            menuPanel.style.display = menuPanel.style.display === 'block' ? 'none' : 'block';
-        });
-        window.addEventListener('click', (ev) => {
-            if (!menuPanel.contains(ev.target) && ev.target !== menuBtn) menuPanel.style.display = 'none';
-        });
-
-        // Dark toggle in menu:
-        const menuDark = document.getElementById('menuDark');
-
-        function applyThemeFromStorage() {
-            if (localStorage.getItem('theme') === 'dark') {
-                document.body.classList.add('dark');
-                menuDark.textContent = '☀️ Light Mode';
-            } else {
-                document.body.classList.remove('dark');
-                menuDark.textContent = '🌙 Dark Mode';
-            }
-        }
-        applyThemeFromStorage();
-        menuDark.addEventListener('click', () => {
-            document.body.classList.toggle('dark');
-            localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
-            applyThemeFromStorage();
-        });
-
-        // Report from menu & fixed button
-        const menuReport = document.getElementById('menuReport');
-        const reportFixed = document.getElementById('reportFixed');
-        /* -------------------------
-           Popup logic (1 lần/ngày + "Không hiện hôm nay")
-           ------------------------- */
-        const popup = document.getElementById('popup');
-        const popupClose = document.getElementById('popupClose');
-        const dontShowTodayChk = document.getElementById('dontShowToday');
-
-        function openPopup(force = false) {
-            const today = new Date().toLocaleDateString('vi-VN');
-            const disabled = localStorage.getItem('popupDisabled') === 'true'; // nếu user tắt hoàn toàn (không dùng ở đây)
-            if (force) {
-                popup.classList.add('open');
-                return;
-            }
-            if (disabled) return;
-            const lastShown = localStorage.getItem('popupShownDate');
-            if (lastShown !== today) {
-                popup.classList.add('open');
-                localStorage.setItem('popupShownDate', today);
-            }
-        }
-
-        popupClose.addEventListener('click', () => {
-            if (dontShowTodayChk.checked) {
-                localStorage.setItem('popupShownDate', new Date().toLocaleDateString('vi-VN'));
-            }
-            popup.classList.remove('open');
-        });
-
-        // show on load
-        window.addEventListener('load', () => openPopup(false));
-
-        /* -------------------------
-           TKB rendering + full view + editing trực
-           ------------------------- */
-        function computeShowDay() {
-            // Lấy giờ VN
-            const vnNow = new Date(new Date().toLocaleString('en-US', {
-                timeZone: 'Asia/Ho_Chi_Minh'
-            }));
-        }
-
-        // NOTE: small helper: get VN date/time (works cross-browser)
-        function getVNDateObj() {
-            const s = new Date().toLocaleString('en-US', {
-                timeZone: 'Asia/Ho_Chi_Minh'
-            });
-            return new Date(s);
-        }
-
-        function renderTodayTKB() {
-                const d = getVNDateObj();
-                let day = d.getDay(); // 0..6
-                const hour = d.getHours();
-
-                // nếu trước 7h thì coi như ngày hôm trước
-                if (hour < 7) day = (day - 1 + 7) % 7;
-
-                // logic hiển thị: Thứ Sáu -> hiện Thứ Bảy; Chủ Nhật -> hiện Thứ Hai; khác -> ngày mai
-                let showDay;
-                if (day === 5) showDay = 6;
-                else if (day === 0) showDay = 1;
-                else showDay = (day + 1) % 7;
-
-                const container = document.getElementById('todayTKB');
-                let html = `<p>Hôm nay: <strong>${dayNames[d.getDay()]}</strong>, ${d.toLocaleDateString('vi-VN')} — Hiển thị TKB <strong>${dayNames[showDay]}</strong></p>`;
-                html += `<div class="inline-note">❗Lưu ý: Sau 7:00 sáng TKB & lịch trực sẽ chuyển sang ngày tiếp theo (một vài quy tắc đặc biệt được áp dụng).</div>`;
-                html += `<table><thead><tr><th>Tiết</th><th>Môn / Nội dung</th></tr></thead><tbody>`;
-                (TKB[showDay] || []).forEach((m, i) => {
-                    html += `<tr><td>${i+1}</td><td>${m}</td></tr>`;
-                });
-                html += `</tbody></table>`;
-                html += `<p style="margin-top:10px;"><b>Lịch trực: </b> <span id="todayTruc">${truc[showDay]}</span>`;
-
-                container.innerHTML = html;
-
-                // handle edit trực: mở prompt -> lưu vào truc và localStorage (chỉ admin)
-                document.getElementById('editTrucBtn').addEventListener('click', () => {
-                    const txt = prompt("Sửa ghi chú lịch trực cho ngày hiển thị:", truc[showDay]);
-                    if (txt !== null) {
-                        truc[showDay] = txt;
-                        localStorage.setItem('lichTruc', JSON.stringify(truc));
-                        renderTodayTKB(); // rerender để cập nhật
-                    }
-                });
-            }
-            // full week + inline chỉnh trực của từng ngày
-        document.getElementById('showFullBtn').addEventListener('click', function() {
-            const full = document.getElementById('fullTKB');
-            if (full.style.display === 'block') {
-                full.style.display = 'none';
-                this.textContent = '📅 Xem toàn bộ TKB & Lịch trực';
-                return;
-            }
-            // build full
-            let html = `<div style="margin-bottom:8px;"><strong>📅 Thời khóa biểu cả tuần</strong></div>`;
-            for (let k = 1; k <= 6; k++) {
-                html += `<h3 style="margin:8px 0 4px;">${dayNames[k]}</h3>`;
-                html += `<table><thead><tr><th>Tiết</th><th>Môn</th></tr></thead><tbody>`;
-                (TKB[k] || []).forEach((m, i) => html += `<tr><td>${i+1}</td><td>${m}</td></tr>`);
-                html += `</tbody></table>`;
-            }
-
-            // một bảng riêng cho lịch trực
-            html += `<hr style="opacity:.08;margin:12px 0;"><h3>🧹 Lịch trực cả tuần</h3>`;
-            html += `<table><thead><tr><th>Ngày</th><th>Tổ trực</th></tr></thead><tbody>`;
-            for (let k = 1; k <= 6; k++) {
-                html += `<tr><td>${dayNames[k]}</td><td class="editable-truc" data-day="${k}">${truc[k]}</td></tr>`;
-            }
-            html += `</tbody></table>`;
-
-            full.innerHTML = html;
-            full.style.display = 'block';
-            this.textContent = '❌ Ẩn toàn bộ';
-            // save buttons
-            full.querySelectorAll('.save-truc').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const day = btn.dataset.day;
-                    const val = prompt("Nhập nội dung trực cho " + dayNames[day], truc[day]);
-                    if (val !== null) {
-                        truc[day] = val;
-                        localStorage.setItem('lichTruc', JSON.stringify(truc));
-                        renderTodayTKB();
-                        // refresh full view
-                        document.getElementById('showFullBtn').click();
-                        document.getElementById('showFullBtn').click();
-                    }
-                });
-            });
-        });
-
-        // init render
-        renderTodayTKB();
-
-        // re-render every minute (keeps up-to-date at 7:00 change)
-        setInterval(renderTodayTKB, 60 * 1000);
-
-        /* -------------------------
-          Small accessibility: close menu with ESC
-        ------------------------- */
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                document.getElementById('menuPanel').style.display = 'none';
-                document.getElementById('popup').classList.remove('open');
-            }
-        });
-    </script>
+    <!-- TKB card -->
+    <div class="card half liquid-effect" id="tkbCard">
+      <h2>📅 Thời khóa biểu và lịch trực nhật ngày mai</h2>
+      <div id="todayTKB">Đang tải...</div>
+      <button id="showFullBtn">📅 Xem toàn bộ TKB & Lịch trực</button>
+      <div id="fullTKB" style="display:none; margin-top:14px;">
+      </div>
+    </div>
+  </div>
+  <script>
+          /* -------------------------
+          Config / dữ liệu mặc định
+          ------------------------- */
+          const API_URL = "https://script.google.com/macros/s/AKfycbw5sjUwJfwRtKBQQu5FgYrmgSjoQ22vvnmlv99H7YJHTVgVZRXm1vWB7fFJg8B2O2M7/exec";
+  
+          const TKB = {
+              0: ["Chủ nhật: Nghỉ / Tự học"],
+              1: ["HĐTN,HN(CC)", "LS&ĐL - lịch sử", "Tiếng anh", "LS&ĐL - Địa lí", "Toán học - đại số"],
+              2: ["Ngữ văn", "Tiếng anh", "Công nghệ", "HĐTN,HN", "GDTC"],
+              3: ["Ngữ văn", "Toán học - hình học", "KHTN - Vật lý", "NT - Mĩ thuật", "KHTN - Sinh học"],
+              4: ["Toán học - đại Số", "Tin học", "LS&ĐL - lịch sử", "Âm nhạc", "Tiếng anh"],
+              5: ["GDĐP", "Ngữ văn", "HĐTN,HN", "Toán học - hình học", "Giáo dục công dân"],
+              6: ["KHTN - Sinh học", "GDTC", "Ngữ văn", "KHTN - Hóa học", "Nghỉ"]
+          };
+  
+          // Lịch trực (có lưu localStorage nếu user chỉnh)
+          let truc = JSON.parse(localStorage.getItem('lichTruc') || 'null') || {
+              0: "Chủ nhật: Không trực",
+              1: "Tổ 4",
+              2: "Tổ 1",
+              3: "Tổ 2",
+              4: "Tổ 3",
+              5: "Tổ 4",
+              6: "Tổ 1",
+          };
+  
+          const dayNames = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
+  
+          /* -------------------------
+          Menu
+          ------------------------- */
+          const menuBtn = document.getElementById('menuBtn');
+          const menuPanel = document.getElementById('menuPanel');
+  
+          menuBtn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              menuPanel.style.display = menuPanel.style.display === 'block' ? 'none' : 'block';
+          });
+          window.addEventListener('click', (ev) => {
+              if (!menuPanel.contains(ev.target) && ev.target !== menuBtn) menuPanel.style.display = 'none';
+          });
+  
+          // Dark toggle in menu:
+          const menuDark = document.getElementById('menuDark');
+          document.getElementById("menuPopup").addEventListener("click", () => {
+              openPopup(true); // mở popup cưỡng bức khi bấm trong menu
+          });
+          
+          // Liquid/Normal toggle
+          const menuLiquid = document.getElementById('menuLiquid');
+          
+          function applyThemeFromStorage() {
+              // Áp dụng dark mode
+              if (localStorage.getItem('theme') === 'dark') {
+                  document.body.classList.add('dark');
+                  menuDark.textContent = '☀️ Light Mode';
+              } else {
+                  document.body.classList.remove('dark');
+                  menuDark.textContent = '🌙 Dark Mode';
+              }
+              
+              // Áp dụng liquid/normal mode
+              if (localStorage.getItem('liquidMode') === 'normal') {
+                  document.body.classList.add('normal-mode');
+                  menuLiquid.textContent = '✨ Chuyển Liquid Glass/Thường';
+              } else {
+                  document.body.classList.remove('normal-mode');
+                  menuLiquid.textContent = '✨ Chuyển Giao diện thường/Liquid';
+              }
+              
+              // Áp dụng màu chủ đề
+              const savedTheme = localStorage.getItem('colorTheme') || 'blue';
+              applyColorTheme(savedTheme);
+          }
+          
+          menuDark.addEventListener('click', () => {
+              document.body.classList.toggle('dark');
+              localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+              applyThemeFromStorage();
+          });
+          
+          menuLiquid.addEventListener('click', () => {
+              document.body.classList.toggle('normal-mode');
+              localStorage.setItem('liquidMode', document.body.classList.contains('normal-mode') ? 'normal' : 'liquid');
+              applyThemeFromStorage();
+          });
+          
+          // Xử lý màu chủ đề
+          function applyColorTheme(theme) {
+              // Xóa tất cả các class màu chủ đề
+              document.body.classList.remove('theme-pink', 'theme-blue', 'theme-green', 'theme-fresh', 'theme-popular', 'theme-white', 'theme-black');
+              
+              // Thêm class màu chủ đề được chọn
+              if (theme) {
+                  document.body.classList.add(`theme-${theme}`);
+              }
+              
+              // Cập nhật trạng thái active cho các nút màu
+              document.querySelectorAll('.color-theme').forEach(btn => {
+                  btn.classList.remove('active');
+                  if (btn.dataset.theme === theme) {
+                      btn.classList.add('active');
+                  }
+              });
+              
+              // Lưu màu chủ đề vào localStorage
+              localStorage.setItem('colorTheme', theme);
+          }
+          
+          // Thêm sự kiện click cho các nút màu
+          document.querySelectorAll('.color-theme').forEach(btn => {
+              btn.addEventListener('click', () => {
+                  const theme = btn.dataset.theme;
+                  applyColorTheme(theme);
+              });
+          });
+  
+          /* -------------------------
+          Popup logic (1 lần/ngày + "Không hiện hôm nay")
+          ------------------------- */
+          const popup = document.getElementById('popup');
+          const popupClose = document.getElementById('popupClose');
+          const dontShowTodayChk = document.getElementById('dontShowToday');
+  
+          function openPopup(force = false) {
+              const today = new Date().toLocaleDateString('vi-VN');
+              const disabled = localStorage.getItem('popupDisabled') === 'true'; // nếu user tắt hoàn toàn (không dùng ở đây)
+              
+              if (force) {
+                  popup.classList.add('open');
+                  return;
+              }
+              
+              if (disabled) return;
+              
+              const lastShown = localStorage.getItem('popupShownDate');
+              if (lastShown !== today) {
+                  popup.classList.add('open');
+                  localStorage.setItem('popupShownDate', today);
+              }
+          }
+  
+          // Đóng popup khi click vào nút đóng
+          popupClose.addEventListener('click', () => {
+              if (dontShowTodayChk.checked) {
+                  localStorage.setItem('popupShownDate', new Date().toLocaleDateString('vi-VN'));
+              }
+              popup.classList.remove('open');
+          });
+  
+          // Đóng popup khi click bên ngoài popup
+          popup.addEventListener('click', (e) => {
+              if (e.target === popup) {
+                  if (dontShowTodayChk.checked) {
+                      localStorage.setItem('popupShownDate', new Date().toLocaleDateString('vi-VN'));
+                  }
+                  popup.classList.remove('open');
+              }
+          });
+  
+          // Đóng popup khi nhấn phím Escape
+          document.addEventListener('keydown', (e) => {
+              if (e.key === 'Escape' && popup.classList.contains('open')) {
+                  if (dontShowTodayChk.checked) {
+                      localStorage.setItem('popupShownDate', new Date().toLocaleDateString('vi-VN'));
+                  }
+                  popup.classList.remove('open');
+              }
+          });
+  
+          // show on load
+          window.addEventListener('load', () => {
+              applyThemeFromStorage();
+              openPopup(false);
+          });
+  
+          /* -------------------------
+             TKB rendering + full view + editing trực
+             ------------------------- */
+          function computeShowDay() {
+              // Lấy giờ VN
+              const vnNow = new Date(new Date().toLocaleString('en-US', {
+                  timeZone: 'Asia/Ho_Chi_Minh'
+              }));
+          }
+  
+          // NOTE: small helper: get VN date/time (works cross-browser)
+          function getVNDateObj() {
+              const s = new Date().toLocaleString('en-US', {
+                  timeZone: 'Asia/Ho_Chi_Minh'
+              });
+              return new Date(s);
+          }
+  
+          function renderTodayTKB() {
+                  const d = getVNDateObj();
+                  let day = d.getDay(); // 0..6
+                  const hour = d.getHours();
+  
+                  // nếu trước 7h thì coi như ngày hôm trước
+                  if (hour < 7) day = (day - 1 + 7) % 7;
+  
+                  // logic hiển thị: Thứ Sáu -> hiện Thứ Bảy; Chủ Nhật -> hiện Thứ Hai; khác -> ngày mai
+                  let showDay;
+                  if (day === 5) showDay = 6;
+                  else if (day === 0) showDay = 1;
+                  else showDay = (day + 1) % 7;
+  
+                  const container = document.getElementById('todayTKB');
+                  let html = `<p>Hôm nay: <strong>${dayNames[d.getDay()]}</strong>, ${d.toLocaleDateString('vi-VN')} — Hiển thị TKB <strong>${dayNames[showDay]}</strong></p>`;
+                  html += `<div class="inline-note">❗Lưu ý: Sau 7:00 sáng TKB & lịch trực sẽ chuyển sang ngày tiếp theo (một vài quy tắc đặc biệt được áp dụng).</div>`;
+                  html += `<table><thead><tr><th>Tiết</th><th>Môn / Nội dung</th></tr></thead><tbody>`;
+                  (TKB[showDay] || []).forEach((m, i) => {
+                      html += `<tr><td>${i+1}</td><td>${m}</td></tr>`;
+                  });
+                  html += `</tbody></table>`;
+                  html += `<p style="margin-top:10px;"><b>Lịch trực: </b> <span id="todayTruc">${truc[showDay]}</span>`;
+  
+                  container.innerHTML = html;
+  
+                  // handle edit trực: mở prompt -> lưu vào truc và localStorage (chỉ admin)
+                  document.getElementById('editTrucBtn').addEventListener('click', () => {
+                      const txt = prompt("Sửa ghi chú lịch trực cho ngày hiển thị:", truc[showDay]);
+                      if (txt !== null) {
+                          truc[showDay] = txt;
+                          localStorage.setItem('lichTruc', JSON.stringify(truc));
+                          renderTodayTKB(); // rerender để cập nhật
+                      }
+                  });
+              }
+              // full week + inline chỉnh trực của từng ngày
+          document.getElementById('showFullBtn').addEventListener('click', function() {
+              const full = document.getElementById('fullTKB');
+              if (full.style.display === 'block') {
+                  full.style.display = 'none';
+                  this.textContent = '📅 Xem toàn bộ TKB & Lịch trực';
+                  return;
+              }
+              // build full
+              let html = `<div style="margin-bottom:8px;"><strong>📅 Thời khóa biểu cả tuần</strong></div>`;
+              for (let k = 1; k <= 6; k++) {
+                  html += `<h3 style="margin:8px 0 4px;">${dayNames[k]}</h3>`;
+                  html += `<table><thead><tr><th>Tiết</th><th>Môn</th></tr></thead><tbody>`;
+                  (TKB[k] || []).forEach((m, i) => html += `<tr><td>${i+1}</td><td>${m}</td></tr>`);
+                  html += `</tbody></table>`;
+              }
+  
+              // một bảng riêng cho lịch trực
+              html += `<hr style="opacity:.08;margin:12px 0;"><h3>🧹 Lịch trực cả tuần</h3>`;
+              html += `<table><thead><tr><th>Ngày</th><th>Tổ trực</th></tr></thead><tbody>`;
+              for (let k = 1; k <= 6; k++) {
+                  html += `<tr><td>${dayNames[k]}</td><td class="editable-truc" data-day="${k}">${truc[k]}</td></tr>`;
+              }
+              html += `</tbody></table>`;
+  
+              full.innerHTML = html;
+              full.style.display = 'block';
+              this.textContent = '❌ Ẩn toàn bộ';
+              // save buttons
+              full.querySelectorAll('.save-truc').forEach(btn => {
+                  btn.addEventListener('click', () => {
+                      const day = btn.dataset.day;
+                      const val = prompt("Nhập nội dung trực cho " + dayNames[day], truc[day]);
+                      if (val !== null) {
+                          truc[day] = val;
+                          localStorage.setItem('lichTruc', JSON.stringify(truc));
+                          renderTodayTKB();
+                          // refresh full view
+                          document.getElementById('showFullBtn').click();
+                          document.getElementById('showFullBtn').click();
+                      }
+                  });
+              });
+          });
+          // init render
+          renderTodayTKB();
+  
+          // re-render every minute (keeps up-to-date at 7:00 change)
+          setInterval(renderTodayTKB, 60 * 1000);
+  
+          /* -------------------------
+            Small accessibility: close menu with ESC
+          ------------------------- */
+          window.addEventListener('keydown', (e) => {
+              if (e.key === 'Escape') {
+                  document.getElementById('menuPanel').style.display = 'none';
+                  document.getElementById('popup').classList.remove('open');
+              }
+          });
+  </script>
 </body>
 
 </html>
