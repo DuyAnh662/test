@@ -15,7 +15,7 @@
           gtag('config', 'G-92KE83JEYM');
   </script>
   <meta charset="utf-8" />
-  <title>Bảng Thông Báo BTVN - 28/9/2025</title>
+  <title>Bảng Thông Báo BTVN - 27/9/2025</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
   :root {
@@ -505,27 +505,14 @@
           }
           /* layout: two column on wide screens */
           
-.wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  max-width: 1200px;
-  margin: 80px auto 40px;
-  padding: 0 16px;
-  width: 100%; /* Thêm dòng này */
-}
-
-/* Thêm media queries ngay bên dưới */
-@media (max-width: 768px) {
-  .wrap {
-    width: 75% !important;
-    padding: 0 !important;
-  }
-  
-  body {
-    font-size: 16px;
-  }
-}
+          .wrap {
+              display: flex;
+              flex-direction: column;
+              gap: 24px;
+              max-width: 1200px;
+              margin: 80px auto 40px;
+              padding: 0 16px;
+          }
           
           @media(min-width:900px) {
               .wrap {
@@ -821,6 +808,15 @@
               color: var(--accent);
           }
           
+          .popup-card .footer-check {
+              margin-top: 16px;
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              font-size: 14px;
+              opacity: .85;
+          }
+          
           .report-link {
               display: block;
               padding: 12px 16px;
@@ -1020,33 +1016,6 @@
           body.dark .menu-panel a.donate-btn {
               color: #f0f0f0; /* Tăng độ sáng của liên kết donate */
           }
-          /* Responsive cho điện thoại (dưới 768px) */
-@media (max-width: 768px) {
-  /* Điều chỉnh container chính */
-  .wrap {
-    width: 75% !important; /* Chiếm 75% chiều rộng */
-    margin: 80px auto 40px; /* Căn giữa */
-    padding: 0 !important;
-  }
-
-  /* Điều chỉnh các card */
-  .card {
-    width: 100% !important;
-  }
-
-  /* Tăng cỡ chữ cho dễ đọc */
-  body {
-    font-size: 16px;
-  }
-}
-
-/* Responsive cho PC (mặc định) */
-@media (min-width: 769px) {
-  .wrap {
-    width: 100% !important; /* Chiếm 100% chiều rộng */
-    max-width: 1200px;
-  }
-}
   </style>
 </head>
 
@@ -1084,8 +1053,12 @@
     <div class="popup-card liquid-effect" id="popupCard">
       <div class="close" id="popupClose" title="Đóng">✕</div>
       <h3>❗Lưu ý</h3>
-      <p id="popupText">+Được làm ra và phát triển bởi ChatGBT(WEB), Z AI(WEB), Gemini(WEB),Vũ Duy Anh và Nguyễn Văn Hoàng Bách</p>
+      <p id="popupText">+Được làm ra và phát triển bởi ChatGBT(Web), Vũ Duy Anh và Nguyễn Văn Hoàng Bách</p>
       <p id="popupText">+Donate chúng toi nhé!^_^</p>
+      <p style="margin-top:12px; text-align:left;">
+        <label>
+          <input type="checkbox" id="dontShowToday" />Không hiển thị lại hôm nay</label>
+      </p>
     </div>
   </div>
   <!-- MAIN -->
@@ -1180,9 +1153,6 @@
           <li>Cập nhật Hóa học</li>
           <li>Cập nhật Ngữ văn</li>
           <li>Cập nhật Lịch trực nhật</li>
-          <li>Cập nhật tính năng Liquid Glass</li>
-          <li>Nhiều tùy chọn về giao diện</li>
-          <li>Thay đổi giao diện toàn bộ hệ thống!</li>
           <li>Sửa đổi một vài thứ khác</li>
         </ul>
       </div>
@@ -1418,10 +1388,11 @@
           });
   
           /* -------------------------
-          Popup logic (1 lần/ngày)
+          Popup logic (1 lần/ngày + "Không hiện hôm nay")
           ------------------------- */
           const popup = document.getElementById('popup');
           const popupClose = document.getElementById('popupClose');
+          const dontShowTodayChk = document.getElementById('dontShowToday');
   
           function openPopup(force = false) {
               const today = new Date().toLocaleDateString('vi-VN');
@@ -1443,12 +1414,18 @@
   
           // Đóng popup khi click vào nút đóng
           popupClose.addEventListener('click', () => {
+              if (dontShowTodayChk.checked) {
+                  localStorage.setItem('popupShownDate', new Date().toLocaleDateString('vi-VN'));
+              }
               popup.classList.remove('open');
           });
   
           // Đóng popup khi click bên ngoài popup
           popup.addEventListener('click', (e) => {
               if (e.target === popup) {
+                  if (dontShowTodayChk.checked) {
+                      localStorage.setItem('popupShownDate', new Date().toLocaleDateString('vi-VN'));
+                  }
                   popup.classList.remove('open');
               }
           });
@@ -1456,6 +1433,9 @@
           // Đóng popup khi nhấn phím Escape
           document.addEventListener('keydown', (e) => {
               if (e.key === 'Escape' && popup.classList.contains('open')) {
+                  if (dontShowTodayChk.checked) {
+                      localStorage.setItem('popupShownDate', new Date().toLocaleDateString('vi-VN'));
+                  }
                   popup.classList.remove('open');
               }
           });
