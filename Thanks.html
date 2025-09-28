@@ -6,72 +6,289 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lời cảm ơn</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --font-main: 'Inter', sans-serif;
+            --primary: #ff4081;
+            --primary-dark: #e73370;
+            --accent: #64b5f6;
+            --accent-dark: #42a5f5;
+            
+            /* Liquid Glass variables */
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.3);
+            --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+            
+            /* Text & Background */
+            --text-color: #333;
+            --bg-start: #74ebd5;
+            --bg-end: #9face6;
+            
+            /* Liquid Effect */
+            --liquid-primary: rgba(255, 64, 129, 0.3);
+            --liquid-accent: rgba(100, 181, 246, 0.3);
+        }
+        
+        /* Dark mode */
+        body.dark {
+            --primary: #ff6b9d;
+            --primary-dark: #ff4081;
+            --accent: #64b5f6;
+            --accent-dark: #42a5f5;
+            
+            --glass-bg: rgba(0, 0, 0, 0.2);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            
+            --text-color: #f0f0f0;
+            --bg-start: #1a1a2e;
+            --bg-end: #16213e;
+            
+            --liquid-primary: rgba(255, 107, 157, 0.3);
+            --liquid-accent: rgba(100, 181, 246, 0.3);
+        }
+        
         body {
-            font-family: "Segoe UI", Arial, sans-serif;
-            background: linear-gradient(135deg, #74ebd5, #9face6);
+            font-family: var(--font-main);
+            background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
             margin: 0;
             padding: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            min-height: 100vh;
             text-align: center;
+            color: var(--text-color);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* Hiệu ứng nền động */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            z-index: -1;
+            pointer-events: none;
         }
         
         .thank-box {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 50px;
+            border-radius: 24px;
+            border: var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            max-width: 600px;
+            margin: 20px;
+            position: relative;
+            overflow: hidden;
             animation: fadeIn 1.2s ease-in-out;
+            transition: all 0.4s ease;
+        }
+        
+        /* Hiệu ứng liquid cho thank-box */
+        .thank-box::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+            transform: scale(0);
+            transition: transform 0.8s ease;
+            z-index: -1;
+        }
+        
+        .thank-box:hover::before {
+            transform: scale(1);
+        }
+        
+        .thank-box:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(31, 38, 135, 0.3);
         }
         
         h1 {
-            color: #333;
-            margin-bottom: 15px;
+            color: var(--text-color);
+            margin-bottom: 20px;
+            font-weight: 700;
+            font-size: 32px;
+            position: relative;
+            z-index: 2;
         }
         
         p {
             font-size: 18px;
-            color: #555;
-            margin-bottom: 20px;
+            color: var(--text-color);
+            margin-bottom: 25px;
+            line-height: 1.6;
+            position: relative;
+            z-index: 2;
         }
         
-        a {
+        /* Nút Liquid Glass */
+        .back-btn {
             display: inline-block;
             text-decoration: none;
-            background: #ff4081;
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            transition: 0.3s;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            color: var(--primary);
+            padding: 15px 30px;
+            border-radius: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            font-weight: 600;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            z-index: 2;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
         }
         
-        a:hover {
-            background: #e73370;
+        /* Hiệu ứng liquid cho nút */
+        .back-btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+            transform: scale(0);
+            transition: transform 0.6s ease;
+            z-index: -1;
+        }
+        
+        body.dark .back-btn::before {
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+        }
+        
+        .back-btn:hover {
+            color: var(--primary-dark);
+            transform: translateY(-6px) scale(1.03);
+            box-shadow: 0 12px 25px rgba(255, 64, 129, 0.4), 
+                        0 0 0 6px var(--liquid-primary);
+        }
+        
+        .back-btn:hover::before {
+            transform: scale(1);
+        }
+        
+        /* Hiệu ứng icon */
+        .icon {
+            font-size: 40px;
+            margin-bottom: 20px;
+            display: block;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
         
         @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(30px);
             }
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
+        
+        /* Dark mode toggle */
+        .dark-mode-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: var(--text-color);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 100;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode-toggle:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        /* Responsive */
+        @media (max-width: 600px) {
+            .thank-box {
+                padding: 30px 20px;
+                margin: 15px;
+            }
+            
+            h1 {
+                font-size: 26px;
+            }
+            
+            p {
+                font-size: 16px;
+            }
+            
+            .back-btn {
+                padding: 12px 25px;
+                font-size: 14px;
+            }
+        }
     </style>
 </head>
 
 <body>
+    <div class="dark-mode-toggle" id="darkModeToggle">🌙 Dark Mode</div>
+    
     <div class="thank-box">
-        <h1>🌟 Cảm ơn bạn vì bạn đã cố gắng 🌟</h1>
+        <span class="icon">🌟</span>
+        <h1>Cảm ơn bạn vì bạn đã cố gắng</h1>
         <p>Mọi nỗ lực của bạn đều xứng đáng. Đừng quên rằng mỗi ngày đều là một cơ hội mới để phát triển 💪</p>
-        <p>Đây sẽ là nguồn thu nhập chính của chúng tôi đùng ngại khó khăn nhé!
-            <p>
-                <a href="index.html">⬅️ Quay lại trang chính</a>
+        <p>Đây sẽ là nguồn thu nhập chính của chúng tôi đùng ngại khó khăn nhé!</p>
+        <a href="index.html" class="back-btn">⬅️ Quay lại trang chính</a>
     </div>
-</body>
 
+    <script>
+        // Dark mode toggle
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        
+        function applyDarkModeFromStorage() {
+            const isDarkMode = localStorage.getItem('darkMode') === 'true';
+            if (isDarkMode) {
+                document.body.classList.add('dark');
+                darkModeToggle.textContent = '☀️ Light Mode';
+            } else {
+                document.body.classList.remove('dark');
+                darkModeToggle.textContent = '🌙 Dark Mode';
+            }
+        }
+        
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            const isDarkMode = document.body.classList.contains('dark');
+            localStorage.setItem('darkMode', isDarkMode);
+            darkModeToggle.textContent = isDarkMode ? '☀️ Light Mode' : '🌙 Dark Mode';
+        });
+        
+        // Apply dark mode on page load
+        applyDarkModeFromStorage();
+    </script>
+</body>
 </html>

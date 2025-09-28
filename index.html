@@ -151,6 +151,21 @@
               --text: #f5f5f5;
           }
           
+          /* Chủ đề màu xanh ngọc - tím */
+  body.theme-aquaviolet {
+              --theme-primary: #00b4d8;
+              --theme-secondary: #7209b7;
+              --theme-bg: linear-gradient(135deg, #caf0f8 0%, #e0aaff 100%);
+              --theme-accent: #00b4d8;
+              --theme-card: rgba(255, 255, 255, 0.7);
+              --theme-glass: rgba(255, 255, 255, 0.25);
+              --theme-border: rgba(255, 255, 255, 0.18);
+              
+              /* Màu nhẹ hơn cho chế độ thường */
+              --normal-card: #f0f9ff;
+              --normal-border: #c5e4ff;
+          }
+          
           body {
               margin: 16px;
               font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -191,6 +206,21 @@
           
           body.dark::before {
               background: linear-gradient(45deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 70%);
+          }
+          
+          /* Canvas bầu trời sao - chỉ hiển thị trong dark mode */
+          #sky {
+              position: fixed;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              z-index: -1;
+              display: none;
+          }
+          
+          body.dark #sky {
+              display: block;
           }
           
           /* Giao diện thường (không phải Liquid Glass) */
@@ -395,8 +425,8 @@
               border: 1px solid #e0e0e0;
           }
           
-          .color-theme.black {
-              background: #212121;
+          .color-theme.aquaviolet {
+              background: linear-gradient(135deg, #00b4d8, #7209b7);
           }
           
           /* popup */
@@ -500,14 +530,19 @@
               border-radius: 20px;
               box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
               border: 1px solid var(--glass-border);
-              transition: all 0.3s ease;
-              transform: translateY(0);
-              will-change: transform;
+              transition: background 0.3s ease;
+              will-change: background;
           }
           
+          /* Xóa hoàn toàn hiệu ứng khi di chuột vào card */
           .card:hover {
-              transform: translateY(-5px);
-              box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+              transform: none;
+              box-shadow: none;
+          }
+          
+          /* Xóa hiệu ứng liquid cho card */
+          .card.liquid-effect:hover::before {
+              transform: scale(0);
           }
           
           .card.half {
@@ -824,8 +859,9 @@
               transition: transform 0.6s ease;
           }
           
-          .liquid-effect:hover::before {
-              transform: scale(1);
+          /* Không áp dụng hiệu ứng liquid cho card khi hover */
+          .card.liquid-effect:hover::before {
+              transform: scale(0);
           }
           
           /* Hiệu ứng loading */
@@ -843,12 +879,11 @@
               to { transform: rotate(360deg); }
           }
           
-          /* Thêm hiệu ứng cho các list items */
+          /* Xóa hiệu ứng cho các list items */
           ul li {
               margin: 8px 0;
               padding-left: 8px;
               position: relative;
-              transition: all 0.2s ease;
           }
           
           ul li::before {
@@ -857,22 +892,10 @@
               font-weight: bold;
               position: absolute;
               left: -8px;
-              transition: all 0.2s ease;
           }
-          
-          ul li:hover {
-              transform: translateX(4px);
-          }
-          
-          ul li:hover::before {
-              color: var(--accent);
-              transform: scale(1.2);
-          }
-          
-          /* Hiệu ứng cho tiêu đề */
+          /* Xóa hiệu ứng cho tiêu đề */
           h1, h2, h3 {
               position: relative;
-              transition: all 0.3s ease;
           }
           
           h1::after, h2::after, h3::after {
@@ -883,11 +906,6 @@
               width: 0;
               height: 2px;
               background: var(--accent);
-              transition: width 0.3s ease;
-          }
-          
-          h1:hover::after, h2:hover::after, h3:hover::after {
-              width: 100%;
           }
           
           /* Thêm hiệu ứng glass cho các bảng */
@@ -911,12 +929,11 @@
               background: rgba(0, 102, 204, 0.1);
           }
           
-          /* Hiệu ứng cho các liên kết */
+          /* Xóa hiệu ứng cho các liên kết */
           a {
               color: var(--accent);
               text-decoration: none;
               position: relative;
-              transition: all 0.2s ease;
           }
           
           a::after {
@@ -927,13 +944,7 @@
               width: 0;
               height: 1px;
               background: var(--accent);
-              transition: width 0.3s ease;
           }
-          
-          a:hover::after {
-              width: 100%;
-          }
-          
           /* Hiệu ứng cho các input */
           input[type="checkbox"] {
               width: 18px;
@@ -1009,6 +1020,9 @@
 </head>
 
 <body>
+  <!-- Thêm canvas bầu trời sao -->
+  <canvas id="sky"></canvas>
+
   <!-- MENU -->
   <div class="menu" aria-hidden="false">
     <button class="menu-btn liquid-effect" id="menuBtn">☰ Menu</button>
@@ -1029,7 +1043,7 @@
           <div class="color-theme fresh" data-theme="fresh" title="Màu tươi"></div>
           <div class="color-theme popular" data-theme="popular" title="Màu nhiều người thích nhất"></div>
           <div class="color-theme white" data-theme="white" title="Trắng"></div>
-          <div class="color-theme black" data-theme="black" title="Đen"></div>
+          <div class="color-theme aquaviolet" data-theme="aquaviolet" title="Xanh ngọc - Tím"></div>
         </div>
       </div>
     </div>
@@ -1182,6 +1196,106 @@
           const dayNames = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
   
           /* -------------------------
+          Canvas bầu trời sao - chỉ hoạt động trong dark mode
+          ------------------------- */
+          const canvas = document.getElementById("sky");
+          const ctx = canvas.getContext("2d");
+
+          function resizeCanvas(){
+              canvas.width = window.innerWidth;
+              canvas.height = window.innerHeight;
+          }
+          window.addEventListener("resize", resizeCanvas);
+          resizeCanvas();
+
+          // ---- Tạo sao ----
+          const stars = [];
+          for(let i=0; i<200; i++){
+              stars.push({
+                  x: Math.random() * canvas.width,
+                  y: Math.random() * canvas.height,
+                  r: Math.random() * 1.5,
+                  opacity: Math.random()
+              });
+          }
+
+          // ---- Sao băng ----
+          const meteors = [];
+          let meteorInterval = null;
+          
+          function createMeteor(){
+              meteors.push({
+                  x: Math.random() * canvas.width,
+                  y: Math.random() * (canvas.height/2),
+                  length: Math.random() * 80 + 40,
+                  speed: Math.random() * 12 + 8,
+                  opacity: 1
+              });
+          }
+
+          // ---- Vẽ bầu trời ----
+          function drawSky(){
+              const isDarkMode = document.body.classList.contains("dark");
+              
+              // Xóa canvas trước khi vẽ
+              ctx.clearRect(0, 0, canvas.width, canvas.height);
+              
+              // Chỉ vẽ khi dark mode được bật
+              if (isDarkMode) {
+                  // Nền trời
+                  ctx.fillStyle = "#0f172a";
+                  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                  // Vẽ sao
+                  for(let s of stars){
+                      ctx.beginPath();
+                      ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+                      ctx.fillStyle = `rgba(255,255,255,${s.opacity})`;
+                      ctx.fill();
+                      s.opacity += (Math.random()-0.5)*0.05;
+                      if(s.opacity<0) s.opacity=0;
+                      if(s.opacity>1) s.opacity=1;
+                  }
+
+                  // Vẽ sao băng
+                  for(let i=meteors.length-1; i>=0; i--){
+                      const m = meteors[i];
+                      ctx.strokeStyle = `rgba(255,255,255,${m.opacity})`;
+                      ctx.lineWidth = 2;
+                      ctx.beginPath();
+                      ctx.moveTo(m.x, m.y);
+                      ctx.lineTo(m.x - m.length, m.y - m.length);
+                      ctx.stroke();
+
+                      m.x += m.speed;
+                      m.y += m.speed;
+                      m.opacity -= 0.05;
+
+                      if(m.opacity <= 0){
+                          meteors.splice(i, 1);
+                      }
+                  }
+                  
+                  // Bắt đầu tạo sao băng nếu chưa có interval
+                  if(meteorInterval === null) {
+                      meteorInterval = setInterval(createMeteor, 1200);
+                  }
+              } else {
+                  // Dừng tạo sao băng khi không ở dark mode
+                  if(meteorInterval !== null) {
+                      clearInterval(meteorInterval);
+                      meteorInterval = null;
+                      meteors.length = 0; // Xóa tất cả sao băng
+                  }
+              }
+
+              requestAnimationFrame(drawSky);
+          }
+          
+          // Bắt đầu vẽ bầu trời
+          drawSky();
+  
+          /* -------------------------
           Menu
           ------------------------- */
           const menuBtn = document.getElementById('menuBtn');
@@ -1209,9 +1323,14 @@
               if (localStorage.getItem('theme') === 'dark') {
                   document.body.classList.add('dark');
                   menuDark.textContent = '☀️ Light Mode';
+                  // Tự động chuyển sang chủ đề đen khi bật dark mode
+                  applyColorTheme('black');
               } else {
                   document.body.classList.remove('dark');
                   menuDark.textContent = '🌙 Dark Mode';
+                  // Quay lại chủ đề đã lưu trước đó khi tắt dark mode
+                  const savedTheme = localStorage.getItem('colorTheme') || 'blue';
+                  applyColorTheme(savedTheme);
               }
               
               // Áp dụng liquid/normal mode
@@ -1222,10 +1341,6 @@
                   document.body.classList.remove('normal-mode');
                   menuLiquid.textContent = '✨ Chuyển Giao diện thường/Liquid';
               }
-              
-              // Áp dụng màu chủ đề
-              const savedTheme = localStorage.getItem('colorTheme') || 'blue';
-              applyColorTheme(savedTheme);
           }
           
           menuDark.addEventListener('click', () => {
@@ -1243,7 +1358,7 @@
           // Xử lý màu chủ đề
           function applyColorTheme(theme) {
               // Xóa tất cả các class màu chủ đề
-              document.body.classList.remove('theme-pink', 'theme-blue', 'theme-green', 'theme-fresh', 'theme-popular', 'theme-white', 'theme-black');
+              document.body.classList.remove('theme-pink', 'theme-blue', 'theme-green', 'theme-fresh', 'theme-popular', 'theme-white', 'theme-black', 'theme-aquaviolet');
               
               // Thêm class màu chủ đề được chọn
               if (theme) {
@@ -1258,8 +1373,10 @@
                   }
               });
               
-              // Lưu màu chủ đề vào localStorage
-              localStorage.setItem('colorTheme', theme);
+              // Lưu màu chủ đề vào localStorage (chỉ khi không ở dark mode)
+              if (!document.body.classList.contains('dark')) {
+                  localStorage.setItem('colorTheme', theme);
+              }
           }
           
           // Thêm sự kiện click cho các nút màu

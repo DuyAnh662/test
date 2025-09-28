@@ -6,58 +6,175 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Cảm ơn bạn</title>
     <style>
-        body {
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
             height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             background: linear-gradient(135deg, #0f172a, #1e293b);
             color: #f1f5f9;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            position: relative;
         }
-        
+
+        /* Hiệu ứng bong bóng lỏng */
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(148, 163, 184, 0.1);
+            backdrop-filter: blur(3px);
+            animation: float 8s infinite ease-in-out;
+            opacity: 0.4;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0) scale(1); }
+            25% { transform: translateY(-20px) translateX(10px) scale(1.05); }
+            50% { transform: translateY(10px) translateX(-10px) scale(0.95); }
+            75% { transform: translateY(-15px) translateX(5px) scale(1.02); }
+        }
+
+        /* Hộp chính với hiệu ứng thủy tinh lỏng */
         .box {
             text-align: center;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 30px 40px;
-            border-radius: 16px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 40px 50px;
+            border-radius: 24px;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            max-width: 450px;
+            position: relative;
+            z-index: 10;
+            animation: gentle-float 6s infinite ease-in-out;
         }
-        
+
+        @keyframes gentle-float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Hiệu ứng ánh sáng động tinh tế */
+        .box::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, rgba(148, 163, 184, 0.3), rgba(226, 232, 240, 0.2));
+            border-radius: 24px;
+            opacity: 0.5;
+            z-index: -1;
+            animation: glow 3s infinite alternate;
+        }
+
+        @keyframes glow {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.5; }
+        }
+
         h1 {
-            margin: 0 0 15px;
-            font-size: 22px;
-            color: #38bdf8;
+            margin: 0 0 20px;
+            font-size: 26px;
+            color: #e2e8f0;
+            text-shadow: 0 2px 10px rgba(226, 232, 240, 0.2);
+            font-weight: 600;
         }
-        
+
         .count {
-            font-size: 48px;
-            font-weight: bold;
-            margin: 10px 0;
-            color: #fbbf24;
+            font-size: 64px;
+            font-weight: 700;
+            margin: 20px 0;
+            color: #94a3b8;
+            text-shadow: 0 0 15px rgba(148, 163, 184, 0.3);
+            animation: pulse 2s infinite;
         }
-        
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        p {
+            margin: 15px 0;
+            font-size: 18px;
+            opacity: 0.9;
+            color: #cbd5e1;
+        }
+
+        /* Nút với hiệu ứng thủy tinh */
         .btn {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background: #38bdf8;
-            color: #0f172a;
-            border: none;
-            border-radius: 8px;
+            margin-top: 30px;
+            padding: 14px 28px;
+            background: rgba(148, 163, 184, 0.15);
+            color: #e2e8f0;
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            border-radius: 12px;
             cursor: pointer;
-            font-weight: bold;
-            transition: 0.3s;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
         }
-        
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(226, 232, 240, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
         .btn:hover {
-            background: #0ea5e9;
-            transform: scale(1.05);
+            background: rgba(148, 163, 184, 0.2);
+            border-color: rgba(148, 163, 184, 0.5);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(148, 163, 184, 0.2);
+        }
+
+        /* Hiệu ứng phản chiếu dưới cùng */
+        .box::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 10%;
+            width: 80%;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+            filter: blur(10px);
         }
     </style>
 </head>
 
 <body>
+    <!-- Tạo các bong bóng lỏng -->
+    <div class="bubble" style="width: 80px; height: 80px; top: 10%; left: 15%; animation-delay: 0s;"></div>
+    <div class="bubble" style="width: 120px; height: 120px; top: 70%; left: 80%; animation-delay: 1s;"></div>
+    <div class="bubble" style="width: 60px; height: 60px; top: 40%; left: 70%; animation-delay: 2s;"></div>
+    <div class="bubble" style="width: 100px; height: 100px; top: 20%; left: 60%; animation-delay: 3s;"></div>
+    <div class="bubble" style="width: 90px; height: 90px; top: 60%; left: 20%; animation-delay: 4s;"></div>
+
     <div class="box">
         <h1>💖 Cảm ơn bạn vô ^_^</h1>
         <h1>Đừng ngại cho tui một gói mì nhé!</h1>
@@ -91,6 +208,29 @@
         function goHome() {
             window.location.href = "index.html"; // sửa thành link trang chính của bạn
         }
+
+        // Tạo thêm bong bóng ngẫu nhiên
+        function createRandomBubble() {
+            const bubble = document.createElement('div');
+            bubble.classList.add('bubble');
+            
+            const size = Math.random() * 80 + 40;
+            bubble.style.width = `${size}px`;
+            bubble.style.height = `${size}px`;
+            bubble.style.top = `${Math.random() * 100}%`;
+            bubble.style.left = `${Math.random() * 100}%`;
+            bubble.style.animationDelay = `${Math.random() * 5}s`;
+            
+            document.body.appendChild(bubble);
+            
+            // Xóa bong bóng sau khi animation kết thúc
+            setTimeout(() => {
+                bubble.remove();
+            }, 8000);
+        }
+
+        // Tạo bong bóng mới mỗi 3 giây
+        setInterval(createRandomBubble, 3000);
     </script>
 </body>
 
