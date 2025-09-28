@@ -1,225 +1,511 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
-  <meta charset="UTF-8">
-  <title>Report lỗi / góp ý</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      transition: background 0.3s, color 0.3s;
-    }
+    <meta charset="UTF-8">
+    <title>Report lỗi / Góp ý</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <style>
+        /* 1. FONT CHỮ HIỆN ĐẠI */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 
-    body.light { background: #f3f4f6; color: #111; }
-    body.dark { background: #0f172a; color: #f1f5f9; }
+        /* 2. BIẾN MÀU SẮC & THIẾT LẬP GLASSMOPRHISM */
+        :root {
+            --font-main: 'Inter', sans-serif;
+            --primary: #007bff;
+            --primary-dark: #0056b3;
+            --success: #28a745;
+            --success-dark: #1e7e34;
+            --error: #dc3545;
+            --neutral: #6c757d;
+            --neutral-dark: #5a6268;
 
-    .report-box {
-      background: rgba(255,255,255,0.9);
-      padding: 25px 30px;
-      border-radius: 14px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-      width: 360px;
-      transition: background 0.3s, color 0.3s;
-      text-align: center;
-    }
-    body.dark .report-box {
-      background: rgba(30,41,59,0.95);
-      color: #f1f5f9;
-    }
+            /* Glass Base */
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.4);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            
+            /* Text & Background */
+            --bg-start: #ffffff;
+            --bg-end: #2193b0;
+            --text-color: #212529;
+            --input-bg: rgba(255, 255, 255, 0.3);
+            --toggle-bg: #ffffff;
+        }
 
-    h2 {
-      margin-top: 0;
-      margin-bottom: 12px;
-      color: #2563eb;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      justify-content: center;
-    }
+        /* 3. DARK MODE CHO GLASSMOPRHISM */
+        body.dark {
+            --primary: #4A90E2;
+            --primary-dark: #2F72B9;
+            --success: #5cb85c;
+            --success-dark: #449d44;
+            --error: #ff6b6b;
+            
+            --glass-bg: rgba(0, 0, 0, 0.3);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
+            
+            --bg-start: #1c1c1c; /* Giữ biến nhưng sẽ bị canvas overwrite */
+            --bg-end: #000000; /* Giữ biến nhưng sẽ bị canvas overwrite */
+            --text-color: #f0f0f0;
+            --input-bg: rgba(255, 255, 255, 0.05);
+            --toggle-bg: #333333;
+            /* >>> THAY ĐỔI: Quan trọng để canvas hiển thị <<< */
+            background: transparent !important; 
+        }
 
-    textarea {
-      width: 100%;
-      height: 120px;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      resize: none;
-      font-size: 14px;
-      margin-bottom: 12px;
-      transition: background 0.3s, color 0.3s, border 0.3s;
-      box-sizing: border-box;
-    }
-    body.dark textarea {
-      background: #1e293b;
-      color: #f1f5f9;
-      border: 1px solid #475569;
-    }
+        /* 4. THIẾT LẬP CHUNG */
+        body {
+            font-family: var(--font-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            /* Nền Gradient (Dùng cho Light Mode) */
+            background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
+            color: var(--text-color);
+            transition: background 0.4s ease, color 0.4s ease;
+            line-height: 1.5;
+            overflow: hidden; /* Ngăn cuộn */
+        }
 
-    button {
-      width: 100%;
-      padding: 12px;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-      margin-top: 8px;
-      transition: background 0.3s;
-    }
-    .send-btn { background: #2563eb; color: white; }
-    .send-btn:hover { background: #1d4ed8; }
-    .back-btn { background: #6b7280; color: white; }
-    .back-btn:hover { background: #4b5563; }
+        h2 {
+            margin-top: 0;
+            margin-bottom: 25px;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+            font-weight: 700;
+        }
 
-    .top-bar {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-    }
-    .toggle-btn {
-      background: #475569;
-      color: #fff;
-      padding: 6px 12px;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
-      font-size: 14px;
-      transition: background 0.3s;
-    }
-    .toggle-btn:hover { background: #334155; }
+        /* 5. GLASS BOX CHỦ ĐẠO */
+        .report-box {
+            /* Glass Effect */
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 20px;
+            border: var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            
+            padding: 30px;
+            width: 380px;
+            transition: all 0.4s ease;
+            text-align: center;
+        }
 
-    /* Popup modal */
-    .modal {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      display: none;
-      justify-content: center;
-      align-items: center;
-      background: rgba(0,0,0,0.5);
-      z-index: 9999;
-    }
-    .modal-content {
-      background: white;
-      padding: 20px 30px;
-      border-radius: 12px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-      text-align: center;
-      animation: popIn 0.3s ease;
-      max-width: 300px;
-    }
-    body.dark .modal-content {
-      background: #1e293b;
-      color: #f1f5f9;
-    }
-    .modal-content.success { border-left: 6px solid #16a34a; }
-    .modal-content.error { border-left: 6px solid #dc2626; }
-    .modal button {
-      margin-top: 15px;
-      padding: 8px 16px;
-      border: none;
-      border-radius: 6px;
-      background: #2563eb;
-      color: #fff;
-      cursor: pointer;
-    }
-    .modal button:hover { background: #1d4ed8; }
+        /* 6. INPUT VÀ TEXTAREA (Ánh sáng nhẹ) */
+        textarea {
+            width: 100%;
+            height: 140px;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.6); /* Border rõ hơn một chút */
+            background: var(--input-bg);
+            resize: none;
+            font-size: 15px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+            color: var(--text-color);
+            font-family: var(--font-main);
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary);
+        }
 
-    @keyframes popIn {
-      from { transform: scale(0.8); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-  </style>
+        /* 7. BUTTONS (Liquid Glass Style, Viền trắng) */
+        button {
+            width: 100%;
+            padding: 15px;
+            border: none; 
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            letter-spacing: 0.5px;
+
+            /* Base Liquid Glass Effect cho nút */
+            background: rgba(255, 255, 255, 0.15); /* Background mờ */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: var(--text-color); /* Màu chữ thích ứng với theme */
+            border: 2px solid rgba(255, 255, 255, 0.7); 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Bóng mờ */
+        }
+
+        body.dark button {
+            background: rgba(0, 0, 0, 0.25);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Nút Report Lỗi (Primary/Blue) */
+        .send-btn { 
+            color: var(--primary-dark); 
+        }
+        .send-btn:hover { 
+            background: rgba(0, 123, 255, 0.2); 
+            color: var(--primary-dark);
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 10px 25px rgba(0, 123, 255, 0.8), 
+                        0 0 0 4px rgba(0, 123, 255, 0.3);
+        }
+
+        /* Nút Góp ý / Đề xuất (Success/Green) */
+        .feedback-btn { 
+            color: var(--success-dark);
+        }
+        .feedback-btn:hover { 
+            background: rgba(40, 167, 69, 0.2);
+            color: var(--success-dark);
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 10px 25px rgba(40, 167, 69, 0.8),
+                        0 0 0 4px rgba(40, 167, 69, 0.3);
+        }
+
+        /* Nút Quay lại (Neutral/Gray) */
+        .back-btn { 
+            color: var(--neutral-dark);
+            font-weight: 500;
+        }
+        .back-btn:hover { 
+            background: rgba(108, 117, 125, 0.2);
+            color: var(--neutral-dark);
+            transform: translateY(0) scale(1.01); 
+            box-shadow: 0 5px 15px rgba(108, 117, 125, 0.4);
+        }
+        
+        /* 8. TOGGLE BUTTON (Giữ nguyên) */
+        .top-bar {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        .toggle-btn {
+            background: var(--toggle-bg);
+            color: var(--text-color);
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            box-shadow: none;
+            width: auto;
+            margin: 0;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            font-weight: 500;
+            backdrop-filter: none;
+        }
+        .toggle-btn:hover { 
+            opacity: 0.9; 
+            transform: none;
+        }
+
+        /* 9. POPUP MODAL (Giữ nguyên) */
+        .modal {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+        }
+        .modal-content {
+            background: var(--text-color);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-width: 320px;
+            min-width: 250px;
+            color: white;
+        }
+        .modal-content.success { border-left: 6px solid var(--success); background: #28a745; }
+        .modal-content.error { border-left: 6px solid var(--error); background: #dc3545; }
+        .modal-content p {
+            font-size: 17px;
+            font-weight: 500;
+            margin: 0 0 15px 0;
+            color: white;
+        }
+        .modal button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            background: #ffffff;
+            color: var(--primary);
+            width: auto;
+        }
+        .modal button:hover { 
+            background: #eeeeee; 
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.7); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* Mobile Viewport Fix */
+        @media (max-width: 500px) {
+            .report-box {
+                width: 90%;
+            }
+        }
+
+        /* 10. CANVAS BACKGROUND */
+        #sky {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1; 
+        }
+    </style>
 </head>
+
 <body>
-  <div class="top-bar">
-    <button class="toggle-btn" id="toggleTheme">🌙 Dark Mode</button>
-  </div>
+    <canvas id="sky"></canvas>
 
-  <div class="report-box">
-    <h2>📢 Gửi Report</h2>
-    <textarea id="message" placeholder="Nhập góp ý hoặc báo lỗi..."></textarea>
-    <button class="send-btn" onclick="sendReport()">Gửi Report</button>
-    <button class="back-btn" onclick="goHome()">⬅️ Quay lại trang chính</button>
-  </div>
-
-  <!-- Popup modal -->
-  <div id="modal" class="modal">
-    <div id="modalContent" class="modal-content">
-      <p id="modalMessage">Thông báo</p>
-      <button onclick="closeModal()">Đóng</button>
+    <div class="top-bar">
+        <button class="toggle-btn" id="toggleTheme">🌙 Dark Mode</button>
     </div>
-  </div>
+
+    <div class="report-box">
+        <h2>📢 Gửi thông tin</h2>
+        <textarea id="message" placeholder="Nhập góp ý, báo lỗi hoặc đề xuất tính năng..."></textarea>
+        <button class="send-btn" onclick="sendData('report')">🐞 Gửi Report Lỗi</button>
+        <button class="feedback-btn" onclick="sendData('feedback')">💡 Gửi Góp ý / Đề xuất</button>
+        <button class="back-btn" onclick="goHome()">⬅️ Quay lại trang chính</button>
+    </div>
+
+    <div id="modal" class="modal">
+        <div id="modalContent" class="modal-content">
+            <p id="modalMessage">Thông báo</p>
+            <button onclick="closeModal()">Đóng</button>
+        </div>
+    </div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbze3eehTtQOscTcqBzOa8UBUikJHmsC67ddYKt6-8mJj_8LRBUSpm6Rxz_9JAMkIRH4/exec";
+    // URL này được giả định là an toàn và đã hoạt động
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyt-0a-VSrjLNAlae50y6WC0piKEmR6_isW-WcYwR6Ij50rTD0eCjcMALhE0ANEoZvs/exec";
 
-  // ----- DARK MODE -----
-  function applyThemeFromStorage() {
-    const theme = localStorage.getItem("theme");
-    if (theme === "dark") {
-      document.body.classList.add("dark");
-      document.getElementById("toggleTheme").textContent = "☀️ Light Mode";
-    } else {
-      document.body.classList.add("light");
-      document.getElementById("toggleTheme").textContent = "🌙 Dark Mode";
+    // ------------------------------------------------------------------
+    // ----- CANVAS STAR ANIMATION LOGIC (Đã sửa để hoạt động với Dark Mode) -----
+    // ------------------------------------------------------------------
+    const canvas = document.getElementById("sky");
+    const ctx = canvas.getContext("2d");
+
+    function resizeCanvas(){
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
     }
-  }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
 
-  function toggleMode(){
-    document.body.classList.toggle("dark");
-    document.body.classList.toggle("light");
-
-    if(document.body.classList.contains("dark")){
-      localStorage.setItem("theme","dark");
-      document.getElementById("toggleTheme").textContent = "☀️ Light Mode";
-    } else {
-      localStorage.setItem("theme","light");
-      document.getElementById("toggleTheme").textContent = "🌙 Dark Mode";
+    // ---- Tạo sao ----
+    const stars = [];
+    for(let i=0; i<200; i++){
+        stars.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            r: Math.random() * 1.5,
+            opacity: Math.random()
+        });
     }
-  }
-  document.getElementById("toggleTheme").addEventListener("click", toggleMode);
-  applyThemeFromStorage();
 
-  // ----- Modal -----
-  function showModal(message, isError=false){
-    const modal = document.getElementById("modal");
-    const modalContent = document.getElementById("modalContent");
-    const modalMessage = document.getElementById("modalMessage");
-
-    modalMessage.textContent = message;
-    modalContent.className = "modal-content " + (isError ? "error" : "success");
-    modal.style.display = "flex";
-  }
-  function closeModal(){
-    document.getElementById("modal").style.display = "none";
-  }
-
-  // ----- Gửi report -----
-  async function sendReport(){
-    const msg = document.getElementById("message").value.trim();
-    if(!msg){
-      showModal("⚠️ Bạn chưa nhập nội dung!", true);
-      return;
+    // ---- Sao băng ----
+    const meteors = [];
+    function createMeteor(){
+        meteors.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * (canvas.height/2),
+            length: Math.random() * 80 + 40,
+            speed: Math.random() * 12 + 8,
+            opacity: 1
+        });
     }
-    try {
-      await fetch(SCRIPT_URL, {
-        method: "POST",
-        body: JSON.stringify({ message: msg })
-      });
-      showModal("✅ Report đã được gửi!");
-      document.getElementById("message").value = "";
-    } catch(err){
-      showModal("❌ Lỗi khi gửi report!", true);
-    }
-  }
+    // Chỉ tạo sao băng khi dark mode được áp dụng
+    let meteorInterval = null; 
 
-  function goHome(){
-    window.location.href = "index.html";
-  }
+    // ---- Vẽ bầu trời ----
+    function drawSky(){
+        const isDarkMode = document.body.classList.contains("dark");
+        ctx.clearRect(0,0,canvas.width,canvas.height); // Luôn clear canvas để trong suốt khi Light Mode
+
+        if (isDarkMode) {
+            // Nền trời (thay thế background gradient CSS)
+            ctx.fillStyle = "#0f172a";
+            ctx.fillRect(0,0,canvas.width,canvas.height);
+
+            // Vẽ sao
+            for(let s of stars){
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+                ctx.fillStyle = `rgba(255,255,255,${s.opacity})`;
+                ctx.fill();
+                s.opacity += (Math.random()-0.5)*0.05;
+                if(s.opacity<0) s.opacity=0;
+                if(s.opacity>1) s.opacity=1;
+            }
+
+            // Vẽ sao băng
+            for(let i=meteors.length-1; i>=0; i--){
+                const m = meteors[i];
+                ctx.strokeStyle = `rgba(255,255,255,${m.opacity})`;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(m.x, m.y);
+                ctx.lineTo(m.x - m.length, m.y - m.length);
+                ctx.stroke();
+
+                m.x += m.speed;
+                m.y += m.speed;
+                m.opacity -= 0.05;
+
+                if(m.opacity <= 0){
+                    meteors.splice(i,1);
+                }
+            }
+            
+            // Đảm bảo interval tạo sao băng chỉ chạy khi ở Dark Mode
+            if(meteorInterval === null) {
+                meteorInterval = setInterval(createMeteor, 1200);
+            }
+
+        } else {
+             // Dừng tạo sao băng khi Light Mode
+             if(meteorInterval !== null) {
+                clearInterval(meteorInterval);
+                meteorInterval = null;
+                meteors.length = 0; // Xóa sao băng cũ
+             }
+        }
+
+        requestAnimationFrame(drawSky);
+    }
+    drawSky(); // Bắt đầu vòng lặp animation
+
+    // ------------------------------------------------------------------
+    // ----- ORIGINAL FORM LOGIC -----
+    // ------------------------------------------------------------------
+
+    // ----- DARK MODE -----
+    function applyThemeFromStorage() {
+        const theme = localStorage.getItem("theme");
+        if (theme === "dark") {
+            document.body.classList.add("dark");
+            document.getElementById("toggleTheme").textContent = "☀️ Light Mode";
+        } else {
+            document.body.classList.add("light");
+            document.getElementById("toggleTheme").textContent = "🌙 Dark Mode";
+        }
+    }
+
+    function toggleMode(){
+        // document.body.classList.toggle("dark"); // đã có
+        // document.body.classList.toggle("light"); // đã có
+
+        if(document.body.classList.contains("dark")){
+            document.body.classList.remove("dark");
+            document.body.classList.add("light");
+            localStorage.setItem("theme","light");
+            document.getElementById("toggleTheme").textContent = "🌙 Dark Mode";
+        } else {
+            document.body.classList.remove("light");
+            document.body.classList.add("dark");
+            localStorage.setItem("theme","dark");
+            document.getElementById("toggleTheme").textContent = "☀️ Light Mode";
+        }
+    }
+    document.getElementById("toggleTheme").addEventListener("click", toggleMode);
+    applyThemeFromStorage();
+
+    // ----- Modal -----
+    function showModal(message, isError=false){
+        const modal = document.getElementById("modal");
+        const modalContent = document.getElementById("modalContent");
+        const modalMessage = document.getElementById("modalMessage");
+
+        modalMessage.textContent = message;
+        // Đảm bảo chỉ có 1 trong 2 class success/error
+        modalContent.className = "modal-content " + (isError ? "error" : "success");
+        modal.style.display = "flex";
+    }
+    function closeModal(){
+        document.getElementById("modal").style.display = "none";
+    }
+
+    // ----- Gửi dữ liệu -----
+    async function sendData(type){
+        const msg = document.getElementById("message").value.trim();
+        const sendBtn = type === 'report' ? document.querySelector('.send-btn') : document.querySelector('.feedback-btn');
+        
+        if(!msg){
+            showModal("⚠️ Bạn chưa nhập nội dung!", true);
+            return;
+        }
+
+        // Vô hiệu hóa nút và hiện trạng thái loading
+        sendBtn.disabled = true;
+        const originalText = sendBtn.innerHTML;
+        sendBtn.innerHTML = 'Đang gửi...'; // Giữ đơn giản cho hiển thị loading
+
+        try {
+            const response = await fetch(SCRIPT_URL, {
+                method: "POST",
+                // KHÔNG cần thêm headers: {'Content-Type': 'application/json'} vì Google Apps Script không yêu cầu
+                body: JSON.stringify({
+                    message: msg,
+                    type: type // Gửi type ('report' hoặc 'feedback') trực tiếp
+                })
+            });
+
+            // Apps Script trả về response.ok (status 200) khi thành công
+            if (response.ok) {
+                const result = await response.json();
+                
+                // Kiểm tra status từ JSON response của Apps Script
+                if (result && result.status === 'success') {
+                    if(type === "report"){
+                        showModal("✅ Report đã được gửi thành công!");
+                    } else {
+                        showModal("✅ Góp ý đã được gửi thành công!");
+                    }
+                    document.getElementById("message").value = "";
+                } else {
+                    // Nếu Apps Script trả về status: error
+                    showModal("❌ Lỗi Server: Vui lòng kiểm tra lại Google Apps Script!", true);
+                }
+
+            } else {
+                showModal("❌ Lỗi mạng: Vui lòng kiểm tra kết nối hoặc URL!", true);
+            }
+
+        } catch(err){
+            console.error("Lỗi Fetch:", err);
+            // Đây là lỗi mà bạn gặp, thường là do URL không đúng hoặc Script chưa được Deploy đúng.
+            showModal("❌ Lỗi khi gửi dữ liệu! Vui lòng kiểm tra lại URL hoặc kết nối.", true); 
+        } finally {
+            // Khôi phục nút và văn bản ban đầu
+            sendBtn.disabled = false;
+            sendBtn.innerHTML = originalText;
+        }
+    }
+    function goHome(){
+        // Quay lại trang index.html
+        window.location.href = "index.html";
+    }
 </script>
 </body>
+
 </html>
