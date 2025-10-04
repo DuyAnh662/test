@@ -15,7 +15,7 @@
         gtag('config', 'G-92KE83JEYM');
     </script>
     <meta charset="utf-8" />
-    <title>Bảng Thông Báo BTVN - 03/10/2025</title>
+    <title>Bảng Thông Báo BTVN - 04/10/2025</title>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <style>
         :root {
@@ -1688,6 +1688,83 @@
                 color: #f0f0f0 !important;
             }
         }
+        
+        /* CSS cho bảng thời khóa biểu buổi chiều */
+        .day-container {
+            margin-bottom: 20px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            background: var(--table-bg);
+            border: 1px solid var(--table-border);
+        }
+        
+        .day-header {
+            background: var(--table-header-bg);
+            color: var(--table-header-text);
+            padding: 12px 16px;
+            font-size: 18px;
+            font-weight: 700;
+            text-align: center;
+            border-bottom: 1px solid var(--table-border);
+        }
+        
+        .session-container {
+            padding: 8px;
+        }
+        
+        .session-header {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--heading-text);
+            margin: 8px 0;
+            padding-left: 8px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .session-header::before {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+        
+        .morning-header::before {
+            content: "🌅";
+        }
+        
+        .afternoon-header::before {
+            content: "🌆";
+        }
+        
+        .session-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+        
+        .session-table th,
+        .session-table td {
+            padding: 10px 12px;
+            text-align: left;
+        }
+        
+        .session-table th {
+            background: var(--table-header-bg);
+            color: var(--table-header-text);
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .session-table tr:nth-child(even) td {
+            background: var(--table-row-even-bg);
+        }
+        
+        .day-divider {
+            height: 16px;
+        }
     </style>
 </head>
 
@@ -1743,7 +1820,7 @@
             <div class="popup-changelog">
                 <div class="changelog-header">
                     <span class="changelog-icon">📋</span>
-                    <span class="changelog-version">Changelog (V3.0.5)</span>
+                    <span class="changelog-version">Changelog (V3.0.6)</span>
                 </div>
 
                 <div class="changelog-content">
@@ -1754,8 +1831,8 @@
                         </div>
                         <ul class="change-list">
                             <li class="change-item">Cập nhật Ngữ văn</li>
-                            <li class="change-item">Cập nhật GDCD</li>
-                            <li class="change-item">Cập nhật Toán học - Hình học</li>
+                            <li class="change-item">Cập nhật Hóa học</li>
+                            <li class="change-item">Cập nhật Sinh học</li>
                         </ul>
                     </div>
 
@@ -1765,7 +1842,7 @@
                             <span>Tính năng mới</span>
                         </div>
                         <ul class="change-list">
-                            <li class="change-item">Hiện tại không có!</li>
+                            <li class="change-item">Lịch học buổi chiều(Beta)</li>
                         </ul>
                     </div>
 
@@ -1786,6 +1863,7 @@
                         </div>
                         <ul class="change-list">
                             <li class="change-item">Phân tích, sửa chữa và cải tiến thêm nhiều thứ khác</li>
+                            <li class="change-item">cập nhật lịch trực</li>
                         </ul>
                     </div>
                 </div>
@@ -1798,11 +1876,12 @@
             <div class="donate-cta">Donate chúng tôi nhé!^_^</div>
         </div>
     </div>
+    
     <!-- MAIN -->
     <div class="wrap">
         <!-- BTVN -->
         <div class="card liquid-effect">
-            <h1 class="fade-in-text">📢 Thông báo BTVN cho 03/10/2025</h1>
+            <h1 class="fade-in-text">📢 Thông báo BTVN cho 06/10/2025</h1>
             <h2 class="animate-item">📘 Địa lí</h2>
             <ul class="animate-item">
                 <li>Học thuộc hết tiết 5 bài 2</li>
@@ -1819,11 +1898,11 @@
             </ul>
             <h2 class="animate-item">✍ Ngữ văn</h2>
             <ul class="animate-item">
-                <li>Viết kết nói với đọc SGK-41</li>
+                <li>Làm hết thực hành tiếng việt SGK-42; 43</li>
             </ul>
             <h2 class="animate-item">🧬 Sinh học</h2>
             <ul class="animate-item">
-                <li>Làm phần "3.Kết quả"(Kẻ 2 bảng SGK-134)</li>
+                <li>Học phần 2 a, b tiết 9(Chưa rõ)</li>
             </ul>
             <h2 class="animate-item">🏠 GDĐP</h2>
             <ul class="animate-item">
@@ -1847,7 +1926,7 @@
             </ul>
             <h2 class="animate-item">⚗ Hóa học</h2>
             <ul class="animate-item">
-                <li>Học thuộc khái niệm biến đổi vật lý và khái niệm biến đổi hóa học</li>
+                <li>Làm bài cô dã đọc trên lớp</li>
             </ul>
             <h2 class="animate-item">🇬🇧 Tiếng Anh(Global success)</h2>
             <ul class="animate-item">
@@ -1858,7 +1937,7 @@
             </ul>
             <h2 class="animate-item">👥 Công dân</h2>
             <ul class="animate-item">
-                <li>Học hết phần màu vang SGK-14</li>
+                <li>Học hết phần màu vàng (SGK-14)</li>
             </ul>
             <h2 class="animate-item">🔧 Công nghệ</h2>
             <ul class="animate-item">
@@ -1886,9 +1965,9 @@
             <div class="changelog animate-item" style="margin-top:14px;">
                 <strong>Những môn học đã được thay đổi, câp nhật</strong>
                 <ul>
-                    <li>Cập nhật Ngũ văn</li>
-                    <li>Cập nhật Toán học - Hình học</li>
-                    <li>Cập nhật GDCD</li>
+                    <li>Cập nhật Ngữ văn</li>
+                    <li>Cập nhật Hóa học</li>
+                    <li>Cập nhật Sinh học</li>
                 </ul>
             </div>
         </div>
@@ -1907,25 +1986,26 @@
                   ------------------------- */
         const API_URL = "https://script.google.com/macros/s/AKfycbw5sjUwJfwRtKBQQu5FgYrmgSjoQ22vvnmlv99H7YJHTVgVZRXm1vWB7fFJg8B2O2M7/exec";
 
+        // Cập nhật TKB để thêm lịch học buổi chiều
         const TKB = {
             0: ["Chủ nhật: Nghỉ / Tự học"],
-            1: ["HĐTN,HN(Chào cờ)", "LS&ĐL - Lịch sử", "Tiếng Anh", "LS&ĐL - Địa lí", "Toán học - Đại số"],
-            2: ["Ngữ văn", "Tiếng Anh", "Công nghệ", "HĐTN,HN", "Giáo dục thể chất"],
-            3: ["Ngữ văn", "Toán học - Hình học", "KHTN - Vật lý", "NT - Mĩ thuật", "KHTN - Sinh học"],
-            4: ["Toán học - Đại Số", "Tin học", "LS&ĐL - Lịch sử", "Âm nhạc", "Tiếng Anh"],
-            5: ["Giáo dục địa phương", "Ngữ văn", "HĐTN,HN", "Toán học - Hình học", "Giáo dục công dân"],
-            6: ["KHTN - Sinh học", "Giáo dục thể chất", "Ngữ văn", "KHTN - Hóa học", "Nghỉ"]
+            1: ["HĐTN,HN(Chào cờ)", "LS&ĐL - Lịch sử", "Tiếng Anh", "LS&ĐL - Địa lí", "Toán học - Đại số", "Nghỉ", "Nghỉ", "Nghỉ", "Nghỉ"],
+            2: ["Ngữ văn", "Tiếng Anh", "Công nghệ", "HĐTN,HN", "Giáo dục thể chất", "Nghỉ", "Nghỉ", "Nghỉ", "Nghỉ"],
+            3: ["Ngữ văn", "Toán học - Hình học", "KHTN - Vật lý", "NT - Mĩ thuật", "KHTN - Sinh học", "Nghỉ", "Nghỉ", "Nghỉ", "Nghỉ"],
+            4: ["Toán học - Đại Số", "Tin học", "LS&ĐL - Lịch sử", "Âm nhạc", "Tiếng Anh", "Nghỉ", "Nghỉ", "Nghỉ", "Nghỉ"],
+            5: ["Giáo dục địa phương", "Ngữ văn", "HĐTN,HN", "Toán học - Hình học", "Giáo dục công dân", "Nghỉ", "Nghỉ", "Nghỉ", "Nghỉ"],
+            6: ["KHTN - Sinh học", "Giáo dục thể chất", "Ngữ văn", "KHTN - Hóa học", "Nghỉ", "Nghỉ", "Nghỉ", "Nghỉ", "Nghỉ"]
         };
 
-        // Lịch trực (có lưu localStorage nếu user chỉnh)
-        let truc = JSON.parse(localStorage.getItem('lichTruc') || 'null') || {
+        // Lịch trực (không lưu vào localStorage)
+        const truc = {
             0: "Chủ nhật: Không trực",
-            1: "Tổ 4",
-            2: "Tổ 1",
-            3: "Tổ 2",
-            4: "Tổ 3",
-            5: "Tổ 4",
-            6: "Tổ 1",
+            1: "Tổ 2",
+            2: "Tổ 3",
+            3: "Tổ 4",
+            4: "Tổ 1",
+            5: "Tổ 2",
+            6: "Tổ 3",
         };
 
         const dayNames = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
@@ -2273,15 +2353,8 @@
         });
 
         /* -------------------------
-           TKB rendering + full view + editing trực
-           ------------------------- */
-        function computeShowDay() {
-            // Lấy giờ VN
-            const vnNow = new Date(new Date().toLocaleString('en-US', {
-                timeZone: 'Asia/Ho_Chi_Minh'
-            }));
-        }
-
+           TKB rendering + full view (không có editing trực)
+        ------------------------- */
         // NOTE: small helper: get VN date/time (works cross-browser)
         function getVNDateObj() {
             const s = new Date().toLocaleString('en-US', {
@@ -2291,42 +2364,81 @@
         }
 
         function renderTodayTKB() {
-                const d = getVNDateObj();
-                let day = d.getDay(); // 0..6
-                const hour = d.getHours();
+            const d = getVNDateObj();
+            let day = d.getDay(); // 0..6
+            const hour = d.getHours();
 
-                // nếu trước 7h thì coi như ngày hôm trước
-                if (hour < 7) day = (day - 1 + 7) % 7;
+            // nếu trước 7h thì coi như ngày hôm trước
+            if (hour < 7) day = (day - 1 + 7) % 7;
 
-                // logic hiển thị: Thứ Sáu -> hiện Thứ Bảy; Chủ Nhật -> hiện Thứ Hai; khác -> ngày mai
-                let showDay;
-                if (day === 5) showDay = 6;
-                else if (day === 0) showDay = 1;
-                else showDay = (day + 1) % 7;
+            // logic hiển thị: Thứ Sáu -> hiện Thứ Bảy; Chủ Nhật -> hiện Thứ Hai; Thứ Bảy -> hiện Thứ Hai; khác -> ngày mai
+            let showDay;
+            if (day === 5) showDay = 6;           // Thứ Sáu -> Thứ Bảy
+            else if (day === 6) showDay = 1;      // Thứ Bảy -> Thứ Hai (KHÔNG HIỆN CN)
+            else if (day === 0) showDay = 1;      // Chủ Nhật -> Thứ Hai
+            else showDay = (day + 1) % 7;         // Các ngày khác -> ngày tiếp theo
 
-                // Tính ngày tháng năm cho ngày mai
-                let tomorrowDate = new Date(d);
+            // Tính ngày tháng năm cho ngày mai (hoặc thứ hai nếu là thứ bảy/chủ nhật)
+            let tomorrowDate = new Date(d);
+            if (day === 5) { // Thứ Sáu
                 tomorrowDate.setDate(d.getDate() + 1);
-
-                // Định dạng ngày tháng năm
-                const dayOfMonth = tomorrowDate.getDate();
-                const month = tomorrowDate.getMonth() + 1;
-                const year = tomorrowDate.getFullYear();
-                const formattedDate = `${dayOfMonth < 10 ? '0' + dayOfMonth : dayOfMonth}/${month < 10 ? '0' + month : month}/${year}`;
-
-                const container = document.getElementById('todayTKB');
-                let html = `<p>Hôm nay: <strong>${dayNames[d.getDay()]}</strong>, ${d.toLocaleDateString('vi-VN')} — Hiển thị TKB và lịch trực <strong>${dayNames[showDay]}</strong>, ngày ${formattedDate}</p>`;
-                html += `<div class="inline-note">❗Lưu ý: Sau 7:00 sáng TKB & lịch trực sẽ chuyển sang ngày tiếp theo (một vài quy tắc đặc biệt được áp dụng).</div>`;
-                html += `<table><thead><tr><th>Tiết</th><th>Môn / Nội dung</th></tr></thead><tbody>`;
-                (TKB[showDay] || []).forEach((m, i) => {
-                    html += `<tr><td>${i+1}</td><td>${m}</td></tr>`;
-                });
-                html += `</tbody></table>`;
-                html += `<p style="margin-top:10px;"><b>Lịch trực: </b> <span id="todayTruc">${truc[showDay]}</span></p>`;
-
-                container.innerHTML = html;
+            } else if (day === 6) { // Thứ Bảy
+                // Tìm tới thứ hai
+                tomorrowDate.setDate(d.getDate() + ((1 + 7 - day) % 7));
+            } else if (day === 0) { // Chủ Nhật
+                tomorrowDate.setDate(d.getDate() + 1);
+            } else {
+                tomorrowDate.setDate(d.getDate() + 1);
             }
-            // full week + inline chỉnh trực của từng ngày
+
+            // Định dạng ngày tháng năm
+            const dayOfMonth = tomorrowDate.getDate();
+            const month = tomorrowDate.getMonth() + 1;
+            const year = tomorrowDate.getFullYear();
+            const formattedDate = `${dayOfMonth < 10 ? '0' + dayOfMonth : dayOfMonth}/${month < 10 ? '0' + month : month}/${year}`;
+
+            const container = document.getElementById('todayTKB');
+            let html = `<p>Hôm nay: <strong>${dayNames[d.getDay()]}</strong>, ${d.toLocaleDateString('vi-VN')} — Hiển thị TKB và lịch trực <strong>${dayNames[showDay]}</strong>, ngày ${formattedDate}</p>`;
+            html += `<div class="inline-note">❗Lưu ý: Sau 7:00 sáng TKB & lịch trực sẽ chuyển sang ngày tiếp theo (một vài quy tắc đặc biệt được áp dụng).</div>`;
+            
+            // Thêm container cho ngày
+            html += `<div class="day-container">`;
+            html += `<div class="day-header">${dayNames[showDay]}</div>`;
+            html += `<div class="session-container">`;
+            
+            // Bảng buổi sáng
+            html += `<div class="session-header morning-header">Buổi sáng</div>`;
+            html += `<table class="session-table"><thead><tr><th>Tiết</th><th>Môn / Nội dung</th></tr></thead><tbody>`;
+            
+            // Hiển thị 5 tiết buổi sáng
+            for (let i = 0; i < 5; i++) {
+                if (TKB[showDay] && TKB[showDay][i]) {
+                    html += `<tr><td>${i+1}</td><td>${TKB[showDay][i]}</td></tr>`;
+                }
+            }
+            html += `</tbody></table>`;
+            
+            // Bảng buổi chiều
+            html += `<div class="session-header afternoon-header">Buổi chiều</div>`;
+            html += `<table class="session-table"><thead><tr><th>Tiết</th><th>Môn / Nội dung</th></tr></thead><tbody>`;
+            
+            // Hiển thị các tiết buổi chiều (từ tiết 6 trở đi)
+            for (let i = 5; i < (TKB[showDay] ? TKB[showDay].length : 0); i++) {
+                if (TKB[showDay] && TKB[showDay][i]) {
+                    html += `<tr><td>${i+1}</td><td>${TKB[showDay][i]}</td></tr>`;
+                }
+            }
+            html += `</tbody></table>`;
+            
+            html += `</div>`; // Kết thúc session-container
+            html += `</div>`; // Kết thúc day-container
+            
+            html += `<p style="margin-top:10px;"><b>Lịch trực: </b> <span id="todayTruc">${truc[showDay]}</span></p>`;
+
+            container.innerHTML = html;
+        }
+        
+        // full week (không có chỉnh trực)
         document.getElementById('showFullBtn').addEventListener('click', function() {
             const full = document.getElementById('fullTKB');
             if (full.style.display === 'block') {
@@ -2335,41 +2447,49 @@
                 return;
             }
             // build full
-            let html = `<div style="margin-bottom:8px;"><strong>📅 Thời khóa biểu cả tuần</strong></div>`;
-            for (let k = 1; k <= 6; k++) {
-                html += `<h3 style="margin:8px 0 4px;">${dayNames[k]}</h3>`;
-                html += `<table><thead><tr><th>Tiết</th><th>Môn</th></tr></thead><tbody>`;
-                (TKB[k] || []).forEach((m, i) => html += `<tr><td>${i+1}</td><td>${m}</td></tr>`);
+            let html = `<div style="margin-bottom:8px;"><strong>📅 Thời khóa biểu cả tuần (Chủ nhật không hiển thị)</strong></div>`;
+            for (let k = 1; k <= 6; k++) { // Bỏ Chủ Nhật (k=0)
+                // Container cho mỗi ngày
+                html += `<div class="day-container">`;
+                html += `<div class="day-header">${dayNames[k]}</div>`;
+                html += `<div class="session-container">`;
+                
+                // Bảng buổi sáng
+                html += `<div class="session-header morning-header">Buổi sáng</div>`;
+                html += `<table class="session-table"><thead><tr><th>Tiết</th><th>Môn</th></tr></thead><tbody>`;
+                for (let i = 0; i < 5; i++) {
+                    if (TKB[k] && TKB[k][i]) {
+                        html += `<tr><td>${i+1}</td><td>${TKB[k][i]}</td></tr>`;
+                    }
+                }
                 html += `</tbody></table>`;
+                
+                // Bảng buổi chiều
+                html += `<div class="session-header afternoon-header">Buổi chiều</div>`;
+                html += `<table class="session-table"><thead><tr><th>Tiết</th><th>Môn</th></tr></thead><tbody>`;
+                for (let i = 5; i < (TKB[k] ? TKB[k].length : 0); i++) {
+                    if (TKB[k] && TKB[k][i]) {
+                        html += `<tr><td>${i+1}</td><td>${TKB[k][i]}</td></tr>`;
+                    }
+                }
+                html += `</tbody></table>`;
+                
+                // Thêm lịch trực ở dưới mỗi thứ (không có chức năng chỉnh sửa)
+                html += `<div class="truc-container" style="margin-top: 12px; padding: 8px; background: var(--table-header-bg); border-radius: 8px;">`;
+                html += `<strong style="color: var(--table-header-text);">🧹 Lịch trực: </strong> `;
+                html += `<span>${truc[k]}</span>`;
+                html += `</div>`;
+                
+                html += `</div>`; // Kết thúc session-container
+                html += `</div>`; // Kết thúc day-container
+                html += `<div class="day-divider"></div>`; // Khoảng cách giữa các ngày
             }
-
-            // một bảng riêng cho lịch trực
-            html += `<hr style="opacity:.08;margin:12px 0;"><h3>🧹 Lịch trực cả tuần</h3>`;
-            html += `<table><thead><tr><th>Ngày</th><th>Tổ trực</th></tr></thead><tbody>`;
-            for (let k = 1; k <= 6; k++) {
-                html += `<tr><td>${dayNames[k]}</td><td class="editable-truc" data-day="${k}">${truc[k]}</td></tr>`;
-            }
-            html += `</tbody></table>`;
 
             full.innerHTML = html;
             full.style.display = 'block';
             this.textContent = '❌ Ẩn toàn bộ';
-            // save buttons
-            full.querySelectorAll('.save-truc').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const day = btn.dataset.day;
-                    const val = prompt("Nhập nội dung trực cho " + dayNames[day], truc[day]);
-                    if (val !== null) {
-                        truc[day] = val;
-                        localStorage.setItem('lichTruc', JSON.stringify(truc));
-                        renderTodayTKB();
-                        // refresh full view
-                        document.getElementById('showFullBtn').click();
-                        document.getElementById('showFullBtn').click();
-                    }
-                });
-            });
         });
+        
         // init render
         renderTodayTKB();
 
