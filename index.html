@@ -1815,12 +1815,12 @@
     <div class="popup" id="popup">
         <div class="popup-card liquid-effect" id="popupCard">
             <div class="close" id="popupClose" title="Đóng">✕</div>
-            <h3>❗Lưu ý</h3>
+            <h3>❗Lưu ý[Nên xem qua trang status]</h3>
 
             <div class="popup-changelog">
                 <div class="changelog-header">
                     <span class="changelog-icon">📋</span>
-                    <span class="changelog-version">Changelog (V3.0.6)</span>
+                    <span class="changelog-version">Changelog (V3.0.7)</span>
                 </div>
 
                 <div class="changelog-content">
@@ -1842,7 +1842,7 @@
                             <span>Tính năng mới</span>
                         </div>
                         <ul class="change-list">
-                            <li class="change-item">Lịch học buổi chiều(Beta)</li>
+                            <li class="change-item">Lịch học buổi chiều</li>
                         </ul>
                     </div>
 
@@ -1864,6 +1864,8 @@
                         <ul class="change-list">
                             <li class="change-item">Phân tích, sửa chữa và cải tiến thêm nhiều thứ khác</li>
                             <li class="change-item">cập nhật lịch trực</li>
+                            <li class="change-item">cập nhật thời khóa biểu</li>
+
                         </ul>
                     </div>
                 </div>
@@ -1989,12 +1991,12 @@
         // Cập nhật TKB để thêm lịch học buổi chiều
         const TKB = {
             0: ["Chủ nhật: Nghỉ / Tự học"],
-            1: ["HĐTN,HN(Chào cờ)", "LS&ĐL - Lịch sử", "Tiếng Anh", "LS&ĐL - Địa lí", "Toán học - Đại số", "Nghỉ", "Nghỉ", "Nghỉ", "Nghỉ"],
-            2: ["Ngữ văn", "Tiếng Anh", "Công nghệ", "HĐTN,HN", "Giáo dục thể chất", "Nghỉ", "Nghỉ", "Nghỉ", "Nghỉ"],
-            3: ["Ngữ văn", "Toán học - Hình học", "KHTN - Vật lý", "NT - Mĩ thuật", "KHTN - Sinh học", "Nghỉ", "Nghỉ", "Nghỉ", "Nghỉ"],
-            4: ["Toán học - Đại Số", "Tin học", "LS&ĐL - Lịch sử", "Âm nhạc", "Tiếng Anh", "Nghỉ", "Nghỉ", "Nghỉ", "Nghỉ"],
-            5: ["Giáo dục địa phương", "Ngữ văn", "HĐTN,HN", "Toán học - Hình học", "Giáo dục công dân", "Nghỉ", "Nghỉ", "Nghỉ", "Nghỉ"],
-            6: ["KHTN - Sinh học", "Giáo dục thể chất", "Ngữ văn", "KHTN - Hóa học", "Nghỉ", "Nghỉ", "Nghỉ", "Nghỉ", "Nghỉ"]
+            1: ["HĐTN,HN(Chào cờ)", "Ngữ văn", "Toán học - Đại số", "KHTN - Sinh học", "Nghỉ", "Tiếng Anh", "GDĐP"],
+            2: ["Toán học - Hình học", "Tiếng Anh", "GDTC", "Công nghệ", "Ngữ văn", "Nghỉ"],
+            3: ["GDCD", "LS&ĐL - Lịch sử", "KHTN - Sinh học", "Tin học", "Nghỉ", "KHTN - Hóa học", "LS&ĐL - Địa lí", "NT - Mĩ thuật"],
+            4: ["Toán học - Đại Số", "Ngữ văn", "Ngữ văn", "GDTC", "Nghỉ", "Nghỉ"],
+            5: ["Toán học - Hình học", "KHTN - Vật lý", "LS&ĐL - Lịch sử", "Tiếng Anh", "Nghỉ", "HĐTN", "HĐTN", "NT - Âm nhạc"],
+            6: ["Nghỉ"]
         };
 
         // Lịch trực (không lưu vào localStorage)
