@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - BTVN System</title>
+  <link rel="stylesheet" href="admin.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📘</text></svg>">
+</head>
+<body>
+  <!-- Đăng nhập -->
+  <div id="login-box" class="card">
+    <h2>🔑 Đăng nhập quản trị</h2>
+    <input type="text" id="username" placeholder="Tên đăng nhập">
+    <input type="password" id="password" placeholder="Mật khẩu">
+    <button id="loginBtn">Đăng nhập</button>
+    <p id="loginMsg"></p>
+  </div>
+
+  <!-- Admin panel -->
+  <div id="admin-panel" style="display:none;">
+    <header>
+      <h1>Trang Quản Trị BTVN</h1>
+      <button id="logoutBtn">Đăng xuất</button>
+    </header>
+
+    <main class="container">
+      <!-- BTVN -->
+      <section class="card">
+        <h2>📝 Bài Tập Về Nhà</h2>
+        <label>Môn học</label>
+        <select id="subject">
+          <option value="">-- Chọn môn học --</option>
+          <option>Toán - Đại số</option><option>Toán - Hình học</option><option>Ngữ văn</option><option>Tiếng Anh</option>
+          <option>Vật lý</option><option>Hóa học</option><option>Sinh học</option>
+          <option>Lịch sử</option><option>Địa lý</option><option>GDCD</option>
+          <option>Tin học</option><option>Công nghệ</option><option>Thể dục</option>
+        </select>
+        <label>Nội dung</label>
+        <textarea id="btvn_content" placeholder="Nội dung bài tập"></textarea>
+        <div class="btn-group">
+          <button id="updateBTVN" class="btn-update">➕ Thêm mới</button>
+          <button id="addNewBTVN" class="btn-new">🔁 Cập nhật (ghi đè)</button>
+        </div>
+      </section>
+
+      <!-- TKB -->
+<section class="card">
+  <h2>📅 Thời Khoá Biểu</h2>
+
+  <label>Chọn thứ</label>
+  <select id="tkb_day">
+    <option value="">-- Chọn thứ --</option>
+    <option value="1">Thứ 2</option>
+    <option value="2">Thứ 3</option>
+    <option value="3">Thứ 4</option>
+    <option value="4">Thứ 5</option>
+    <option value="5">Thứ 6</option>
+  </select>
+
+<label>Tổ trực trong ngày</label>
+<select id="tkb_truc">
+  <option value="">-- Chọn tổ trực --</option>
+  <option value="Tổ 1">Tổ 1</option>
+  <option value="Tổ 2">Tổ 2</option>
+  <option value="Tổ 3">Tổ 3</option>
+  <option value="Tổ 4">Tổ 4</option>
+</select>
+
+  <div id="periodsContainer"></div>
+  <button id="addPeriod">➕ Thêm tiết</button>
+
+  <div class="btn-group mt-20">
+    <button id="updateTKB" class="btn-update">🔁 Cập nhật (ghi đè)</button>
+    <button id="addNewTKB" class="btn-new">➕ Thêm mới (xoá toàn bộ ngày cũ)</button>
+  </div>
+</section>
+
+      <!-- Changelog -->
+      <section class="card">
+        <h2>📜 Cập nhật thay đổi</h2>
+        <textarea id="changelog_text" placeholder="Nhập nội dung changelog..."></textarea>
+        <div class="btn-group">
+          <button id="updateChangelog" class="btn-update">🔁 Ghi đè</button>
+          <button id="addNewChangelog" class="btn-new">➕ Thêm mới</button>
+        </div>
+      </section>
+
+      <!-- Data viewer -->
+      <section class="card">
+        <h2>📊 Xem dữ liệu</h2>
+        <button id="refreshData">Tải lại</button>
+        <pre id="dataViewer">(chưa tải)</pre>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby-w7uCCpBZadyJ1lSUoeFlKZlNcV0sGiAAn0hJJdpK06J2CQfzeIf2c72xRmqQbBOv/exec";
+    const ADMIN_USERNAME = "admin";
+    const ADMIN_PASSWORD = "123456";
+  </script>
+  <script src="admin.js"></script>
+</body>
+</html>
