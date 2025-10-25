@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Trang Trạng Thái Hệ Thống & Cập Nhật</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #009966;
+      --primary-gradient: linear-gradient(90deg, #38d39f 30%, #38a6d3 100%);
+      --background: #f7fafc;
+      --background-alt: #fff;
+      --background-commit: linear-gradient(90deg, #e1f5fe 0%, #f9fbe7 100%);
+      --text: #23273a;
+      --text-light: #23273a;
+      --text-meta: #789;
+      --border: #eaf6fb;
+      --shadow: 0 8px 32px #22a6b340;
+      --shadow-card: 0 2px 8px #38a6d333;
+      --table-th: #666;
+      --alert-bg: linear-gradient(90deg, #fff2c7 0%, #fbe6b9 100%);
+      --alert-color: #a67c00;
+      --commit-border: #38a6d3;
+      --footer: #7ab;
+      --link: #0083e8;
+      --ok-bg: linear-gradient(90deg, #38d39f 30%, #38a6d3 100%);
+      --ok-shadow: 0 2px 8px #38d39f22;
+      --scrollbar-bg: #eaf6fb;
+      --scrollbar-thumb: #b2ebf2;
+      --card-bg: rgba(255, 255, 255, 0.8);
+      --status-online: #28a745;
+      --status-warning: #ffc107;
+      --status-error: #dc3545;
+    }
+    body.dark {
+      --primary: #8affc1;
+      --primary-gradient: linear-gradient(90deg, #266f53 30%, #173a52 100%);
+      --background: #181d21;
+      --background-alt: #20262b;
+      --background-commit: linear-gradient(90deg, #193347 0%, #262b2e 100%);
+      --text: #e6ffe5;
+      --text-light: #cfe8d9;
+      --text-meta: #b6d1e1;
+      --border: #22303a;
+      --shadow: 0 8px 32px #173a5240;
+      --shadow-card: 0 2px 8px #173a5233;
+      --table-th: #83a89f;
+      --alert-bg: linear-gradient(90deg, #3d3b2e 0%, #2d2c21 100%);
+      --alert-color: #ffe185;
+      --commit-border: #38d39f;
+      --footer: #41b883;
+      --link: #1ec0ff;
+      --ok-bg: linear-gradient(90deg, #38a6d3 30%, #38d39f 100%);
+      --ok-shadow: 0 2px 8px #38a6d322;
+      --scrollbar-bg: #22303a;
+      --scrollbar-thumb: #38d39f;
+      --card-bg: rgba(32, 38, 43, 0.8);
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    html {
+      transition: background-color 0.4s;
+    }
+    
+    body {
+      font-family: 'Roboto', 'Quicksand', Arial, sans-serif;
+      background: var(--background);
+      color: var(--text);
+      margin: 0; 
+      padding: 0;
+      transition: background 0.4s, color 0.4s;
+      line-height: 1.6;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(56, 211, 159, 0.05) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(56, 166, 211, 0.07) 0%, transparent 20%);
+      background-attachment: fixed;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      background: var(--background-alt);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 40px 30px;
+      transition: background 0.4s, color 0.4s, box-shadow 0.4s;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: var(--primary-gradient);
+    }
+    
+    h1 {
+      text-align: center;
+      color: var(--primary);
+      font-size: 2.5em;
+      letter-spacing: 1px;
+      margin-bottom: 0.5em;
+      transition: color 0.4s;
+      font-weight: 700;
+      position: relative;
+    }
+    
+    h1::after {
+      content: '';
+      display: block;
+      width: 80px;
+      height: 3px;
+      background: var(--primary-gradient);
+      margin: 15px auto 0;
+      border-radius: 3px;
+    }
+    
+    .status-container {
+      display: flex;
+      justify-content: center;
+      margin: 25px 0;
+    }
+    
+    .status-ok {
+      color: #fff;
+      background: var(--ok-bg);
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 24px;
+      border-radius: 30px;
+      font-size: 1.2em;
+      font-weight: 600;
+      box-shadow: var(--ok-shadow);
+      transition: all 0.3s ease;
+    }
+    
+    .status-ok:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(56, 211, 159, 0.3);
+    }
+    
+    .status-ok i {
+      margin-right: 8px;
+      font-size: 1.1em;
+    }
+    
+    .toggle-mode {
+      position: absolute;
+      right: 30px;
+      top: 30px;
+      z-index: 10;
+      background: var(--background-alt);
+      border: 1.5px solid var(--border);
+      border-radius: 30px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 8px 20px;
+      font-size: 1em;
+      color: var(--primary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+      user-select: none;
+    }
+    
+    .toggle-mode:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    
+    .toggle-mode:active { 
+      transform: translateY(0);
+      filter: brightness(0.95);
+    }
+    
+    .toggle-mode .icon {
+      font-size: 1.3em;
+      vertical-align: middle;
+      transition: color 0.4s;
+    }
+    
+    .info-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 25px;
+      font-size: 1.05em;
+    }
+    
+    .info-table th, .info-table td {
+      text-align: left;
+      padding: 12px 0;
+      vertical-align: top;
+      border: none;
+      transition: color 0.4s;
+    }
+    
+    .info-table th {
+      width: 40%;
+      color: var(--table-th);
+      font-weight: 500;
+      font-size: 0.95em;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .info-table td { 
+      color: var(--text-light);
+      font-weight: 400;
+    }
+    
+    .info-table tr {
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .info-table tr:last-child {
+      border-bottom: none;
+    }
+    
+    .info-table i {
+      margin-right: 10px;
+      color: var(--primary);
+      width: 20px;
+      text-align: center;
+    }
+    
+    .alert {
+      background: var(--alert-bg);
+      color: var(--alert-color);
+      padding: 15px 20px;
+      border-radius: 12px;
+      margin: 25px 0;
+      font-weight: 500;
+      font-size: 1.05em;
+      box-shadow: 0 2px 8px rgba(251, 230, 185, 0.2);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+    }
+    
+    .alert i {
+      margin-right: 12px;
+      font-size: 1.3em;
+    }
+    
+    .recent-commits {
+      margin: 30px 0;
+      background: var(--background-commit);
+      border-radius: 15px;
+      box-shadow: var(--shadow-card);
+      padding: 25px;
+      transition: all 0.3s ease;
+    }
+    
+    .recent-commits:hover {
+      box-shadow: 0 5px 15px rgba(56, 166, 211, 0.15);
+    }
+    
+    .recent-commits h2 {
+      margin: 0 0 20px 0;
+      font-size: 1.3em;
+      letter-spacing: 1px;
+      color: var(--primary);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+    }
+    
+    .recent-commits h2 i {
+      margin-right: 10px;
+    }
+    
+    .commit-item {
+      border-left: 4px solid var(--commit-border);
+      margin-bottom: 16px;
+      padding-left: 15px;
+      font-size: 1.03em;
+      background: transparent;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    .commit-item:hover {
+      transform: translateX(5px);
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 0 8px 8px 0;
+    }
+    
+    .commit-item .msg {
+      color: var(--text);
+      font-weight: 600;
+      transition: color 0.4s;
+      display: block;
+      margin-bottom: 5px;
+    }
+    
+    .commit-item .meta {
+      color: var(--text-meta);
+      font-size: 0.95em;
+      transition: color 0.4s;
+    }
+    
+    .commit-item .meta i {
+      margin-right: 5px;
+      font-size: 0.9em;
+    }
+    
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 1em;
+      color: var(--footer);
+      letter-spacing: 0.5px;
+      transition: color 0.4s;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+    
+    .footer p {
+      margin: 10px 0;
+    }
+    
+    a { 
+      color: var(--link); 
+      text-decoration: none; 
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+    
+    a:hover { 
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    
+    ::selection { 
+      background: rgba(56, 166, 211, 0.3);
+      color: var(--text);
+    }
+    
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 10px; 
+      background: var(--scrollbar-bg);
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: var(--scrollbar-thumb); 
+      border-radius: 8px;
+    }
+    
+    /* Animation */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .container > * {
+      animation: fadeIn 0.6s ease forwards;
+    }
+    
+    .container > *:nth-child(1) { animation-delay: 0.1s; }
+    .container > *:nth-child(2) { animation-delay: 0.2s; }
+    .container > *:nth-child(3) { animation-delay: 0.3s; }
+    .container > *:nth-child(4) { animation-delay: 0.4s; }
+    .container > *:nth-child(5) { animation-delay: 0.5s; }
+    
+    /* Status Indicator */
+    .status-indicator {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 8px;
+      animation: pulse 2s infinite;
+    }
+    
+    .status-online {
+      background-color: var(--status-online);
+      box-shadow: 0 0 0 rgba(40, 167, 69, 0.4);
+    }
+    
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4);
+      }
+      70% {
+        box-shadow: 0 0 0 10px rgba(40, 167, 69, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
+      }
+    }
+    
+    /* Card Design */
+    .info-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-card);
+      transition: all 0.3s ease;
+    }
+    
+    .info-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .info-card h3 {
+      margin-top: 0;
+      color: var(--primary);
+      font-size: 1.2em;
+      display: flex;
+      align-items: center;
+    }
+    
+    .info-card h3 i {
+      margin-right: 10px;
+    }
+    
+    .info-card p {
+      margin-bottom: 0;
+      color: var(--text-light);
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container { 
+        padding: 25px 20px; 
+        margin: 20px 15px;
+      }
+      
+      h1 { 
+        font-size: 2em; 
+      }
+      
+      .toggle-mode { 
+        right: 20px; 
+        top: 20px; 
+        font-size: 0.9em;
+        padding: 6px 15px;
+      }
+      
+      .info-table th, .info-table td {
+        display: block;
+        width: 100%;
+      }
+      
+      .info-table th {
+        margin-bottom: 5px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .container { 
+        padding: 20px 15px; 
+      }
+      
+      h1 { 
+        font-size: 1.8em; 
+      }
+      
+      .toggle-mode { 
+        right: 15px; 
+        top: 15px; 
+        font-size: 0.85em;
+        padding: 5px 12px;
+      }
+      
+      .status-ok {
+        font-size: 1em;
+        padding: 6px 18px;
+      }
+    }
+  </style>
+  <script>
+    // Thời gian hoạt động (giả lập)
+    const startTime = Date.now() - (1000);
+    function updateStatusTime() {
+      const now = new Date();
+      const utcString = now.toISOString().replace('T', ' ').substring(0,19);
+      document.getElementById('current-time').innerText = utcString + " UTC";
+      
+      // Uptime
+      const uptimeSec = Math.floor((Date.now() - startTime) / 1000);
+      const h = Math.floor(uptimeSec / 3600);
+      const m = Math.floor((uptimeSec % 3600) / 60);
+      const s = uptimeSec % 60;
+      document.getElementById('uptime').innerText = h + ' giờ ' + m + ' phút ' + s + ' giây';
+    }
+    setInterval(updateStatusTime, 1000);
+    window.onload = updateStatusTime;
+
+    // Light/Dark Mode
+    function setMode(isDark) {
+      if(isDark) {
+        document.body.classList.add('dark');
+        localStorage.setItem('site-theme', 'dark');
+        document.getElementById('mode-icon').textContent = '🌙';
+        document.getElementById('mode-label').textContent = 'Dark Mode';
+      } else {
+        document.body.classList.remove('dark');
+        localStorage.setItem('site-theme', 'light');
+        document.getElementById('mode-icon').textContent = '☀️';
+        document.getElementById('mode-label').textContent = 'Light Mode';
+      }
+    }
+    function toggleMode() {
+      setMode(!document.body.classList.contains('dark'));
+    }
+    // Load mode from localStorage
+    window.addEventListener('DOMContentLoaded', function() {
+      let theme = localStorage.getItem('site-theme');
+      setMode(theme === 'dark');
+    });
+  </script>
+</head>
+<body>
+  <button class="toggle-mode" onclick="toggleMode()">
+    <span id="mode-icon" class="icon">☀️</span>
+    <span id="mode-label">Light Mode</span>
+  </button>
+  
+  <div class="container">
+    <h1>Trạng Thái Hệ Thống</h1>
+    
+    <div class="status-container">
+      <span class="status-ok">
+        <i class="fas fa-check-circle"></i>
+        Online
+      </span>
+    </div>
+    
+    <div class="info-card">
+      <h3><i class="fas fa-info-circle"></i> Thông tin hệ thống</h3>
+      <table class="info-table">
+        <tr>
+          <th><i class="fas fa-clock"></i> Thời gian hiện tại:</th>
+          <td id="current-time">Đang tải...</td>
+        </tr>
+        <tr>
+          <th><i class="fas fa-hourglass-half"></i> Thời gian hoạt động:</th>
+          <td id="uptime">Đang tải...</td>
+        </tr>
+        <tr>
+          <th><i class="fas fa-code-branch"></i> Phiên bản ứng dụng:</th>
+          <td>4.0.0</td>
+        </tr>
+        <tr>
+          <th><i class="fas fa-server"></i> Trạng thái repo:</th>
+          <td>
+            <span class="status-indicator status-online"></span>
+            Public, <span style="color: #28a745;">Đang hoạt động</span>
+          </td>
+        </tr>
+        <tr>
+          <th><i class="fas fa-code"></i> Ngôn ngữ chính:</th>
+          <td>HTML</td>
+        </tr>
+        <tr>
+          <th><i class="fas fa-sync-alt"></i> Đã cập nhật lần cuối:</th>
+          <td>2025-10-22 21:40:00 UTC</td>
+        </tr>
+        <tr>
+          <th><i class="fas fa-globe"></i> Trang web:</th>
+          <td>
+            <a href="https://duyanh662.github.io/TBBTVN8A4TTHCSGB/" target="_blank">
+              https://duyanh662.github.io/TBBTVN8A4TTHCSGB/
+            </a>
+          </td>
+        </tr>
+                <tr>
+          <th><i class="fas fa-globe"></i> Trang web hiển thị góp ý và report:</th>
+          <td>
+            <a href="https://duyanh662.github.io/TBBTVN8A4TTHCSGB/Display.html" target="_blank">
+              https://duyanh662.github.io/TBBTVN8A4TTHCSGB/Display.html
+            </a>
+          </td>
+        </tr>
+      </table>
+    </div>
+    
+    <div class="alert">
+      <i class="fas fa-info-circle"></i>
+      Không có thông báo nào. Hệ thống hoạt động bình thường!
+    </div>
+    
+    <div class="recent-commits">
+      <h2><i class="fas fa-history"></i> Cập nhật gần đây từ trang web chính</h2>
+            
+      <div class="commit-item">
+        <span class="msg">Sửa đổi lỗi hiển thị cập nhật sửa lỗi bảo mật chỉnh sửa dễ nhìn sửa lỗi vặt</span>
+          <div class="meta">
+            <i class="fas fa-user"></i> by <b>DuyAnh662</b> &bull; 
+            <i class="fas fa-calendar-alt"></i> 2025-10-24 20:50 UTC+7 &bull; 
+            <i class="fas fa-code-branch"></i> main
+          </div>
+      </div>
+      
+    </div>
+    <div class="footer">
+      <p>&copy; 2025 <a href="https://github.com/DuyAnh662" target="_blank">DuyAnh662</a> &mdash; Trang trạng thái tự động cập nhật thời gian thực.</p>
+      <p style="color:#38a6d3;">Mọi thay đổi mới nhất trên trang web chính đều sẽ hiển thị tại đây! Nếu có điều gì muốn báo cáo, góp ý vui lòng bấm <a href="Report.html" class="report-link">vào đây</a></p>
+    </div>
+  </div>
+</body>
+</html>

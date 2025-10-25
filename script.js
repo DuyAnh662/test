@@ -1,361 +1,675 @@
-// Kết hợp cả hai API URL
+// script.js - Phiên bản hoàn chỉnh đã sửa lỗi với đầy đủ hiệu ứng
+
+// Constants
 const API_URL = "https://script.google.com/macros/s/AKfycbw5sjUwJfwRtKBQQu5FgYrmgSjoQ22vvnmlv99H7YJHTVgVZRXm1vWB7fFJg8B2O2M7/exec";
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby-w7uCCpBZadyJ1lSUoeFlKZlNcV0sGiAAn0hJJdpK06J2CQfzeIf2c72xRmqQbBOv/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby_jnFFS0Adq6yBqm5VQHjy2Ap59kqFclYDiJlHYkEwmvV21QQZzp-ZvJ27xumt3IDR/exec";
 
-// Dữ liệu mặc định (từ file 1)
-const defaultTKB = {
-    0: ["nghỉ"],
-    1: ["null"],
-    2: ["null"],
-    3: ["null"],
-    4: ["null"],
-    5: ["null"],
-    6: ["Nghỉ"]
-};
-
-const defaultTruc = {
-    0: "Chủ nhật: Không trực",
-    1: "Tổ 2",
-    2: "Tổ 3",
-    3: "Tổ 4",
-    4: "Tổ 1",
-    5: "Tổ 2",
-    6: "Tổ 3",
+// Default data
+const defaultData = {
+    tkb: {
+        0: ["Nghỉ"],
+        1: ["Null"],
+        2: ["Null"],
+        3: ["Null"],
+        4: ["Null"],
+        5: ["Null"],
+        6: ["Nghỉ"]
+    },
+    truc: {
+        0: "Chủ nhật: Không trực",
+        1: "Null",
+        2: "Null",
+        3: "Null",
+        4: "Null",
+        5: "Null",
+        6: "Null",
+    }
 };
 
 const dayNames = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
 
-// Biến toàn cục để lưu dữ liệu từ API
-let currentData = {
-    tkb: defaultTKB,
-    truc: defaultTruc,
-    btvn: [],
-    changelog: [],
-    notices: []
+// Global state
+const state = {
+    currentData: {
+        tkb: defaultData.tkb,
+        truc: defaultData.truc,
+        btvn: [],
+        changelog: [],
+        notices: []
+    },
+    isLoading: false,
+    refreshTimer: null,
+    autoRefreshInterval: null,
+    isAutoRefreshEnabled: false,
+    lastData: null,
+    animationFrameId: null,
+    meteorInterval: null,
+    stars: [],
+    meteors: []
 };
 
-/* -------------------------
-Canvas bầu trời sao - chỉ hoạt động trong dark mode
-------------------------- */
-const canvas = document.getElementById("sky");
-const ctx = canvas.getContext("2d");
+// Cache DOM elements
+const elements = {
+    sky: document.getElementById("sky"),
+    loadingScreen: document.getElementById("loadingScreen"),
+    themeLoading: document.getElementById("themeLoading"),
+    menuBtn: document.getElementById("menuBtn"),
+    menuPanel: document.getElementById("menuPanel"),
+    menuDark: document.getElementById("menuDark"),
+    menuLiquid: document.getElementById("menuLiquid"),
+    menuPopup: document.getElementById("menuPopup"),
+    popup: document.getElementById("popup"),
+    popupClose: document.getElementById("popupClose"),
+    popupCard: document.getElementById("popupCard"),
+    btvnContainer: document.getElementById("btvnContainer"),
+    noticesContainer: document.getElementById("noticesContainer"),
+    tkbContainer: document.getElementById("tkbContainer"),
+    showFullBtn: document.getElementById("showFullBtn"),
+    fullTKB: document.getElementById("fullTKB"),
+    changelogContainer: document.getElementById("changelogContainer"),
+    colorThemes: document.querySelectorAll(".color-theme"),
+    refreshBtn: document.getElementById("refreshBtn"),
+    // Thêm các phần tử mới cho modal TKB Full
+    tkbFullPopup: document.getElementById("tkbFullPopup"),
+    tkbFullClose: document.getElementById("tkbFullClose"),
+    tkbFullContent: document.getElementById("tkbFullContent")
+};
 
-function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-}
-window.addEventListener("resize", resizeCanvas);
-resizeCanvas();
-
-// ---- Tạo sao ----
-const stars = [];
-for (let i = 0; i < 200; i++) {
-    stars.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        r: Math.random() * 1.5,
-        opacity: Math.random()
-    });
-}
-
-// ---- Sao băng ----
-const meteors = [];
-let meteorInterval = null;
-
-function createMeteor() {
-    meteors.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * (canvas.height / 2),
-        length: Math.random() * 80 + 40,
-        speed: Math.random() * 12 + 8,
-        opacity: 1
-    });
+// RequestIdleCallback polyfill
+if (!('requestIdleCallback' in window)) {
+    window.requestIdleCallback = cb => setTimeout(cb, 50);
 }
 
-// ---- Vẽ bầu trời ----
-function drawSky() {
-    const isDarkMode = document.body.classList.contains("dark");
-
-    // Xóa canvas trước khi vẽ
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Chỉ vẽ khi dark mode được bật
-    if (isDarkMode) {
-        // Nền trời
-        ctx.fillStyle = "#0f172a";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        // Vẽ sao
-        for (let s of stars) {
-            ctx.beginPath();
-            ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(255,255,255,${s.opacity})`;
-            ctx.fill();
-            s.opacity += (Math.random() - 0.5) * 0.05;
-            if (s.opacity < 0) s.opacity = 0;
-            if (s.opacity > 1) s.opacity = 1;
+// Canvas functions - Tối ưu
+function initCanvas() {
+    const canvas = elements.sky;
+    const ctx = canvas.getContext("2d");
+    
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        createStars();
+    }
+    
+    function createStars() {
+        state.stars = [];
+        for (let i = 0; i < 200; i++) {
+            state.stars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                r: Math.random() * 1.5,
+                opacity: Math.random(),
+                blinkSpeed: 0.005 + Math.random() * 0.01
+            });
         }
-
-        // Vẽ sao băng
-        for (let i = meteors.length - 1; i >= 0; i--) {
-            const m = meteors[i];
-            ctx.strokeStyle = `rgba(255,255,255,${m.opacity})`;
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(m.x, m.y);
-            ctx.lineTo(m.x - m.length, m.y - m.length);
-            ctx.stroke();
-
-            m.x += m.speed;
-            m.y += m.speed;
-            m.opacity -= 0.05;
-
-            if (m.opacity <= 0) {
-                meteors.splice(i, 1);
+    }
+    
+    function createMeteor() {
+        state.meteors.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * (canvas.height / 2),
+            length: Math.random() * 80 + 40,
+            speed: Math.random() * 12 + 8,
+            opacity: 1,
+            angle: Math.random() * Math.PI / 4 + Math.PI / 4
+        });
+    }
+    
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+    
+    function drawSky() {
+        if (document.hidden) {
+            state.animationFrameId = requestAnimationFrame(drawSky);
+            return;
+        }
+        
+        const isDarkMode = document.body.classList.contains("dark");
+        
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        if (isDarkMode) {
+            ctx.fillStyle = "#0f172a";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw stars
+            for (const star of state.stars) {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255,255,255,${star.opacity})`;
+                ctx.fill();
+                
+                star.opacity += (Math.random() - 0.5) * star.blinkSpeed;
+                star.opacity = Math.min(1, Math.max(0.3, star.opacity));
+            }
+            
+            // Draw meteors
+            for (let i = state.meteors.length - 1; i >= 0; i--) {
+                const m = state.meteors[i];
+                ctx.strokeStyle = `rgba(255,255,255,${m.opacity})`;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(m.x, m.y);
+                ctx.lineTo(
+                    m.x - m.length * Math.cos(m.angle),
+                    m.y - m.length * Math.sin(m.angle)
+                );
+                ctx.stroke();
+                
+                m.x += m.speed * Math.cos(m.angle);
+                m.y += m.speed * Math.sin(m.angle);
+                m.opacity -= 0.02;
+                if (m.opacity <= 0) state.meteors.splice(i, 1);
+            }
+            
+            if (state.meteorInterval === null) {
+                state.meteorInterval = setInterval(createMeteor, 5000);
+            }
+        } else {
+            if (state.meteorInterval !== null) {
+                clearInterval(state.meteorInterval);
+                state.meteorInterval = null;
+                state.meteors.length = 0;
             }
         }
-
-        // Bắt đầu tạo sao băng nếu chưa có interval
-        if (meteorInterval === null) {
-            meteorInterval = setInterval(createMeteor, 1200);
-        }
-    } else {
-        // Dừng tạo sao băng khi không ở dark mode
-        if (meteorInterval !== null) {
-            clearInterval(meteorInterval);
-            meteorInterval = null;
-            meteors.length = 0; // Xóa tất cả sao băng
-        }
+        
+        state.animationFrameId = requestAnimationFrame(drawSky);
     }
-
-    requestAnimationFrame(drawSky);
+    
+    drawSky();
 }
 
-// Bắt đầu vẽ bầu trời
-drawSky();
-
-/* -------------------------
-Menu
-------------------------- */
-const menuBtn = document.getElementById('menuBtn');
-const menuPanel = document.getElementById('menuPanel');
-
-menuBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    menuPanel.style.display = menuPanel.style.display === 'block' ? 'none' : 'block';
-});
-window.addEventListener('click', (ev) => {
-    if (!menuPanel.contains(ev.target) && ev.target !== menuBtn) menuPanel.style.display = 'none';
-});
-
-// Dark toggle in menu:
-const menuDark = document.getElementById('menuDark');
-document.getElementById("menuPopup").addEventListener("click", () => {
-    openPopup(true); // mở popup cưỡng bức khi bấm trong menu
-});
-
-// Liquid/Normal toggle
-const menuLiquid = document.getElementById('menuLiquid');
-
-function applyThemeFromStorage() {
-    // Áp dụng dark mode
-    if (localStorage.getItem('theme') === 'dark') {
-        document.body.classList.add('dark');
-        menuDark.textContent = '☀️ Light Mode';
-        // Tự động chuyển sang chủ đề đen khi bật dark mode
-        applyColorTheme('black');
-    } else {
-        document.body.classList.remove('dark');
-        menuDark.textContent = '🌙 Dark Mode';
-        // Quay lại chủ đề đã lưu trước đó khi tắt dark mode
-        const savedTheme = localStorage.getItem('colorTheme') || 'blue';
-        applyColorTheme(savedTheme);
-    }
-
-    // Áp dụng liquid/normal mode
-    if (localStorage.getItem('liquidMode') === 'normal') {
-        document.body.classList.add('normal-mode');
-        menuLiquid.textContent = '✨ Đang hiển thị giao diện thường';
-    } else {
-        document.body.classList.remove('normal-mode');
-        menuLiquid.textContent = '✨ Đang hiển thị Liquid Glass';
+// Tạo hiệu ứng hạt nổi
+function createParticles() {
+    const particlesContainer = document.createElement('div');
+    particlesContainer.className = 'particles';
+    document.body.appendChild(particlesContainer);
+    
+    // Chỉ tạo particles ở light mode
+    if (!document.body.classList.contains("dark")) {
+        for (let i = 0; i < 20; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            
+            // Kích thước ngẫu nhiên
+            const size = Math.random() * 10 + 5;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            
+            // Vị trí ngẫu nhiên
+            particle.style.left = `${Math.random() * 100}%`;
+            
+            // Độ trễ ngẫu nhiên
+            particle.style.animationDelay = `${Math.random() * 15}s`;
+            
+            particlesContainer.appendChild(particle);
+        }
     }
 }
 
-menuDark.addEventListener('click', () => {
-    showThemeLoading();
-
-    setTimeout(() => {
-        document.body.classList.toggle('dark');
-        localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
-        applyThemeFromStorage();
-        hideThemeLoading();
-    }, 500);
-});
-
-menuLiquid.addEventListener('click', () => {
-    showThemeLoading();
-
-    setTimeout(() => {
-        document.body.classList.toggle('normal-mode');
-        localStorage.setItem('liquidMode', document.body.classList.contains('normal-mode') ? 'normal' : 'liquid');
-        applyThemeFromStorage();
-        hideThemeLoading();
-    }, 500);
-});
-
-// Xử lý màu chủ đề
-function applyColorTheme(theme) {
-    // Xóa tất cả các class màu chủ đề
-    document.body.classList.remove('theme-pink', 'theme-blue', 'theme-green', 'theme-fresh', 'theme-popular', 'theme-white', 'theme-black', 'theme-aquaviolet');
-
-    // Thêm class màu chủ đề được chọn
-    if (theme) {
-        document.body.classList.add(`theme-${theme}`);
+// Tab Navigation - Tối ưu
+function initTabNavigation() {
+    const tabButtons = document.querySelectorAll('.tab-btn-fixed');
+    const tabPanels = document.querySelectorAll('.tab-panel');
+    const tabIndicator = document.querySelector('.tab-indicator-fixed');
+    const tabNavigationFixed = document.getElementById('tabNavigationFixed');
+    const tabExpandBtn = document.getElementById('tabExpandBtn');
+    
+    const tabState = {
+        tabTimeout: null,
+        isTabInteracted: false,
+        TAB_HIDE_DELAY: 8000,
+        TAB_MINIMIZE_DELAY: 15000
+    };
+    
+    function updateIndicator(activeTab) {
+        const tabRect = activeTab.getBoundingClientRect();
+        const containerRect = activeTab.parentElement.getBoundingClientRect();
+        
+        tabIndicator.style.cssText = `
+            left: ${tabRect.left - containerRect.left}px;
+            width: ${tabRect.width}px;
+            height: 3px;
+            border-radius: 3px 3px 0 0;
+        `;
     }
-
-    // Cập nhật trạng thái active cho các nút màu
-    document.querySelectorAll('.color-theme').forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.dataset.theme === theme) {
-            btn.classList.add('active');
+    
+    function switchTab(targetTab) {
+        tabButtons.forEach(btn => {
+            const isActive = btn === targetTab;
+            btn.classList.toggle('active', isActive);
+            btn.setAttribute('aria-selected', isActive);
+        });
+        
+        const tabId = targetTab.getAttribute('data-tab');
+        tabPanels.forEach(panel => {
+            const isActive = panel.id === `${tabId}-panel`;
+            panel.classList.toggle('active', isActive);
+            panel.setAttribute('aria-hidden', !isActive);
+        });
+        
+        updateIndicator(targetTab);
+        localStorage.setItem('activeTab', tabId);
+        resetTabTimer();
+    }
+    
+    function resetTabTimer() {
+        clearTimeout(tabState.tabTimeout);
+        tabState.isTabInteracted = true;
+        showFullTab();
+        
+        tabState.tabTimeout = setTimeout(() => {
+            minimizeTab();
+        }, tabState.TAB_HIDE_DELAY);
+    }
+    
+    function showFullTab() {
+        tabNavigationFixed.classList.remove('minimized', 'hidden');
+        tabExpandBtn.classList.remove('visible');
+    }
+    
+    function minimizeTab() {
+        tabNavigationFixed.classList.remove('hidden');
+        tabNavigationFixed.classList.add('minimized');
+        tabExpandBtn.classList.remove('visible');
+        
+        tabState.tabTimeout = setTimeout(() => {
+            hideTab();
+        }, tabState.TAB_MINIMIZE_DELAY);
+    }
+    
+    function hideTab() {
+        tabNavigationFixed.classList.remove('minimized');
+        tabNavigationFixed.classList.add('hidden');
+        tabExpandBtn.classList.add('visible');
+    }
+    
+    // Event listeners
+    tabNavigationFixed.addEventListener('mouseenter', resetTabTimer);
+    tabNavigationFixed.addEventListener('mouseleave', () => {
+        if (tabState.isTabInteracted) {
+            tabState.tabTimeout = setTimeout(() => {
+                minimizeTab();
+            }, tabState.TAB_HIDE_DELAY);
         }
     });
-
-    // Lưu màu chủ đề vào localStorage (chỉ khi không ở dark mode)
-    if (!document.body.classList.contains('dark')) {
-        localStorage.setItem('colorTheme', theme);
+    
+    tabExpandBtn.addEventListener('click', resetTabTimer);
+    tabNavigationFixed.addEventListener('touchstart', resetTabTimer, { passive: true });
+    
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => switchTab(button));
+    });
+    
+    // Initialize
+    const activeTab = document.querySelector('.tab-btn-fixed.active');
+    if (activeTab) {
+        updateIndicator(activeTab);
     }
+    
+    window.addEventListener('resize', () => {
+        const currentActiveTab = document.querySelector('.tab-btn-fixed.active');
+        if (currentActiveTab) {
+            updateIndicator(currentActiveTab);
+        }
+    });
+    
+    const savedTabId = localStorage.getItem('activeTab');
+    if (savedTabId) {
+        const savedTab = document.querySelector(`.tab-btn-fixed[data-tab="${savedTabId}"]`);
+        if (savedTab) {
+            switchTab(savedTab);
+        }
+    }
+    
+    resetTabTimer();
 }
 
-// Hiệu ứng loading khi chuyển chủ đề
-function showThemeLoading() {
-    const themeLoading = document.getElementById('themeLoading');
-    themeLoading.classList.add('active');
-}
-
-function hideThemeLoading() {
-    const themeLoading = document.getElementById('themeLoading');
-    themeLoading.classList.remove('active');
-}
-
-// Thêm sự kiện click cho các nút màu
-document.querySelectorAll('.color-theme').forEach(btn => {
-    btn.addEventListener('click', () => {
-        const theme = btn.dataset.theme;
+// Menu functions - Tối ưu
+function initMenu() {
+    // Toggle menu
+    elements.menuBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const isExpanded = elements.menuBtn.getAttribute("aria-expanded") === "true";
+        elements.menuBtn.setAttribute("aria-expanded", !isExpanded);
+        elements.menuPanel.setAttribute("aria-hidden", isExpanded);
+        elements.menuPanel.style.display = isExpanded ? "none" : "block";
+    });
+    
+    // Close menu when clicking outside
+    document.addEventListener("click", (ev) => {
+        if (!elements.menuPanel.contains(ev.target) && ev.target !== elements.menuBtn) {
+            elements.menuBtn.setAttribute("aria-expanded", "false");
+            elements.menuPanel.setAttribute("aria-hidden", "true");
+            elements.menuPanel.style.display = "none";
+        }
+    });
+    
+    // Dark mode toggle
+    elements.menuDark.addEventListener("click", () => {
         showThemeLoading();
-
+        
         setTimeout(() => {
-            applyColorTheme(theme);
+            const isDarkMode = document.body.classList.contains("dark");
+            
+            if (isDarkMode) {
+                // Chuyển từ dark mode sang light mode
+                const savedColorTheme = localStorage.getItem("colorTheme") || "blue";
+                applyColorTheme(savedColorTheme);
+                elements.menuDark.innerHTML = '<i class="fas fa-moon" aria-hidden="true"></i><span>Dark Mode</span>';
+                localStorage.setItem("theme", "light");
+            } else {
+                // Chuyển từ light mode sang dark mode
+                applyColorTheme("black");
+                elements.menuDark.innerHTML = '<i class="fas fa-sun" aria-hidden="true"></i><span>Light Mode</span>';
+                localStorage.setItem("theme", "dark");
+            }
+            
             hideThemeLoading();
         }, 500);
     });
-});
+    
+    // Liquid/Normal mode toggle
+    elements.menuLiquid.addEventListener("click", () => {
+        showThemeLoading();
+        
+        setTimeout(() => {
+            document.body.classList.toggle("normal-mode");
+            localStorage.setItem("liquidMode", document.body.classList.contains("normal-mode") ? "normal" : "liquid");
+            applyThemeFromStorage();
+            hideThemeLoading();
+        }, 500);
+    });
+    
+    // Popup toggle
+    elements.menuPopup.addEventListener("click", () => {
+        openPopup(true);
+    });
+    
+    // Auto refresh toggle
+    const menuAutoRefresh = document.getElementById("menuAutoRefresh");
+    if (menuAutoRefresh) {
+        menuAutoRefresh.addEventListener("click", toggleAutoRefresh);
+    }
+    
+    // Color theme selection
+    elements.colorThemes.forEach(btn => {
+        btn.addEventListener("click", () => {
+            const theme = btn.dataset.theme;
+            showThemeLoading();
+            
+            setTimeout(() => {
+                // Nếu đang ở dark mode, chuyển về light mode trước
+                if (document.body.classList.contains("dark")) {
+                    elements.menuDark.innerHTML = '<i class="fas fa-moon" aria-hidden="true"></i><span>Dark Mode</span>';
+                }
+                
+                // Áp dụng màu chủ đề mới
+                applyColorTheme(theme);
+                hideThemeLoading();
+            }, 500);
+        });
+        
+        // Keyboard navigation
+        btn.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                btn.click();
+            }
+        });
+    });
+}
 
-/* -------------------------
-Popup logic (1 lần/ngày)
-------------------------- */
-const popup = document.getElementById('popup');
-const popupClose = document.getElementById('popupClose');
+// Theme functions - ĐÃ SỬA LỖI
+function applyColorTheme(theme) {
+    console.log("Áp dụng màu chủ đề:", theme);
+    
+    // Thêm lớp changing-theme để tắt các hiệu ứng trong khi chuyển đổi
+    document.body.classList.add("changing-theme");
+    
+    // Xóa tất cả các class màu chủ đề
+    document.body.classList.remove("theme-pink", "theme-blue", "theme-green", "theme-fresh", "theme-popular", "theme-white", "theme-aquaviolet", "theme-mint", "dark");
+    
+    // Xóa class dark nếu có
+    const isDarkMode = document.body.classList.contains("dark");
+    
+    if (theme === "black") {
+        // Chuyển sang dark mode
+        if (!isDarkMode) {
+            document.body.classList.add("dark");
+        }
+        console.log("Đã chuyển sang dark mode");
+    } else {
+        // Chuyển sang light mode với màu theme
+        if (isDarkMode) {
+            document.body.classList.remove("dark");
+        }
+        document.body.classList.add(`theme-${theme}`);
+        console.log("Đã chuyển sang light mode với màu:", theme);
+    }
+    
+    // Cập nhật trạng thái active cho các nút màu
+    elements.colorThemes.forEach(btn => {
+        btn.classList.remove("active");
+        btn.setAttribute("aria-checked", "false");
+        if (btn.dataset.theme === theme) {
+            btn.classList.add("active");
+            btn.setAttribute("aria-checked", "true");
+        }
+    });
+    
+    // Lưu màu chủ đề vào localStorage
+    if (theme !== "black") {
+        localStorage.setItem("colorTheme", theme);
+        localStorage.setItem("theme", "light");
+    } else {
+        localStorage.setItem("theme", "dark");
+    }
+    
+    // Đợi một chút để CSS được áp dụng
+    setTimeout(() => {
+        // Xóa lớp changing-theme để bật lại các hiệu ứng
+        document.body.classList.remove("changing-theme");
+        
+        // Buộc trình duyệt cập nhật lại giao diện
+        document.body.style.display = 'none';
+        document.body.offsetHeight; // Trigger reflow
+        document.body.style.display = '';
+        
+        console.log("Đã áp dụng màu chủ đề thành công");
+    }, 50);
+}
+
+function applyThemeFromStorage() {
+    console.log("Áp dụng theme từ storage");
+    
+    const savedTheme = localStorage.getItem("theme");
+    const savedColorTheme = localStorage.getItem("colorTheme") || "blue";
+    
+    console.log("Theme đã lưu:", savedTheme, "Màu đã lưu:", savedColorTheme);
+    
+    if (savedTheme === "dark") {
+        // Dark mode
+        applyColorTheme("black");
+        elements.menuDark.innerHTML = '<i class="fas fa-sun" aria-hidden="true"></i><span>Light Mode</span>';
+    } else {
+        // Light mode - áp dụng màu chủ đề đã lưu
+        applyColorTheme(savedColorTheme);
+        elements.menuDark.innerHTML = '<i class="fas fa-moon" aria-hidden="true"></i><span>Dark Mode</span>';
+    }
+
+    // Áp dụng liquid/normal mode
+    if (localStorage.getItem("liquidMode") === "normal") {
+        document.body.classList.add("normal-mode");
+        elements.menuLiquid.innerHTML = '<i class="fas fa-magic" aria-hidden="true"></i><span>Đang hiển thị giao diện thường</span>';
+    } else {
+        document.body.classList.remove("normal-mode");
+        elements.menuLiquid.innerHTML = '<i class="fas fa-magic" aria-hidden="true"></i><span>Đang hiển thị Liquid Glass</span>';
+    }
+}
+
+function showThemeLoading() {
+    console.log("Hiển thị loading");
+    elements.themeLoading.classList.add("active");
+}
+
+function hideThemeLoading() {
+    console.log("Ẩn loading");
+    elements.themeLoading.classList.remove("active");
+    forceUpdateUI();
+}
+
+function forceUpdateUI() {
+    // Tạo một sự kiện thay đổi để buộc trình duyệt cập nhật
+    const event = new Event('change');
+    document.body.dispatchEvent(event);
+    
+    // Hoặc sử dụng cách này
+    const originalDisplay = document.body.style.display;
+    document.body.style.display = 'none';
+    setTimeout(() => {
+        document.body.style.display = originalDisplay;
+    }, 10);
+}
+
+// Popup functions - Tối ưu
+function initPopup() {
+    elements.popupClose.addEventListener("click", closePopup);
+    
+    // Close popup when clicking outside
+    elements.popup.addEventListener("click", (e) => {
+        if (e.target === elements.popup) {
+            closePopup();
+        }
+    });
+    
+    // Close popup when pressing Escape
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && elements.popup.classList.contains("open")) {
+            closePopup();
+        }
+    });
+}
 
 function openPopup(force = false) {
     const today = new Date().toLocaleDateString('vi-VN');
-    const disabled = localStorage.getItem('popupDisabled') === 'true'; // nếu user tắt hoàn toàn (không dùng ở đây)
-
+    
     if (force) {
-        popup.classList.add('open');
-        // Ngăn scroll trang khi popup mở
-        document.body.classList.add('popup-open');
+        elements.popup.classList.add("open");
+        document.body.classList.add("popup-open");
+        document.body.style.overflow = "hidden";
         return;
     }
 
-    if (disabled) return;
-
     const lastShown = localStorage.getItem('popupShownDate');
     if (lastShown !== today) {
-        popup.classList.add('open');
+        elements.popup.classList.add("open");
         localStorage.setItem('popupShownDate', today);
-        // Ngăn scroll trang khi popup mở
-        document.body.classList.add('popup-open');
+        document.body.classList.add("popup-open");
+        document.body.style.overflow = "hidden";
     }
 }
 
-// Đóng popup khi click vào nút đóng
-popupClose.addEventListener('click', () => {
-    popup.classList.remove('open');
-    // Cho phép scroll trang lại khi popup đóng
-    document.body.classList.remove('popup-open');
-});
+function closePopup() {
+    elements.popup.classList.remove("open");
+    document.body.classList.remove("popup-open");
+    document.body.style.overflow = "";
+}
 
-// Đóng popup khi click bên ngoài popup
-popup.addEventListener('click', (e) => {
-    if (e.target === popup) {
-        popup.classList.remove('open');
-        // Cho phép scroll trang lại khi popup đóng
-        document.body.classList.remove('popup-open');
-    }
-});
+// Data functions - Tối ưu
+const SUBJECT_LIST = [
+  "Toán - Đại số", "Toán - Hình học", "Ngữ văn", "Tiếng Anh", "Vật lý",
+  "Hóa học", "Sinh học", "Lịch sử", "Địa lí", "GDCD",
+  "Tin học", "Công nghệ", "GDTC", "GDĐP", "Mĩ thuật", "Âm nhạc", "HĐTN"
+];
 
-// Đóng popup khi nhấn phím Escape
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && popup.classList.contains('open')) {
-        popup.classList.remove('open');
-        // Cho phép scroll trang lại khi popup đóng
-        document.body.classList.remove('popup-open');
-    }
-});
+function ensureAllSubjects(btvnArray) {
+  const map = {};
+  btvnArray.forEach(item => { map[item.subject] = item; });
 
-/* -------------------------
-Tải dữ liệu từ API
-------------------------- */
+  return SUBJECT_LIST.map(sub => {
+    if (map[sub]) return map[sub];
+    return { subject: sub, content: "(Chưa có bài tập)", date: "", note: "" };
+  });
+}
+
 async function fetchData() {
-    try {
-        const res = await fetch(SCRIPT_URL + "?action=getAll");
-        const j = await res.json();
-        // Nếu có "result" thì trả về result
-        return j.result || j;
-    } catch (e) {
-        console.error(e);
-        return null;
+  if (state.isLoading) return null;
+  
+  state.isLoading = true;
+
+  try {
+    const response = await fetch(`${SCRIPT_URL}?action=getAll`);
+    
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
     }
+    
+    const data = await response.json();
+
+    if (!data?.result) return null;
+
+    // Add missing subjects
+    data.result.btvn = ensureAllSubjects(data.result.btvn || []);
+
+    return data.result;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return null;
+  } finally {
+    state.isLoading = false;
+  }
 }
-// Hàm render BTVN từ API
+
+// Render functions - Tối ưu
 function renderBTVN(data) {
-    const container = document.getElementById('btvnContainer');
-    if (!data?.btvn?.length) {
+    const container = elements.btvnContainer;
+    
+    const btvnData = data?.btvn ?? [];
+    
+    if (!btvnData.length) {
         container.innerHTML = "<p>Chưa có bài tập.</p>";
         return;
     }
 
-    let html = "";
-    const subjects = {};
-    
-    // Nhóm bài theo môn học
-    data.btvn.forEach(item => {
-        if (!subjects[item.subject]) {
-            subjects[item.subject] = [];
+    // Group by subject
+    const subjects = btvnData.reduce((acc, item) => {
+        if (!acc[item.subject]) {
+            acc[item.subject] = [];
         }
-        subjects[item.subject].push(item);
-    });
+        acc[item.subject].push(item);
+        return acc;
+    }, {});
 
-    // Render theo từng môn
-    Object.keys(subjects).forEach(subject => {
-        html += `<h2 class="animate-item">${getSubjectIcon(subject)} ${subject}</h2>`;
-        html += '<ul class="animate-item">';
-        
-        subjects[subject].forEach(item => {
-            html += `<li>${item.content}</li>`;
-        });
-        
-        html += '</ul>';
-    });
+    // Generate HTML - ĐÃ SỬA LỖI
+    const html = Object.entries(subjects).map(([subject, items]) => {
+        const itemsHtml = items.map(item => `<li class="scroll-fade">${item.content}</li>`).join('');
+        return `
+            <h2 class="animate-item scroll-fade">${getSubjectIcon(subject)} ${subject}</h2>
+            <ul class="animate-item">${itemsHtml}</ul>
+        `;
+    }).join('');
 
     container.innerHTML = html;
+    
+    // Khởi tạo hiệu ứng scroll fade cho các phần tử mới
+    setTimeout(() => {
+        const scrollElements = container.querySelectorAll('.scroll-fade');
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+
+        scrollElements.forEach(el => observer.observe(el));
+    }, 100);
 }
 
-// Hàm render TKB từ API
 function renderTKB(data) {
-    const container = document.getElementById('tkbContainer');
+    const container = elements.tkbContainer;
     if (!data?.tkb) {
         container.innerHTML = "<p>Không có dữ liệu TKB.</p>";
         return;
@@ -364,29 +678,44 @@ function renderTKB(data) {
     const d = getVNDateObj();
     let day = d.getDay();
     const hour = d.getHours();
+    const minute = d.getMinutes();
 
-    if (hour < 7) day = (day - 1 + 7) % 7;
+    // Default to today
+    let showDay = day;
 
-    let showDay;
-    if (day === 5 || day === 6 || day === 0) showDay = 1;
-    else showDay = (day + 1) % 7;
+    // Rules for showing next day's schedule
+    if (day === 1 || day === 3 || day === 5) {
+        // Mon, Wed, Fri -> After 4:45 PM show next day
+        if (hour > 16 || (hour === 16 && minute >= 45)) {
+            showDay = (day + 1) % 7;
+        }
+    } else if (day === 2 || day === 4) {
+        // Tue, Thu -> After 10:00 AM show next day
+        if (hour >= 10) {
+            showDay = (day + 1) % 7;
+        }
+    } else if (day === 6) {
+        showDay = 1;
+    } else if (day === 0) {
+        // Sun always show Monday
+        showDay = 1;
+    }
 
-    let tomorrowDate = new Date(d);
-    if (day === 5) tomorrowDate.setDate(d.getDate() + ((1 + 7 - day) % 7));
-    else if (day === 6) tomorrowDate.setDate(d.getDate() + ((1 + 7 - day) % 7));
-    else if (day === 0) tomorrowDate.setDate(d.getDate() + 1);
-    else tomorrowDate.setDate(d.getDate() + 1);
+    // Calculate display date
+    let targetDate = new Date(d);
+    if (showDay <= day) targetDate.setDate(d.getDate() + ((showDay + 7 - day) % 7));
+    else targetDate.setDate(d.getDate() + (showDay - day));
 
-    const formattedDate = tomorrowDate.toLocaleDateString("vi-VN");
+    const formattedDate = targetDate.toLocaleDateString("vi-VN");
 
     let html = `<p>Hôm nay: <strong>${dayNames[d.getDay()]}</strong>, ${d.toLocaleDateString('vi-VN')} — Hiển thị TKB <strong>${dayNames[showDay]}</strong>, ngày ${formattedDate}</p>`;
-    html += `<div class="inline-note">❗Lưu ý: Sau 7:00 sáng TKB sẽ chuyển sang ngày tiếp theo.</div>`;
+    html += `<div class="inline-note">❗Lưu ý: Hiển thị TKB hôm sau tùy theo khung giờ quy định.</div>`;
 
-    html += `<div class="day-container">`;
+    html += `<div class="day-container scroll-fade">`;
     html += `<div class="day-header">${dayNames[showDay]}</div>`;
     html += `<div class="session-container">`;
 
-    // Buổi sáng
+    // Morning session
     html += `<div class="session-header morning-header">Buổi sáng</div>`;
     html += `<table class="session-table"><thead><tr><th>Tiết</th><th>Môn / Nội dung</th></tr></thead><tbody>`;
     if (data.tkb[showDay]) {
@@ -398,9 +727,9 @@ function renderTKB(data) {
     }
     html += `</tbody></table>`;
 
-    // Buổi chiều
+    // Afternoon session
     html += `<div class="session-header afternoon-header">Buổi chiều</div>`;
-    html += `<table class="session-table"><thead><tr><th>Tiết</th><th>Môn / Nội dung</th></tr></thead><tbody>`;
+    html += `<table class="session-table"><thead><tr><th>Tiết</th><th>Môn</th></tr></thead><tbody>`;
     if (data.tkb[showDay]) {
         data.tkb[showDay]
             .filter(p => p.buoi === "Chiều")
@@ -414,32 +743,97 @@ function renderTKB(data) {
     html += `<p style="margin-top:10px;"><b>Lịch trực: </b> <span id="todayTruc">${data.tkb[showDay]?.[0]?.truc || 'Không có dữ liệu'}</span></p>`;
 
     container.innerHTML = html;
+    
+    // Khởi tạo hiệu ứng scroll fade cho các phần tử mới
+    setTimeout(() => {
+        const scrollElements = container.querySelectorAll('.scroll-fade');
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+
+        scrollElements.forEach(el => observer.observe(el));
+    }, 100);
 }
-// Hàm render changelog từ API
+
 function renderChangelog(data) {
-    const container = document.getElementById('changelogContainer');
-    if (!data?.changelog?.length) {
-        container.innerHTML = "<p>Chưa có dữ liệu changelog.</p>";
-        return;
-    }
+  const container = elements.changelogContainer;
+  if (!data?.changelog?.length) {
+    container.innerHTML = "<p>Chưa có dữ liệu changelog.</p>";
+    return;
+  }
 
-    let html = '<div class="changelog animate-item">';
-    html += '<strong>Những thay đổi gần đây</strong>';
-    html += '<ul>';
-    
-    data.changelog.forEach(item => {
-        html += `<li>${item}</li>`;
-    });
-    
-    html += '</ul></div>';
-    container.innerHTML = html;
+  // Parse logs
+  const parsedLogs = data.changelog.map(line => {
+    const parts = line.split(" - ");
+    const header = parts[0] || "";
+    const content = parts.slice(1).join(" - ") || "";
+
+    const dateMatch = header.match(/\[(.*?)\]/);
+    const numMatch = header.match(/#(\d+)/);
+
+    const date = dateMatch ? dateMatch[1] : "";
+    const version = numMatch ? `#${numMatch[1]}` : "";
+
+    return { date, version, content: content.trim() };
+  });
+
+  // Group by date or version
+  const grouped = {};
+  parsedLogs.forEach(log => {
+    const key = `${log.date} ${log.version}`;
+    if (!grouped[key]) grouped[key] = [];
+    grouped[key].push(log.content);
+  });
+
+  // Generate HTML
+  let html = `
+    <div class="changelog-section">
+      <h3 style="margin-bottom:10px;">📝 Nhật ký thay đổi</h3>
+  `;
+
+  Object.keys(grouped).forEach(key => {
+    const [date, version] = key.split(" ");
+    html += `
+      <div class="changelog-card scroll-fade">
+        <div class="changelog-header">
+          <span class="changelog-version">❗ ${version}</span>
+          ${date ? `<span class="changelog-date">📅 ${date}</span>` : ""}
+        </div>
+        <ul class="changelog-list">
+          ${grouped[key].map(item => `<li class="scroll-fade">🔹 ${item}</li>`).join("")}
+        </ul>
+      </div>
+    `;
+  });
+
+  html += "</div>";
+  container.innerHTML = html;
+  
+  // Khởi tạo hiệu ứng scroll fade cho các phần tử mới
+  setTimeout(() => {
+    const scrollElements = container.querySelectorAll('.scroll-fade');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    scrollElements.forEach(el => observer.observe(el));
+  }, 100);
 }
 
-// Hàm render thông báo từ API
 function renderNotices(data) {
-    const container = document.getElementById('noticesContainer');
+    const container = elements.noticesContainer;
     if (!data?.notices?.length) {
-        container.style.display = 'none';
+        container.style.display = "none";
         return;
     }
 
@@ -452,117 +846,81 @@ function renderNotices(data) {
     
     html += '</ul>';
     container.innerHTML = html;
-    container.style.display = 'block';
+    container.style.display = "block";
 }
 
-// Hàm lấy icon cho môn học
 function getSubjectIcon(subject) {
     const icons = {
         'Địa lí': '📘',
-        'Toán học': '➗',
+        'Toán - Đại số': '➗',
+        'Toán - Hình học': '📐',
         'Ngữ văn': '✍',
-        'Sinh học': '🧬',
-        'GDĐP': '🏠',
-        'Lịch sử': '📜',
-        'Vật lý': '🔬',
-        'HĐTN, HN': '🤝',
-        'Mĩ thuật': '🎨',
-        'Hóa học': '⚗',
         'Tiếng Anh': '🇬🇧',
-        'Công dân': '👥',
+        'Vật lý': '🔬',
+        'Hóa học': '⚗',
+        'Sinh học': '🧬',
+        'Lịch sử': '📜',
+        'Địa lí': '🌍',
+        'GDCD': '👥',
+        'Tin học': '💻',
         'Công nghệ': '🔧',
+        'GDTC': '⚽',
+        'GDĐP': '🏠',
+        'Mĩ thuật': '🎨',
         'Âm nhạc': '🎶',
-        'Tin học': '💻'
+        'HĐTN': '🤝'
     };
     return icons[subject] || '📚';
 }
 
-// Hàm tải và hiển thị toàn bộ dữ liệu
+// Load all data - Tối ưu
 async function loadAllData() {
     const data = await fetchData();
     if (data) {
-        // Cập nhật dữ liệu toàn cục
-        currentData = {
-            tkb: data.tkb || defaultTKB,
-            truc: data.truc || defaultTruc,
+        // Update global state
+        state.currentData = {
+            tkb: data.tkb || defaultData.tkb,
+            truc: data.truc || defaultData.truc,
             btvn: data.btvn || [],
             changelog: data.changelog || [],
             notices: data.notices || []
         };
         
-        renderBTVN(currentData);
-        renderTKB(currentData);
-        renderChangelog(currentData);
-        renderNotices(currentData);
+        // Save data for comparison
+        state.lastData = JSON.parse(JSON.stringify(state.currentData));
+        
+        // Render data
+        renderBTVN(state.currentData);
+        renderTKB(state.currentData);
+        renderChangelog(state.currentData);
+        renderNotices(state.currentData);
     } else {
-        // Sử dụng dữ liệu mặc định nếu không tải được từ API
-        currentData = {
-            tkb: defaultTKB,
-            truc: defaultTruc,
+        // Use default data if API fails
+        state.currentData = {
+            tkb: defaultData.tkb,
+            truc: defaultData.truc,
             btvn: [],
             changelog: [],
             notices: []
         };
         
-        renderBTVN(currentData);
-        renderTKB(currentData);
-        renderChangelog(currentData);
-        renderNotices(currentData);
+        // Save data for comparison
+        state.lastData = JSON.parse(JSON.stringify(state.currentData));
+        
+        // Render data
+        renderBTVN(state.currentData);
+        renderTKB(state.currentData);
+        renderChangelog(state.currentData);
+        renderNotices(state.currentData);
     }
 }
 
-// Giữ nguyên hàm renderTodayTKB từ File 1 nhưng sửa để sử dụng dữ liệu từ API
+// Render today's TKB
 async function renderTodayTKB() {
-    renderTKB(currentData);
+    renderTKB(state.currentData);
 }
 
-document.getElementById('showFullBtn').addEventListener('click', async function() {
-    const full = document.getElementById('fullTKB');
-    if (full.style.display === 'block') {
-        full.style.display = 'none';
-        this.textContent = '📅 Xem toàn bộ TKB';
-        return;
-    }
-
-    let html = `<div style="margin-bottom:8px;"><strong>📅 Thời khóa biểu cả tuần</strong></div>`;
-    for (let k = 1; k <= 6; k++) {
-        html += `<div class="day-container">`;
-        html += `<div class="day-header">${dayNames[k]}</div>`;
-        html += `<div class="session-container">`;
-
-        // Buổi sáng
-        html += `<div class="session-header morning-header">Buổi sáng</div>`;
-        html += `<table class="session-table"><thead><tr><th>Tiết</th><th>Môn</th></tr></thead><tbody>`;
-        if (currentData.tkb[k]) {
-            currentData.tkb[k].filter(p => p.buoi === "Sáng").forEach(p => {
-                html += `<tr><td>${p.tiet}</td><td>${p.subject}</td></tr>`;
-            });
-        }
-        html += `</tbody></table>`;
-
-        // Buổi chiều
-        html += `<div class="session-header afternoon-header">Buổi chiều</div>`;
-        html += `<table class="session-table"><thead><tr><th>Tiết</th><th>Môn</th></tr></thead><tbody>`;
-        if (currentData.tkb[k]) {
-            currentData.tkb[k].filter(p => p.buoi === "Chiều").forEach(p => {
-                html += `<tr><td>${p.tiet}</td><td>${p.subject}</td></tr>`;
-            });
-        }
-        html += `</tbody></table>`;
-
-        html += `<div class="truc-container" style="margin-top: 12px; padding: 8px; background: var(--table-header-bg); border-radius: 8px;">`;
-        html += `<strong style="color: var(--table-header-text);">🧹 Lịch trực: </strong>`;
-        html += `<span>${currentData.tkb[k]?.[0]?.truc || 'Không có dữ liệu'}</span>`;
-        html += `</div>`;
-
-        html += `</div></div><div class="day-divider"></div>`;
-    }
-
-    full.innerHTML = html;
-    full.style.display = 'block';
-    this.textContent = '❌ Ẩn toàn bộ';
-});
-// Helper function: get VN date/time (works cross-browser)
+// Helper function: get VN date/time
 function getVNDateObj() {
     const s = new Date().toLocaleString('en-US', {
         timeZone: 'Asia/Ho_Chi_Minh'
@@ -570,106 +928,482 @@ function getVNDateObj() {
     return new Date(s);
 }
 
-/* -------------------------
-Small accessibility: close menu with ESC
-------------------------- */
-window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-        document.getElementById('menuPanel').style.display = 'none';
-        document.getElementById('popup').classList.remove('open');
-        document.body.classList.remove('popup-open');
+// Auto refresh functionality - Tối ưu
+function hasDataChanged(newData, oldData) {
+    if (!oldData) return true;
+    
+    // Compare BTVN
+    if (JSON.stringify(newData.btvn) !== JSON.stringify(oldData.btvn)) return true;
+    
+    // Compare TKB
+    if (JSON.stringify(newData.tkb) !== JSON.stringify(oldData.tkb)) return true;
+    
+    // Compare notices
+    if (JSON.stringify(newData.notices) !== JSON.stringify(oldData.notices)) return true;
+    
+    // Compare changelog
+    if (JSON.stringify(newData.changelog) !== JSON.stringify(oldData.changelog)) return true;
+    
+    return false;
+}
+
+async function autoRefreshData() {
+    try {
+        const data = await fetchData();
+        if (data && hasDataChanged(data, state.lastData)) {
+            // Update data if changed
+            state.lastData = JSON.parse(JSON.stringify(data));
+            state.currentData = {
+                tkb: data.tkb || defaultData.tkb,
+                truc: data.truc || defaultData.truc,
+                btvn: data.btvn || [],
+                changelog: data.changelog || [],
+                notices: data.notices || []
+            };
+            
+            // Update UI
+            renderBTVN(state.currentData);
+            renderTKB(state.currentData);
+            renderChangelog(state.currentData);
+            renderNotices(state.currentData);
+        }
+    } catch (error) {
+        console.error("Lỗi khi làm mới tự động:", error);
     }
+}
+
+function toggleAutoRefresh() {
+    state.isAutoRefreshEnabled = !state.isAutoRefreshEnabled;
+    
+    if (state.isAutoRefreshEnabled) {
+        // Enable auto refresh
+        state.autoRefreshInterval = setInterval(autoRefreshData, 20000);
+        document.getElementById("menuAutoRefresh").innerHTML = 
+            '<i class="fas fa-pause-circle" aria-hidden="true"></i><span>Tắt làm mới tự động</span>';
+        
+        // Hide manual refresh button
+        if (elements.refreshBtn) {
+            elements.refreshBtn.style.display = "none";
+        }
+        
+        // Show notification
+        showNotification("Đã bật làm mới tự động mỗi 20 giây");
+    } else {
+        // Disable auto refresh
+        if (state.autoRefreshInterval) {
+            clearInterval(state.autoRefreshInterval);
+            state.autoRefreshInterval = null;
+        }
+        document.getElementById("menuAutoRefresh").innerHTML = 
+            '<i class="fas fa-sync-alt" aria-hidden="true"></i><span>Bật làm mới tự động</span>';
+        
+        // Show manual refresh button
+        if (elements.refreshBtn) {
+            elements.refreshBtn.style.display = "flex";
+        }
+        
+        // Show notification
+        showNotification("Đã tắt làm mới tự động");
+    }
+    
+    // Save state to localStorage
+    localStorage.setItem('autoRefreshEnabled', state.isAutoRefreshEnabled);
+}
+
+// Show notification - Tối ưu
+function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.className = 'notification';
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 10);
+    
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => {
+            document.body.removeChild(notification);
+        }, 300);
+    }, 3000);
+}
+
+// Event listeners - Tối ưu
+function initEventListeners() {
+// Handle show full TKB button - Hiển thị trong modal
+elements.showFullBtn.addEventListener("click", function() {
+    const isExpanded = this.getAttribute("aria-expanded") === "true";
+    this.setAttribute("aria-expanded", !isExpanded);
+    
+    if (isExpanded) {
+        // Nếu modal đang mở, đóng nó và đặt lại trạng thái nút
+        closeTkbFullPopup();
+        return;
+    }
+
+    // Hiển thị modal TKB Full
+    showTkbFullPopup();
 });
+    // Thêm sự kiện đóng modal TKB Full
+    elements.tkbFullClose.addEventListener("click", closeTkbFullPopup);
+    
+    // Close popup when clicking outside
+    elements.tkbFullPopup.addEventListener("click", (e) => {
+        if (e.target === elements.tkbFullPopup) {
+            closeTkbFullPopup();
+        }
+    });
+    
+    // Close popup when pressing Escape
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && elements.tkbFullPopup.classList.contains("open")) {
+            closeTkbFullPopup();
+        }
+    });
+    
+    // Handle orientation change
+    window.addEventListener("orientationchange", function() {
+        resizeCanvas();
+        setTimeout(function() {
+            renderTodayTKB();
+        }, 300);
+    });
+    
+    // Add touch event for better mobile experience
+    document.addEventListener("touchstart", function() {}, {
+        passive: true
+    });
+}
 
-// Xử lý sự kiện xoay màn hình
-window.addEventListener('orientationchange', function() {
-    // Cập nhật lại kích thước canvas bầu trời sao
-    resizeCanvas();
+// Hàm hiển thị modal TKB Full
+function showTkbFullPopup() {
+    // Tạo nội dung TKB full
+    let html = '';
+    
+    for (let k = 1; k <= 5; k++) {
+        html += `<div class="day-container scroll-fade">`;
+        html += `<div class="day-header">${dayNames[k]}</div>`;
+        html += `<div class="session-container">`;
 
-    // Cập nhật lại vị trí các phần tử
-    setTimeout(function() {
-        renderTodayTKB();
-    }, 300);
-});
+        // Morning
+        html += `<div class="session-header morning-header">🌅 Buổi sáng</div>`;
+        html += `<table class="session-table"><thead><tr><th>Tiết</th><th>Môn</th></tr></thead><tbody>`;
+        if (state.currentData.tkb[k]) {
+            state.currentData.tkb[k].filter(p => p.buoi === "Sáng").forEach(p => {
+                html += `<tr><td>${p.tiet}</td><td>${p.subject}</td></tr>`;
+            });
+        }
+        html += `</tbody></table>`;
 
-// Thêm sự kiện touch để cải thiện trải nghiệm trên thiết bị cảm ứng
-document.addEventListener('touchstart', function() {}, {
-    passive: true
-});
+        // Afternoon
+        html += `<div class="session-header afternoon-header">🌆 Buổi chiều</div>`;
+        html += `<table class="session-table"><thead><tr><th>Tiết</th><th>Môn</th></tr></thead><tbody>`;
+        if (state.currentData.tkb[k]) {
+            state.currentData.tkb[k].filter(p => p.buoi === "Chiều").forEach(p => {
+                html += `<tr><td>${p.tiet}</td><td>${p.subject}</td></tr>`;
+            });
+        }
+        html += `</tbody></table>`;
 
-// Hàm khởi tạo
-window.addEventListener('load', () => {
+        html += `<div class="truc-container">`;
+        html += `<strong>🧹 Lịch trực: </strong>`;
+        html += `<span>${state.currentData.tkb[k]?.[0]?.truc || 'Không có dữ liệu'}</span>`;
+        html += `</div>`;
+
+        html += `</div></div>`;
+    }
+
+    // Thêm nội dung vào modal
+    elements.tkbFullContent.innerHTML = html;
+    
+    // Hiển thị modal
+    elements.tkbFullPopup.classList.add("open");
+    document.body.classList.add("popup-open");
+    document.body.style.overflow = "hidden";
+    
+    // Cập nhật trạng thái nút
+    elements.showFullBtn.setAttribute("aria-expanded", "true");
+    elements.showFullBtn.innerHTML = '<i class="fas fa-times" aria-hidden="true"></i> Ẩn toàn bộ';
+    
+    // Khởi tạo hiệu ứng scroll fade cho các phần tử mới
+    setTimeout(() => {
+        const scrollElements = elements.tkbFullContent.querySelectorAll('.scroll-fade');
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+
+        scrollElements.forEach(el => observer.observe(el));
+    }, 100);
+}
+
+// Hàm đóng modal TKB Full và đặt lại trạng thái nút
+function closeTkbFullPopup() {
+    elements.tkbFullPopup.classList.remove("open");
+    document.body.classList.remove("popup-open");
+    document.body.style.overflow = "";
+    
+    // Đặt lại trạng thái nút về "Xem toàn bộ TKB"
+    elements.showFullBtn.setAttribute("aria-expanded", "false");
+    elements.showFullBtn.innerHTML = '<i class="fas fa-calendar-week" aria-hidden="true"></i> Xem toàn bộ TKB';
+}
+
+// Refresh button - Tối ưu
+function initRefreshButton() {
+    if (!elements.refreshBtn) return;
+
+    elements.refreshBtn.addEventListener("click", async () => {
+        if (state.isLoading) return;
+        
+        // Add spin effect to icon
+        const icon = elements.refreshBtn.querySelector('i');
+        if (icon) {
+            icon.classList.add('fa-spin');
+        }
+        
+        await loadAllData();
+        
+        // Remove spin effect
+        if (icon) {
+            icon.classList.remove('fa-spin');
+        }
+    });
+}
+
+// Scroll animations - Tối ưu
+function initScrollFade() {
+  const elementsToFade = document.querySelectorAll('.scroll-fade');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  elementsToFade.forEach(el => observer.observe(el));
+}
+
+// Initialize app - Tối ưu
+function initApp() {
+    // Apply theme
     applyThemeFromStorage();
+    
+    // Initialize auto refresh
+    const savedAutoRefresh = localStorage.getItem('autoRefreshEnabled');
+    const isAutoRefresh = savedAutoRefresh === null || savedAutoRefresh === 'true';
+    
+    if (isAutoRefresh) {
+        enableAutoRefresh();
+    } else {
+        disableAutoRefresh();
+    }
+    
+    // Initialize components
+    initCanvas();
+    createParticles();
+    initMenu();
+    initPopup();
+    initTabNavigation();
+    initEventListeners();
+    
+    // Open popup if needed
     openPopup(false);
-    
-    // Ẩn màn hình loading
-    setTimeout(function() {
-        const loadingScreen = document.getElementById('loadingScreen');
-        loadingScreen.style.opacity = '0';
-        setTimeout(function() {
-            loadingScreen.style.display = 'none';
-        }, 500);
-    }, 1500);
-    
-    // Tải dữ liệu từ API
-    loadAllData();
-    
-    // Cập nhật TKB mỗi phút
-    setInterval(renderTodayTKB, 60 * 1000);
-    
-    // Áp dụng hiệu ứng xuất hiện cho các phần tử
-    const fadeElements = document.querySelectorAll('.fade-in-text');
-    fadeElements.forEach((element, index) => {
-        setTimeout(function() {
-            element.style.animationDelay = `${index * 0.1}s`;
-        }, 100);
+
+    // Load data
+    loadAllData().then(() => {
+        const checkRendered = () => {
+            const containers = [
+                elements.btvnContainer,
+                elements.tkbContainer,
+                elements.changelogContainer
+            ];
+            
+            return containers.every(container => 
+                container.innerHTML.trim() !== "Đang tải dữ liệu..."
+            );
+        };
+        
+        const waitForRender = () => {
+            if (checkRendered()) {
+                hideLoadingScreen();
+            } else {
+                setTimeout(waitForRender, 100);
+            }
+        };
+        
+        waitForRender();
     });
-
-    const animateElements = document.querySelectorAll('.animate-item');
-    animateElements.forEach((element, index) => {
-        setTimeout(function() {
-            element.style.animationDelay = `${0.2 + index * 0.05}s`;
-        }, 100);
+    
+    // Initialize refresh button
+    initRefreshButton();
+    
+    // Set up timer for TKB refresh
+    state.refreshTimer = setInterval(renderTodayTKB, 60 * 1000);
+    
+    // Optimize animations
+    requestIdleCallback(() => {
+        optimizeAnimations();
     });
+    
+    // Mobile optimizations
+    if (isMobileDevice()) {
+        optimizeForMobile();
+    }
+    
+    // Mark app as loaded
+    document.body.classList.add("loaded");
+}
 
-    // Tối ưu hóa cho thiết bị di động
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+// Helper functions - Tối ưu
+function enableAutoRefresh() {
+    state.isAutoRefreshEnabled = true;
+    state.autoRefreshInterval = setInterval(autoRefreshData, 20000);
+    updateAutoRefreshButton(true);
+    
+    if (elements.refreshBtn) {
+        elements.refreshBtn.style.display = "none";
+    }
+    
+    localStorage.setItem('autoRefreshEnabled', 'true');
+}
 
-    if (isMobile) {
-        // Thêm class mobile vào body để áp dụng CSS riêng
-        document.body.classList.add('mobile-device');
+function disableAutoRefresh() {
+    state.isAutoRefreshEnabled = false;
+    
+    if (state.autoRefreshInterval) {
+        clearInterval(state.autoRefreshInterval);
+        state.autoRefreshInterval = null;
+    }
+    
+    updateAutoRefreshButton(false);
+    
+    if (elements.refreshBtn) {
+        elements.refreshBtn.style.display = "flex";
+    }
+    
+    localStorage.setItem('autoRefreshEnabled', 'false');
+}
 
-        // Tối ưu hóa popup cho thiết bị di động
-        const popupCard = document.getElementById('popupCard');
-        if (popupCard) {
-            // Đảm bảo popup có thể cuộn
-            popupCard.style.maxHeight = '80vh';
-            popupCard.style.overflowY = 'auto';
-            popupCard.style.webkitOverflowScrolling = 'touch';
-        }
+function updateAutoRefreshButton(enabled) {
+    const menuAutoRefresh = document.getElementById("menuAutoRefresh");
+    if (menuAutoRefresh) {
+        menuAutoRefresh.innerHTML = enabled 
+            ? '<i class="fas fa-pause-circle" aria-hidden="true"></i><span>Tắt làm mới tự động</span>'
+            : '<i class="fas fa-sync-alt" aria-hidden="true"></i><span>Bật làm mới tự động</span>';
+    }
+}
 
-        // Tối ưu hóa các bảng để cuộn ngang nếu cần
-        const tables = document.querySelectorAll('table');
-        tables.forEach(table => {
-            const wrapper = document.createElement('div');
-            wrapper.style.overflowX = 'auto';
-            wrapper.style.marginBottom = '10px';
-            table.parentNode.insertBefore(wrapper, table);
-            wrapper.appendChild(table);
-        });
+function hideLoadingScreen() {
+    elements.loadingScreen.style.opacity = "0";
+    setTimeout(() => {
+        elements.loadingScreen.style.display = "none";
+    }, 400);
+}
 
-        // Tăng kích thước các nút bấm cho dễ thao tác
-        const buttons = document.querySelectorAll('button, .menu-btn, #showFullBtn');
-        buttons.forEach(button => {
-            button.style.minHeight = '44px'; // Kích thước tối thiểu theo khuyến nghị của Apple
-            button.style.minWidth = '44px';
-        });
+function optimizeAnimations() {
+    const fadeEls = document.querySelectorAll('.fade-in-text');
+    fadeEls.forEach((el, i) => el.style.animationDelay = `${i * 0.1}s`);
+    
+    const animEls = document.querySelectorAll('.animate-item');
+    animEls.forEach((el, i) => el.style.animationDelay = `${0.2 + i * 0.05}s`);
+}
 
-        // Tối ưu hóa menu cho thiết bị di động
-        const menuPanel = document.getElementById('menuPanel');
-        if (menuPanel) {
-            menuPanel.style.maxHeight = '70vh';
-            menuPanel.style.overflowY = 'auto';
-        }
+function isMobileDevice() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+function optimizeForMobile() {
+    document.body.classList.add("mobile-device");
+    
+    // Optimize popup
+    elements.popupCard.style.cssText = `
+        max-height: 80vh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    `;
+    
+    // Optimize tables
+    document.querySelectorAll('table').forEach(table => {
+        const wrapper = document.createElement("div");
+        wrapper.style.cssText = `
+            overflow-x: auto;
+            margin-bottom: 10px;
+        `;
+        table.parentNode.insertBefore(wrapper, table);
+        wrapper.appendChild(table);
+    });
+    
+    // Optimize buttons
+    document.querySelectorAll('button, .menu-btn, #showFullBtn').forEach(button => {
+        button.style.cssText = `
+            min-height: 44px;
+            min-width: 44px;
+        `;
+    });
+    
+    // Optimize menu
+    elements.menuPanel.style.cssText = `
+        max-height: 70vh;
+        overflow-y: auto;
+    `;
+}
+
+// Debug function
+function debugTheme() {
+    console.log("=== DEBUG THEME ===");
+    console.log("Body classes:", document.body.className);
+    console.log("Computed background:", getComputedStyle(document.body).background);
+    console.log("Computed color:", getComputedStyle(document.body).color);
+    console.log("Theme từ localStorage:", localStorage.getItem("theme"));
+    console.log("Color theme từ localStorage:", localStorage.getItem("colorTheme"));
+    console.log("=== END DEBUG ===");
+}
+
+// Add debug button (development only)
+function addDebugButton() {
+    const debugBtn = document.createElement("button");
+    debugBtn.textContent = "Debug Theme";
+    debugBtn.style.cssText = `
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        z-index: 9999;
+        padding: 5px;
+        background: red;
+        color: white;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+    `;
+    
+    debugBtn.addEventListener("click", debugTheme);
+    
+    document.body.appendChild(debugBtn);
+}
+
+// Initialize app when DOM is loaded
+document.addEventListener("DOMContentLoaded", initApp);
+
+// Cleanup when page is closed
+window.addEventListener("beforeunload", () => {
+    if (state.animationFrameId) {
+        cancelAnimationFrame(state.animationFrameId);
+    }
+    if (state.meteorInterval) {
+        clearInterval(state.meteorInterval);
+    }
+    if (state.refreshTimer) {
+        clearInterval(state.refreshTimer);
+    }
+    if (state.autoRefreshInterval) {
+        clearInterval(state.autoRefreshInterval);
     }
 });

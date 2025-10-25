@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - BTVN System</title>
+  <link rel="stylesheet" href="admin.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📘</text></svg>">
+  <meta name="description" content="Trang quản trị hệ thống Bài Tập Về Nhà">
+  <!-- Preload resources for better performance -->
+  <link rel="preload" href="admin.js" as="script">
+</head>
+<body>
+  <!-- Đăng nhập -->
+  <div id="login-box" class="card fade-in">
+    <h2>🔑 Đăng nhập quản trị</h2>
+    <form id="loginForm">
+      <input type="text" id="username" placeholder="Tên đăng nhập" required autocomplete="username">
+      <input type="password" id="password" placeholder="Mật khẩu" required autocomplete="current-password">
+      <button type="submit" id="loginBtn">Đăng nhập</button>
+    </form>
+    <p id="loginMsg"></p>
+  </div>
+
+  <!-- Admin panel -->
+  <div id="admin-panel" style="display:none;">
+    <header>
+      <h1>Trang Quản Trị BTVN</h1>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <button id="darkModeToggle" class="dark-toggle" aria-label="Chuyển đổi chế độ sáng/tối">
+          <span id="modeIcon">🌙</span>
+        </button>
+        <button id="logoutBtn" aria-label="Đăng xuất">Đăng xuất</button>
+      </div>
+    </header>
+
+    <main class="container">
+      <!-- BTVN -->
+      <section class="card fade-in">
+        <h2>📝 Bài Tập Về Nhà</h2>
+        <form id="btvnForm">
+          <label for="subject">Môn học</label>
+          <select id="subject" required>
+            <option value="">-- Chọn môn học --</option>
+            <option value="Toán - Đại số">Toán - Đại số</option>
+            <option value="Toán - Hình học">Toán - Hình học</option>
+            <option value="Ngữ văn">Ngữ văn</option>
+            <option value="Tiếng Anh">Tiếng Anh</option>
+            <option value="Vật lý">Vật lý</option>
+            <option value="Hóa học">Hóa học</option>
+            <option value="Sinh học">Sinh học</option>
+            <option value="Lịch sử">Lịch sử</option>
+            <option value="Địa lí">Địa lí</option>
+            <option value="GDCD">GDCD</option>
+            <option value="Tin học">Tin học</option>
+            <option value="Công nghệ">Công nghệ</option>
+            <option value="GDTC">GDTC</option>
+            <option value="GDĐP">GDĐP</option>
+            <option value="Mĩ thuật">Mĩ thuật</option>
+            <option value="Âm nhạc">Âm nhạc</option>
+            <option value="HĐTN">HĐTN</option>
+          </select>
+          <label for="btvn_content">Nội dung</label>
+          <textarea id="btvn_content" placeholder="Nội dung bài tập" rows="4" required></textarea>
+          <div class="btn-group">
+            <button type="button" id="updateBTVN" class="btn-update">➕ Thêm mới</button>
+            <button type="button" id="addNewBTVN" class="btn-new">🔁 Cập nhật (ghi đè)</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- TKB -->
+      <section class="card fade-in">
+        <h2>📅 Thời Khoá Biểu</h2>
+        <form id="tkbForm">
+          <label for="tkb_day">Chọn thứ</label>
+          <select id="tkb_day" required>
+            <option value="">-- Chọn thứ --</option>
+            <option value="1">Thứ 2</option>
+            <option value="2">Thứ 3</option>
+            <option value="3">Thứ 4</option>
+            <option value="4">Thứ 5</option>
+            <option value="5">Thứ 6</option>
+          </select>
+
+          <label for="tkb_truc">Tổ trực trong ngày</label>
+          <select id="tkb_truc" required>
+            <option value="">-- Chọn tổ trực --</option>
+            <option value="Tổ 1">Tổ 1</option>
+            <option value="Tổ 2">Tổ 2</option>
+            <option value="Tổ 3">Tổ 3</option>
+            <option value="Tổ 4">Tổ 4</option>
+          </select>
+
+          <div id="periodsContainer"></div>
+          <button type="button" id="addPeriod">➕ Thêm tiết</button>
+
+          <div class="btn-group mt-20">
+            <button type="button" id="updateTKB" class="btn-update">🔁 Cập nhật (ghi đè)</button>
+            <button type="button" id="addNewTKB" class="btn-new">➕ Thêm mới (xoá toàn bộ ngày cũ)</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Changelog -->
+      <section class="card fade-in">
+        <h2>📜 Cập nhật thay đổi</h2>
+        <form id="changelogForm">
+          <label for="changelog_text">Nội dung changelog</label>
+          <textarea id="changelog_text" placeholder="Nhập nội dung changelog..." rows="4" required></textarea>
+          <div class="btn-group">
+            <button type="button" id="updateChangelog" class="btn-update">🔁 Ghi đè</button>
+            <button type="button" id="addNewChangelog" class="btn-new">➕ Thêm mới</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Data viewer -->
+      <section class="card fade-in">
+        <h2>📊 Xem dữ liệu</h2>
+        <button id="refreshData">Tải lại</button>
+        <pre id="dataViewer" class="data-viewer">(chưa tải)</pre>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // Thêm biến toàn cục để theo dõi trạng thái tải
+    window.isLoading = false;
+    // Cấu hình (lưu hash chứ không lưu mật khẩu plaintext)
+    const CONFIG = {
+      SCRIPT_URL: "https://script.google.com/macros/s/AKfycby_jnFFS0Adq6yBqm5VQHjy2Ap59kqFclYDiJlHYkEwmvV21QQZzp-ZvJ27xumt3IDR/exec",
+      // ... các cấu hình khác bạn đang dùng
+      ADMIN_USERNAME: "admin",
+      // Thay bằng hash bạn đã tạo
+      ADMIN_PASSWORD_HASH: "329fe68c81dcc05dec93329dd35760318da604549107ec7ccb81d3a7545f54f4",
+      TOAST_DURATION: 3000,
+      // ... giữ lại các config khác nếu có
+    };
+
+    // Hàm băm SHA-256 trả về hex string
+    async function sha256Hex(str) {
+      const enc = new TextEncoder();
+      const data = enc.encode(str);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    // Ví dụ dùng trong xử lý login (giả sử bạn đã cache các element DOM)
+    async function handleLogin() {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value; // vẫn lấy input người dùng
+
+      const enteredHash = await sha256Hex(password);
+
+      if (username === CONFIG.ADMIN_USERNAME && enteredHash === CONFIG.ADMIN_PASSWORD_HASH) {
+        localStorage.setItem("adminLogged", "true");
+        showAdmin(); // hàm hiện panel admin của bạn
+        showToast("Đăng nhập thành công", "success");
+      } else {
+        document.getElementById('loginMsg').textContent = "Sai tài khoản hoặc mật khẩu!";
+        showToast("Sai tài khoản hoặc mật khẩu", "error");
+      }
+    }
+  </script>
+  <script src="admin.js" defer></script>
+</body>
+</html>

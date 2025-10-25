@@ -1,4 +1,4 @@
-/* admin.css */
+/* admin.css - Tối ưu hóa */
 :root {
   --primary: #1976d2;
   --secondary: #58a6ff;
@@ -7,64 +7,183 @@
   --info: #007bff;
   --light: #f8f9fa;
   --dark: #343a40;
+  --transition-speed: 0.3s;
+  --card-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  --hover-shadow: 0 8px 15px rgba(0,0,0,0.15);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: #f5f7fa;
   margin: 0;
+  padding: 0;
+  line-height: 1.6;
+  color: #333;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 header {
   background: linear-gradient(90deg, var(--primary), var(--secondary));
   color: white;
-  padding: 15px;
+  padding: 15px 20px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--card-shadow);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
-.container { max-width: 900px; margin: 20px auto; }
+.container {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 0 15px;
+}
 
 .card {
   background: white;
   padding: 20px;
   border-radius: 8px;
   margin-bottom: 20px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  box-shadow: var(--card-shadow);
+  transition: transform var(--transition-speed), box-shadow var(--transition-speed), background-color 0.3s, color 0.3s;
 }
 
-.card h2 { color: var(--primary); margin-bottom: 15px; }
-
-label { display: block; margin-top: 10px; }
-
-input, textarea, select, button {
-  width: 100%; padding: 10px; margin-top: 5px; margin-bottom: 10px;
-  border-radius: 6px; border: 1px solid #ddd;
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--hover-shadow);
 }
 
-button { cursor: pointer; }
-.btn-group { display: flex; gap: 10px; }
+.card h2 {
+  color: var(--primary);
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+  transition: color 0.3s, border-color 0.3s;
+}
 
-.btn-update { background: var(--info); color: white; }
-.btn-new { background: var(--success); color: white; }
-.mt-20 { margin-top: 20px; }
+label {
+  display: block;
+  margin-top: 10px;
+  font-weight: 600;
+  color: #444;
+  transition: color 0.3s;
+}
+
+input, textarea, select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-size: 16px;
+  transition: border-color var(--transition-speed), box-shadow var(--transition-speed), background-color 0.3s, color 0.3s;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.2);
+  outline: none;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: all var(--transition-speed);
+  font-size: 16px;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+.btn-group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn-update {
+  background: var(--info);
+  color: white;
+}
+
+.btn-new {
+  background: var(--success);
+  color: white;
+}
+
+.mt-20 {
+  margin-top: 20px;
+}
 
 .period-row {
-  display: flex; gap: 8px; margin: 6px 0;
+  display: flex;
+  gap: 8px;
+  margin: 6px 0;
+  align-items: center;
 }
 
-.period-row select, .period-row input { flex: 1; }
+.period-row select, .period-row input {
+  flex: 1;
+}
+
+.period-row button {
+  padding: 8px 12px;
+  background: var(--danger);
+  color: white;
+  border-radius: 6px;
+}
 
 .toast {
-  position: fixed; bottom: 20px; right: 20px;
-  padding: 10px 15px; color: white; border-radius: 6px;
-  opacity: 0; transform: translateY(20px);
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 15px 20px;
+  color: white;
+  border-radius: 6px;
+  opacity: 0;
+  transform: translateY(20px);
   transition: all 0.3s;
+  z-index: 1000;
+  max-width: 300px;
+  box-shadow: var(--card-shadow);
 }
-.toast.show { opacity: 1; transform: translateY(0); }
-.toast.success { background: var(--success); }
-.toast.error { background: var(--danger); }
-.toast.info { background: var(--info); }
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast.success {
+  background: var(--success);
+}
+
+.toast.error {
+  background: var(--danger);
+}
+
+.toast.info {
+  background: var(--info);
+}
+
 #tkb_truc {
   font-size: 1rem;
   padding: 10px;
@@ -73,23 +192,158 @@ button { cursor: pointer; }
   border-radius: 6px;
   border: 1px solid #ddd;
 }
+
 .big-select {
   font-size: 1rem;
   padding: 12px;
   min-width: 140px;
 }
-.period-row {
-  display: flex;
-  gap: 10px;
-  margin: 10px 0;
-}
-.period-row select {
-  flex: 1;
-}
-.period-row button {
-  background: var(--danger);
-  color: white;
-  padding: 0 12px;
-  border: none;
+
+.data-viewer {
+  background: #f8f9fa;
+  padding: 15px;
   border-radius: 6px;
+  border: 1px solid #ddd;
+  max-height: 400px;
+  overflow-y: auto;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+/* Nút chuyển đổi chế độ */
+.dark-toggle {
+  position: relative;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  background: var(--primary);
+  color: white;
+  font-size: 18px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.dark-toggle:hover {
+  background: var(--secondary);
+  transform: rotate(30deg);
+}
+
+/* Chế độ tối */
+body.dark {
+  background-color: #121212;
+  color: #e6e6e6;
+}
+
+body.dark .card {
+  background-color: #1e1e1e;
+  color: #e6e6e6;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+body.dark header {
+  background: linear-gradient(90deg, #0d47a1, #1565c0);
+}
+
+body.dark .card h2 {
+  color: #90caf9;
+  border-bottom-color: #333;
+}
+
+body.dark label {
+  color: #bbb;
+}
+
+body.dark input,
+body.dark textarea,
+body.dark select {
+  background-color: #2a2a2a;
+  color: #e6e6e6;
+  border: 1px solid #444;
+}
+
+body.dark input:focus,
+body.dark textarea:focus,
+body.dark select:focus {
+  border-color: var(--secondary);
+  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2);
+}
+
+body.dark .btn-update {
+  background: #0288d1;
+}
+
+body.dark .btn-new {
+  background: #2e7d32;
+}
+
+body.dark .data-viewer {
+  background-color: #2a2a2a;
+  color: #e6e6e6;
+  border: 1px solid #444;
+}
+
+body.dark .period-row button {
+  background: #c62828;
+}
+
+body.dark .toast.success {
+  background: #2e7d32;
+}
+
+body.dark .toast.error {
+  background: #c62828;
+}
+
+body.dark .toast.info {
+  background: #0288d1;
+}
+
+body.dark #tkb_truc {
+  background-color: #2a2a2a;
+  color: #e6e6e6;
+  border: 1px solid #444;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 10px;
+  }
+  
+  .card {
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+  
+  header {
+    padding: 12px 15px;
+  }
+  
+  .btn-group {
+    flex-direction: column;
+  }
+  
+  .period-row {
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .period-row select, .period-row input, .period-row button {
+    width: 100%;
+  }
+}
+
+/* Animation tối ưu */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease forwards;
 }

@@ -1,168 +1,351 @@
+// admin.js - Tối ưu hiệu suất và trải nghiệm người dùng
 document.addEventListener("DOMContentLoaded", () => {
-  const loginBox = document.getElementById("login-box");
-  const adminPanel = document.getElementById("admin-panel");
-  const loginMsg = document.getElementById("loginMsg");
+  // Cache DOM elements
+  const elements = {
+    loginBox: document.getElementById("login-box"),
+    adminPanel: document.getElementById("admin-panel"),
+    loginMsg: document.getElementById("loginMsg"),
+    loginForm: document.getElementById("loginForm"),
+    logoutBtn: document.getElementById("logoutBtn"),
+    // Dark mode elements
+    darkModeToggle: document.getElementById("darkModeToggle"),
+    modeIcon: document.getElementById("modeIcon"),
+    // BTVN elements
+    btvnForm: document.getElementById("btvnForm"),
+    subject: document.getElementById("subject"),
+    btvn_content: document.getElementById("btvn_content"),
+    updateBTVN: document.getElementById("updateBTVN"),
+    addNewBTVN: document.getElementById("addNewBTVN"),
+    // TKB elements
+    tkbForm: document.getElementById("tkbForm"),
+    tkb_day: document.getElementById("tkb_day"),
+    tkb_truc: document.getElementById("tkb_truc"),
+    periodsContainer: document.getElementById("periodsContainer"),
+    addPeriod: document.getElementById("addPeriod"),
+    updateTKB: document.getElementById("updateTKB"),
+    addNewTKB: document.getElementById("addNewTKB"),
+    // Changelog elements
+    changelogForm: document.getElementById("changelogForm"),
+    changelog_text: document.getElementById("changelog_text"),
+    updateChangelog: document.getElementById("updateChangelog"),
+    addNewChangelog: document.getElementById("addNewChangelog"),
+    // Data viewer
+    refreshData: document.getElementById("refreshData"),
+    dataViewer: document.getElementById("dataViewer")
+  };
+
+  // Hàm băm SHA-256 trả về chuỗi hex
+  async function sha256Hex(str) {
+    const enc = new TextEncoder();
+    const data = enc.encode(str);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+  }
+
+  // ----- DARK MODE -----
+  // Kiểm tra chế độ đã lưu trong localStorage
+  if (localStorage.getItem("darkMode") === "true") {
+    document.body.classList.add("dark");
+    elements.modeIcon.textContent = "☀️";
+  }
+
+  // Xử lý sự kiện chuyển đổi chế độ
+  elements.darkModeToggle.addEventListener("click", () => {
+    document.body.classList.toggle("dark");
+    
+    // Cập nhật icon và lưu trạng thái
+    if (document.body.classList.contains("dark")) {
+      elements.modeIcon.textContent = "☀️";
+      localStorage.setItem("darkMode", "true");
+      showToast("Đã chuyển sang chế độ tối", "info");
+    } else {
+      elements.modeIcon.textContent = "🌙";
+      localStorage.setItem("darkMode", "false");
+      showToast("Đã chuyển sang chế độ sáng", "info");
+    }
+  });
 
   // ----- LOGIN -----
-  if (localStorage.getItem("adminLogged") === "true") showAdmin();
+  // Kiểm tra trạng thái đăng nhập
+  if (localStorage.getItem("adminLogged") === "true") {
+    showAdmin();
+  }
 
-  document.getElementById("loginBtn").onclick = () => {
-    const u = val("username"), p = val("password");
-    if (u === ADMIN_USERNAME && p === ADMIN_PASSWORD) {
+  // Xử lý form đăng nhập
+  elements.loginForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    handleLogin();
+  });
+
+  // Xử lý đăng xuất
+  elements.logoutBtn.addEventListener("click", handleLogout);
+
+  async function handleLogin() {
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value;
+
+    if (!username || !password) {
+      elements.loginMsg.textContent = "Vui lòng nhập tên đăng nhập và mật khẩu!";
+      showToast("Vui lòng nhập đủ thông tin", "error");
+      return;
+    }
+
+    const enteredHash = await sha256Hex(password);
+
+    if (username === CONFIG.ADMIN_USERNAME && enteredHash === CONFIG.ADMIN_PASSWORD_HASH) {
       localStorage.setItem("adminLogged", "true");
       showAdmin();
       showToast("Đăng nhập thành công", "success");
     } else {
-      loginMsg.textContent = "Sai tài khoản hoặc mật khẩu!";
+      elements.loginMsg.textContent = "Sai tài khoản hoặc mật khẩu!";
       showToast("Sai tài khoản hoặc mật khẩu", "error");
     }
-  };
+  }
 
-  document.getElementById("logoutBtn").onclick = () => {
+  function handleLogout() {
     localStorage.removeItem("adminLogged");
     showToast("Đã đăng xuất", "info");
-    setTimeout(()=>location.reload(),1000);
-  };
+    setTimeout(() => location.reload(), 1000);
+  }
 
-  function showAdmin(){ loginBox.style.display="none"; adminPanel.style.display="block"; }
+  function showAdmin() {
+    elements.loginBox.style.display = "none";
+    elements.adminPanel.style.display = "block";
+    // Thêm hiệu ứng fade-in cho các phần tử
+    document.querySelectorAll('.card').forEach((card, index) => {
+      setTimeout(() => {
+        card.classList.add('fade-in');
+      }, index * 100);
+    });
+  }
 
   // ----- TOAST -----
-  function showToast(msg, type="info"){
-    document.querySelectorAll(".toast").forEach(t=>t.remove());
-    const t=document.createElement("div"); 
-    t.className=`toast ${type}`;
-    t.innerText=msg; 
-    document.body.appendChild(t);
-    setTimeout(()=>t.classList.add("show"),10);
-    setTimeout(()=>{t.classList.remove("show"); setTimeout(()=>t.remove(),300)},3000);
+  function showToast(message, type = "info") {
+    // Xóa toast cũ nếu có
+    const existingToast = document.querySelector(".toast");
+    if (existingToast) {
+      existingToast.remove();
+    }
+
+    const toast = document.createElement("div");
+    toast.className = `toast ${type}`;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    // Hiển thị toast
+    setTimeout(() => toast.classList.add("show"), 10);
+
+    // Ẩn toast sau một khoảng thời gian
+    setTimeout(() => {
+      toast.classList.remove("show");
+      setTimeout(() => toast.remove(), 300);
+    }, CONFIG.TOAST_DURATION);
   }
 
   // ----- BTVN -----
-  function getBTVN(){ 
-    return { 
-      subject:val("subject"),
-      content:val("btvn_content"),
-      note:""};
+  function getBTVNData() {
+    return {
+      subject: elements.subject.value,
+      content: elements.btvn_content.value,
+      note: ""
+    };
   }
-// 🔁 Cập nhật (ghi đè) — xóa toàn bộ môn đó rồi ghi mới
-document.getElementById("updateBTVN").onclick = ()=> {
-  const d=getBTVN(); 
-  if(!d.subject||!d.content) return showToast("Thiếu dữ liệu","error");
-  postData({ action: "overwriteBTVN", item: d });
-};
 
-// ➕ Thêm mới — chỉ thêm dòng mới, không xóa gì
-document.getElementById("addNewBTVN").onclick = ()=> {
-  const d=getBTVN(); 
-  if(!d.subject||!d.content) return showToast("Thiếu dữ liệu","error");
-  postData({ action: "addBTVN", item: d });
-};
+  // Cập nhật BTVN (ghi đè)
+  elements.updateBTVN.addEventListener("click", () => {
+    const data = getBTVNData();
+    if (!data.subject || !data.content) {
+      showToast("Vui lòng nhập đầy đủ thông tin", "error");
+      return;
+    }
+    postData({ action: "overwriteBTVN", item: data });
+  });
+
+  // Thêm mới BTVN
+  elements.addNewBTVN.addEventListener("click", () => {
+    const data = getBTVNData();
+    if (!data.subject || !data.content) {
+      showToast("Vui lòng nhập đầy đủ thông tin", "error");
+      return;
+    }
+    postData({ action: "addBTVN", item: data });
+  });
+
   // ----- TKB -----
-  document.getElementById("addPeriod").onclick=addPeriod;
-  document.getElementById("updateTKB").onclick=()=>saveAllPeriods(true);   // ghi đè từng tiết
-  document.getElementById("addNewTKB").onclick=()=>saveAllPeriods(false); // xoá cả ngày
+  elements.addPeriod.addEventListener("click", addPeriod);
+  elements.updateTKB.addEventListener("click", () => saveAllPeriods(true));
+  elements.addNewTKB.addEventListener("click", () => saveAllPeriods(false));
 
-  function addPeriod(){
-    const c=document.getElementById("periodsContainer");
-    const r=document.createElement("div"); 
-    r.className="period-row";
-    r.innerHTML=`
-      <select class="period-buoi">
+  function addPeriod() {
+    const periodRow = document.createElement("div");
+    periodRow.className = "period-row fade-in";
+    periodRow.innerHTML = `
+      <select class="period-buoi" required>
         <option value="Sáng">Sáng</option>
         <option value="Chiều">Chiều</option>
       </select>
-      <select class="period-tiet">
-        ${[1,2,3,4,5].map(i=>`<option value="${i}">Tiết ${i}</option>`).join("")}
+      <select class="period-tiet" required>
+        ${[1, 2, 3, 4, 5].map(i => `<option value="${i}">Tiết ${i}</option>`).join("")}
       </select>
-      <select class="period-subject">
+      <select class="period-subject" required>
         <option value="">-- Môn học --</option>
-        <option>Toán</option><option>Ngữ văn</option><option>Tiếng Anh</option>
-        <option>Vật lý</option><option>Hóa học</option><option>Sinh học</option>
-        <option>Lịch sử</option><option>Địa lý</option><option>GDCD</option>
-        <option>Tin học</option><option>Công nghệ</option><option>Thể dục</option><option>Nghỉ</option>
+        <option value="Toán">Toán</option>
+        <option value="Ngữ văn">Ngữ văn</option>
+        <option value="Tiếng Anh">Tiếng Anh</option>
+        <option value="Vật lý">Vật lý</option>
+        <option value="Hóa học">Hóa học</option>
+        <option value="Sinh học">Sinh học</option>
+        <option value="Lịch sử">Lịch sử</option>
+        <option value="Địa lí">Địa lí</option>
+        <option value="GDCD">GDCD</option>
+        <option value="Tin học">Tin học</option>
+        <option value="Công nghệ">Công nghệ</option>
+        <option value="GDTC">GDTC</option>
+        <option value="HĐTN">HĐTN</option>
+        <option value="GDĐP">GDĐP</option>
+        <option value="Mĩ thuật">Mĩ Thuật</option>
+        <option value="Âm nhạc">Âm nhạc</option>
+        <option value="Nghỉ">Nghỉ</option>
       </select>
-      <button type="button" class="removePeriod">❌</button>
+      <button type="button" class="removePeriod" aria-label="Xóa tiết">❌</button>
     `;
-    r.querySelector(".removePeriod").onclick=()=>r.remove();
-    c.appendChild(r);
+    
+    periodRow.querySelector(".removePeriod").addEventListener("click", () => {
+      periodRow.style.transform = "translateX(100%)";
+      periodRow.style.opacity = "0";
+      setTimeout(() => periodRow.remove(), 300);
+    });
+    
+    elements.periodsContainer.appendChild(periodRow);
   }
 
-  async function saveAllPeriods(overwrite){
-    const day=val("tkb_day");
-    const truc=val("tkb_truc"); // dropdown tổ trực
-    const rows=document.querySelectorAll(".period-row");
+  async function saveAllPeriods(overwrite) {
+    const day = elements.tkb_day.value;
+    const truc = elements.tkb_truc.value;
+    const periodRows = elements.periodsContainer.querySelectorAll(".period-row");
 
-    if(!day||rows.length===0) return showToast("Chọn thứ và nhập ít nhất 1 tiết","error");
-    if(!truc) return showToast("Chọn tổ trực cho ngày này","error");
+    if (!day || periodRows.length === 0) {
+      showToast("Chọn thứ và nhập ít nhất 1 tiết", "error");
+      return;
+    }
+    
+    if (!truc) {
+      showToast("Chọn tổ trực cho ngày này", "error");
+      return;
+    }
 
-    // Gom dữ liệu tiết
-    let periods = [];
-    rows.forEach(row=>{
-      const buoi=row.querySelector(".period-buoi").value;
-      const tiet=row.querySelector(".period-tiet").value;
-      const subject=row.querySelector(".period-subject").value;
-      if(subject) periods.push({ buoi, tiet, subject });
+    // Thu thập dữ liệu các tiết
+    const periods = [];
+    let hasError = false;
+    
+    periodRows.forEach(row => {
+      const buoi = row.querySelector(".period-buoi").value;
+      const tiet = row.querySelector(".period-tiet").value;
+      const subject = row.querySelector(".period-subject").value;
+      
+      if (!subject) {
+        showToast("Vui lòng chọn môn học cho tất cả các tiết", "error");
+        hasError = true;
+        return;
+      }
+      
+      periods.push({ buoi, tiet, subject });
     });
+    
+    if (hasError) return;
 
     postData({
-      action:"updateTKB",
-      item:{ day, truc, periods: JSON.stringify(periods) },
+      action: "updateTKB",
+      item: { day, truc, periods: JSON.stringify(periods) },
       overwrite: overwrite
     });
   }
 
   // ----- CHANGELOG -----
-  function getCL(){ return {text:val("changelog_text")}; }
+  function getChangelogData() {
+    return { text: elements.changelog_text.value };
+  }
 
-  document.getElementById("updateChangelog").onclick=()=> {
-    const d=getCL(); if(!d.text) return showToast("Nhập changelog","error");
-    postData({action:"updateChangelog",item:d,overwrite:true});
-  };
+  elements.updateChangelog.addEventListener("click", () => {
+    const data = getChangelogData();
+    if (!data.text) {
+      showToast("Vui lòng nhập nội dung changelog", "error");
+      return;
+    }
+    postData({ action: "updateChangelog", item: data, overwrite: true });
+  });
 
-  document.getElementById("addNewChangelog").onclick=()=> {
-    const d=getCL(); if(!d.text) return showToast("Nhập changelog","error");
-    postData({action:"updateChangelog",item:d,overwrite:false});
-  };
+  elements.addNewChangelog.addEventListener("click", () => {
+    const data = getChangelogData();
+    if (!data.text) {
+      showToast("Vui lòng nhập nội dung changelog", "error");
+      return;
+    }
+    postData({ action: "updateChangelog", item: data, overwrite: false });
+  });
+
+  // ----- DATA VIEWER -----
+  elements.refreshData.addEventListener("click", loadData);
 
   // ----- COMMON -----
-  function val(id){return document.getElementById(id).value;}
+  async function postData(data) {
+    if (window.isLoading) {
+      showToast("Đang xử lý yêu cầu trước đó, vui lòng đợi...", "info");
+      return;
+    }
+    
+    window.isLoading = true;
+    
+    try {
+      const formData = new FormData();
+      formData.append("action", data.action);
+      formData.append("overwrite", data.overwrite ? "true" : "false");
 
-// Thay postData trong admin.js bằng:
-async function postData(d){
-  try {
-    const f = new FormData();
-    f.append("action", d.action);
-    f.append("overwrite", d.overwrite ? "true" : "false");
-
-    if (d.item) {
-      for (let k in d.item) {
-        f.append(k, d.item[k] ?? "");
+      if (data.item) {
+        for (let key in data.item) {
+          formData.append(key, data.item[key] ?? "");
+        }
       }
-    }
 
-    // ✅ Debug in ra toàn bộ FormData
-    for (let [k,v] of f.entries()) {
-      console.log("FORMDATA:", k, "=", v);
-    }
+      // Hiển thị trạng thái đang tải
+      showToast("Đang xử lý...", "info");
+      
+      const response = await fetch(CONFIG.SCRIPT_URL, {
+        method: "POST",
+        body: formData
+      });
+      
+      const result = await response.json();
+      console.log("RESPONSE:", result);
 
-    const r = await fetch(SCRIPT_URL, { method:"POST", body:f });
-    const j = await r.json();
-    console.log("RESPONSE:", j);
-
-    if (j.status === "success") {
-      showToast("✅ " + (j.result?.action || "Thành công"), "success");
-    } else {
-      showToast("❌ " + (j.message || "Lỗi không rõ"), "error");
+      if (result.status === "success") {
+        showToast("✅ " + (result.result?.action || "Thành công"), "success");
+        loadData();
+      } else {
+        showToast("❌ " + (result.message || "Lỗi không rõ"), "error");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      showToast("⚠️ Gửi thất bại: " + error.message, "error");
+    } finally {
+      window.isLoading = false;
     }
-    loadData();
-  } catch (e) {
-    showToast("⚠️ Gửi thất bại: " + e.message, "error");
   }
-}
-  async function loadData(){
-    const v=document.getElementById("dataViewer"); v.textContent="Đang tải...";
-    try{const r=await fetch(SCRIPT_URL+"?action=getAll");const j=await r.json();v.textContent=JSON.stringify(j,null,2);}
-    catch(e){v.textContent="Lỗi: "+e.message;}
+
+  async function loadData() {
+    const dataViewer = elements.dataViewer;
+    dataViewer.textContent = "Đang tải dữ liệu...";
+    
+    try {
+      const response = await fetch(CONFIG.SCRIPT_URL + "?action=getAll");
+      const data = await response.json();
+      dataViewer.textContent = JSON.stringify(data, null, 2);
+    } catch (error) {
+      dataViewer.textContent = "Lỗi: " + error.message;
+    }
   }
+
+  // Tải dữ liệu ban đầu
   loadData();
 });

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Bảng Thông Báo BTVN - 16/9/2025</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f8ff;
+      color: #333;
+      margin: 20px;
+      line-height: 1.6;
+      transition: background 0.3s, color 0.3s;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: background 0.3s, color 0.3s;
+    }
+    h1 {
+      text-align: center;
+      color: #0066cc;
+      margin-bottom: 10px;
+    }
+    h2 {
+      margin-top: 30px;
+      color: #444;
+      border-left: 6px solid #0066cc;
+      padding-left: 10px;
+    }
+    ul {
+      list-style: none;
+      padding-left: 15px;
+    }
+    ul li::before {
+      content: "• ";
+      color: #0066cc;
+    }
+    .note {
+      background: #fff3cd;
+      border-left: 6px solid #ff9900;
+      padding: 10px 15px;
+      margin-top: 20px;
+      border-radius: 8px;
+    }
+    .footer {
+      margin-top: 25px;
+      font-size: 14px;
+      text-align: center;
+      color: #666;
+    }
+    .changelog {
+      margin-top: 20px;
+      background: #eaf4ff;
+      border-left: 6px solid #3399ff;
+      padding: 10px 15px;
+      border-radius: 8px;
+    }
+
+    /* 🌙 Dark mode */
+    body.dark {
+      background: #121212;
+      color: #f5f5f5;
+    }
+    body.dark .container {
+      background: #1e1e1e;
+      color: #f5f5f5;
+      box-shadow: 0 4px 12px rgba(255,255,255,0.1);
+    }
+    body.dark h1 {
+      color: #66b2ff;
+    }
+    body.dark h2 {
+      color: #ddd;
+      border-left-color: #66b2ff;
+    }
+    body.dark ul li::before {
+      color: #66b2ff;
+    }
+    body.dark .note {
+      background: #2c2c1e;
+      border-left-color: #ffcc00;
+    }
+    body.dark .changelog {
+      background: #1e2a38;
+      border-left-color: #66b2ff;
+    }
+    body.dark .footer {
+      color: #aaa;
+    }
+
+    /* 🔘 Toggle button */
+    #toggleMode {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #0066cc;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+      transition: background 0.3s;
+      z-index: 1000;
+    }
+    #toggleMode:hover {
+      background: #004c99;
+    }
+
+    /* Popup styles */
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+    
+    .popup-content {
+      background-color: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      max-width: 500px;
+      width: 90%;
+    }
+    
+    .popup-message {
+      color: red;
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    
+    .popup-close {
+      background-color: #0066cc;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+    
+    .popup-close:hover {
+      background-color: #004c99;
+    }
+    
+    /* Dark mode for popup */
+    body.dark .popup-content {
+      background-color: #2c2c2c;
+    }
+  </style>
+</head>
+<body>
+  <button id="toggleMode">🌙 Dark Mode</button>
+  
+  <!-- Popup -->
+  <div id="popup" class="popup-overlay">
+    <div class="popup-content">
+      <div class="popup-message">Lưu ý: Trang web này hiện không còn được update chỉ để xem!</div>
+      <button id="closePopup" class="popup-close">Đã hiểu</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <h1>📢 Thông báo BTVN [NEW 11:45 - 16/9/2025]</h1>
+
+    <h2>📘 Địa</h2>
+    <ul>
+      <li>Học hết phần d tiết 3 bài 2 [KTBC]</li>
+    </ul>
+
+    <h2>➗ Toán (Kết nối tri thức với cuộc sống)</h2>
+    <strong>Hình:</strong>
+    <ul>
+      <li>3.1 đến 3.3 Sách toán tập 1 [trang 51]</li>
+      <li>Bài tập thêm cho ai muốn kiểm tra đánh giá</li>
+      <li>Làm bài 3; 4 (ghi trên lớp - tiết 1)</li>
+      <li>Học định lí về tổng các góc của một tứ giác, và tứ giác</li>
+    </ul>
+    <strong>Số:</strong>
+    <ul>
+      <li>1.8 đến 1.9 Sách toán tập 1 [trang 14]</li>
+      <li>Học thuộc định lý cộng trừ đa thức - Bài 2 [trang 11]</li>
+    </ul>
+
+    <h2>✍ Văn (Kết nối tri thức với cuộc sống)</h2>
+    <ul>
+      <li>Tóm tắt bài "Quang Trung đại phá quân Thanh"[SGK-17]</li>
+      <li>Trả lời toàn bộ câu hỏi trang 23</li>
+    </ul>
+
+    <h2>🧬 Sinh</h2>
+    <ul>
+      <li>Hiện chưa rõ</li>
+    </ul>
+
+    <h2>🏠 GDĐP</h2>
+    <ul>
+      <li>Chưa có bài</li>
+    </ul>
+
+    <h2>📜 Lịch sử</h2>
+    <ul>
+      <li>Chưa có bài</li>
+    </ul>
+
+    <h2>🔬 Vật lý</h2>
+    <ul>
+      <li>Học thuộc công thức, khái niệm về trọng lượng riêng</li>
+    </ul>
+
+    <h2>🤝 HĐTN, HN</h2>
+    <ul>
+      <li>Hiện chưa rõ</li>
+    </ul>
+
+    <h2>🎨 Mĩ thuật</h2>
+    <ul>
+      <li>Vẽ xong bài cô đã cho trên lớp</li>
+    </ul>
+
+    <h2>⚗ Hóa</h2>
+    <ul>
+      <li>Học hết tiết 1</li>
+    </ul>
+
+    <h2>Tiếng Anh</h2>
+    <ul>
+      <li>Học thuộc 4 từ vựng</li>
+      <li>Viết 4 từ vựng Unit 1 Lesson 6 (mỗi từ 20 lần, mỗi dòng 2 từ)</li>
+    </ul>
+
+    <h2>👥 Công dân</h2>
+    <ul>
+      <li>Học cả khung vàng (SGK - trang 8)</li>
+    </ul>
+
+    <h2>🔧 Công nghệ</h2>
+    <ul>
+      <li>Chưa có bài</li>
+    </ul>
+
+    <h2>🎶 Âm nhạc</h2>
+    <ul>
+      <li>Học bài hát tiết 1 [chưa chắc]</li>
+    </ul>
+
+    <h2>💻 Tin học</h2>
+    <ul>
+      <li>Hiện chưa rõ</li>
+    </ul>
+
+    <div class="note">
+      <p><strong>LƯU Ý:</strong></p>
+      <ul>
+        <li>Muốn báo lỗi vui lòng nhập <code>@TÔI</code></li>
+        <li>Thường hoạt động: 11h50 – 13h00; 17h00 – 20h45</li>
+        <li>Thông tin có thể chưa chính xác, vui lòng kiểm tra lại</li>
+        <li>Mục đích: tốt cho mọi người → nếu sai sót xin báo lại, không chửi tục</li>
+        <li>Bạn đọc hay không là quyền của bạn, không vừa ý vui lòng tìm nguồn khác</li>
+      </ul>
+    </div>
+
+    <div class="changelog">
+      <strong>Changelog (V1.8):</strong>
+      <ul>
+        <li>Cập nhật môn Sinh</li>
+        <li>Cập nhật môn Vật lý</li>
+        <li>Cập nhật môn Toán [Hình]</li>
+        <li>Cập nhật môn Văn</li>
+        <li>Chuyển xang trang web dễ nhìn, dùng hơn</li>
+      </ul>
+    </div>
+
+    <div class="footer">
+      <p>By ChatGBT[Web] and Vũ Duy Anh</p>
+      <p>— HẾT —</p>
+    </div>
+  </div>
+
+  <script>
+    const btn = document.getElementById("toggleMode");
+    const popup = document.getElementById("popup");
+    const closePopupBtn = document.getElementById("closePopup");
+
+    // 🌟 Khi mở web, kiểm tra localStorage để áp dụng chế độ trước đó
+    if (localStorage.getItem("theme") === "dark") {
+      document.body.classList.add("dark");
+      btn.textContent = "☀️ Light Mode";
+    }
+
+    // Bấm nút để đổi chế độ + lưu vào localStorage
+    btn.addEventListener("click", () => {
+      document.body.classList.toggle("dark");
+      if (document.body.classList.contains("dark")) {
+        btn.textContent = "☀️ Light Mode";
+        localStorage.setItem("theme", "dark");
+      } else {
+        btn.textContent = "🌙 Dark Mode";
+        localStorage.setItem("theme", "light");
+      }
+    });
+
+    // Đóng popup khi nhấn nút
+    closePopupBtn.addEventListener("click", () => {
+      popup.style.display = "none";
+    });
+
+    // Đóng popup khi nhấn bất kỳ đâu bên ngoài popup content
+    window.addEventListener("click", (event) => {
+      if (event.target === popup) {
+        popup.style.display = "none";
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Hiển thị Report và Góp ý</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Light mode colors */
+      --primary: #3498db;
+      --primary-dark: #2980b9;
+      --secondary: #2ecc71;
+      --danger: #e74c3c;
+      --light: #f8f9fa;
+      --dark: #343a40;
+      --gray: #6c757d;
+      --gray-light: #e9ecef;
+      --white: #ffffff;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --shadow-hover: 0 10px 15px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+      --bg-gradient-start: #f5f7fa;
+      --bg-gradient-end: #c3cfe2;
+      --box-bg: rgba(255, 255, 255, 0.95);
+      --text-color: #343a40;
+      --tab-bg: #f8f9fa;
+      --item-bg: #ffffff;
+      --no-data-bg: #f8f9fa;
+      --status-bg: rgba(255, 255, 255, 0.9);
+    }
+
+    body.dark-mode {
+      /* Dark mode colors */
+      --primary: #4dabf7;
+      --primary-dark: #339af0;
+      --secondary: #51cf66;
+      --danger: #ff6b6b;
+      --light: #343a40;
+      --dark: #f8f9fa;
+      --gray: #adb5bd;
+      --gray-light: #495057;
+      --white: #212529;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      --shadow-hover: 0 10px 15px rgba(0, 0, 0, 0.4);
+      --bg-gradient-start: #212529;
+      --bg-gradient-end: #000000;
+      --box-bg: rgba(30, 30, 30, 0.95);
+      --text-color: #f8f9fa;
+      --tab-bg: #343a40;
+      --item-bg: #343a40;
+      --no-data-bg: #343a40;
+      --status-bg: rgba(30, 30, 30, 0.9);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+      color: var(--text-color);
+      min-height: 100vh;
+      padding: 20px;
+      line-height: 1.6;
+      transition: var(--transition);
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .box {
+      background: var(--box-bg);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 30px;
+      margin-bottom: 30px;
+      transition: var(--transition);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .box:hover {
+      box-shadow: var(--shadow-hover);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 24px;
+      color: var(--text-color);
+      font-weight: 700;
+      font-size: 1.8rem;
+      position: relative;
+      padding-bottom: 15px;
+    }
+
+    h2:after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background: var(--primary);
+      border-radius: 3px;
+    }
+
+    .tabs {
+      display: flex;
+      border-bottom: 2px solid var(--gray-light);
+      margin-bottom: 20px;
+      overflow: hidden;
+      border-radius: 8px 8px 0 0;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 14px 20px;
+      text-align: center;
+      cursor: pointer;
+      font-weight: 500;
+      color: var(--gray);
+      background: var(--tab-bg);
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tab:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--primary);
+      transform: translateY(100%);
+      transition: transform 0.3s ease;
+      z-index: -1;
+    }
+
+    .tab:hover {
+      color: var(--primary-dark);
+    }
+
+    .tab.active {
+      color: var(--white);
+      font-weight: 600;
+    }
+
+    .tab.active:before {
+      transform: translateY(0);
+    }
+
+    .content-container {
+      min-height: 300px;
+      position: relative;
+    }
+
+    .item {
+      background: var(--item-bg);
+      padding: 16px 20px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      transition: var(--transition);
+      border-left: 4px solid var(--primary);
+    }
+
+    .item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .name {
+      font-weight: 600;
+      color: var(--primary-dark);
+      font-size: 1rem;
+    }
+
+    .time {
+      font-size: 0.85rem;
+      color: var(--gray);
+      background: var(--gray-light);
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+
+    .item-content {
+      color: var(--text-color);
+      padding: 8px 0;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .no-data {
+      text-align: center;
+      color: var(--gray);
+      padding: 40px 20px;
+      font-style: italic;
+      background: var(--no-data-bg);
+      border-radius: 10px;
+      margin: 20px 0;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      margin-top: 25px;
+      gap: 15px;
+    }
+
+    button {
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    #refresh {
+      background: var(--primary);
+      color: white;
+    }
+
+    #refresh:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    #back {
+      background: var(--secondary);
+      color: white;
+    }
+
+    #back:hover {
+      background: #27ae60;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    #status {
+      margin-top: 20px;
+      text-align: center;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 500;
+      white-space: pre-wrap;
+      transition: var(--transition);
+      background: var(--status-bg);
+    }
+
+    .status-error {
+      color: var(--danger);
+      border-left: 4px solid var(--danger);
+    }
+
+    .status-success {
+      color: var(--secondary);
+      border-left: 4px solid var(--secondary);
+    }
+
+    .status-loading {
+      color: var(--primary);
+      border-left: 4px solid var(--primary);
+    }
+
+    .loader {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Theme toggle button */
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 100;
+      background: var(--box-bg);
+      color: var(--text-color);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50px;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+      font-weight: 500;
+    }
+
+    .theme-toggle:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .theme-icon {
+      font-size: 1.2rem;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .box {
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+      }
+
+      .tab {
+        padding: 12px 15px;
+        font-size: 0.9rem;
+      }
+
+      .item {
+        padding: 14px 16px;
+      }
+
+      .item-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .time {
+        margin-top: 5px;
+        align-self: flex-end;
+      }
+
+      .controls {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      button {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .theme-toggle {
+        top: 15px;
+        right: 15px;
+        padding: 6px 12px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 15px;
+      }
+
+      .container {
+        padding: 15px;
+      }
+
+      .box {
+        padding: 15px;
+      }
+
+      h2 {
+        font-size: 1.3rem;
+      }
+
+      .tab {
+        padding: 10px;
+        font-size: 0.85rem;
+      }
+
+      .item {
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Theme toggle button -->
+  <div class="theme-toggle" id="theme-toggle">
+    <span class="theme-icon" id="theme-icon">🌙</span>
+    <span id="theme-text">Dark Mode</span>
+  </div>
+
+  <div class="container">
+    <div class="box">
+      <h2>📋 Report & Góp ý</h2>
+      <div class="tabs">
+        <div class="tab active" id="tab-reports">🐞 Report</div>
+        <div class="tab" id="tab-feedbacks">💡 Góp ý</div>
+      </div>
+
+      <div class="content-container">
+        <div id="reports-container"></div>
+        <div id="feedbacks-container" style="display:none"></div>
+      </div>
+
+      <div class="controls">
+        <button id="refresh">🔄 Làm mới</button>
+        <button id="back">⬅️ Trang chính</button>
+      </div>
+
+      <div id="status"></div>
+    </div>
+  </div>
+
+<script>
+  // ====== DÁN URL WEB APP CỦA BẠN Ở ĐÂY ======
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwODmbIW4ygI_7jrXF2IKWzrZmBmfAitZyaM4RsxbwRwz5v2r_3BS8ZYjxhWlr14nEe/exec";
+  // ===========================================
+
+  // Theme toggle functionality
+  const themeToggle = document.getElementById('theme-toggle');
+  const themeIcon = document.getElementById('theme-icon');
+  const themeText = document.getElementById('theme-text');
+  
+  // Check for saved theme preference or default to light mode
+  const currentTheme = localStorage.getItem('theme') || 'light';
+  
+  // Apply the saved theme on page load
+  if (currentTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+    themeIcon.textContent = '☀️';
+    themeText.textContent = 'Light Mode';
+  }
+  
+  // Toggle theme when button is clicked
+  themeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    
+    // Update button text and icon based on current theme
+    if (document.body.classList.contains('dark-mode')) {
+      themeIcon.textContent = '☀️';
+      themeText.textContent = 'Light Mode';
+      localStorage.setItem('theme', 'dark');
+    } else {
+      themeIcon.textContent = '🌙';
+      themeText.textContent = 'Dark Mode';
+      localStorage.setItem('theme', 'light');
+    }
+  });
+
+  // Tab handling
+  document.getElementById('tab-reports').addEventListener('click', () => showTab('reports'));
+  document.getElementById('tab-feedbacks').addEventListener('click', () => showTab('feedbacks'));
+  document.getElementById('refresh').addEventListener('click', () => {
+    // Add animation to refresh button
+    const refreshBtn = document.getElementById('refresh');
+    refreshBtn.style.transform = 'rotate(360deg)';
+    setTimeout(() => {
+      refreshBtn.style.transform = 'rotate(0deg)';
+    }, 500);
+    loadData();
+  });
+  document.getElementById('back').addEventListener('click', () => window.location.href='index.html');
+
+  function showTab(name) {
+    document.getElementById('tab-reports').classList.toggle('active', name==='reports');
+    document.getElementById('tab-feedbacks').classList.toggle('active', name==='feedbacks');
+    document.getElementById('reports-container').style.display = name==='reports' ? 'block' : 'none';
+    document.getElementById('feedbacks-container').style.display = name==='feedbacks' ? 'block' : 'none';
+  }
+
+  function setStatus(msg, isError = false, isLoading = false) {
+    const s = document.getElementById('status');
+    s.className = '';
+    
+    if (isLoading) {
+      s.innerHTML = `<span class="loader"></span> ${msg}`;
+      s.classList.add('status-loading');
+    } else if (isError) {
+      s.textContent = msg;
+      s.classList.add('status-error');
+    } else {
+      s.textContent = msg;
+      s.classList.add('status-success');
+    }
+  }
+
+  function formatTime(t) {
+    if(!t) return 'Không có thời gian';
+    const d = new Date(t);
+    if(isNaN(d)) return t;
+    const pad = n => String(n).padStart(2,'0');
+    return `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+
+  function escapeHtml(s) { 
+    if(s === null || s === undefined) return ''; 
+    return String(s)
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;')
+      .replace(/'/g,'&#039;')
+      .replace(/\n/g,'<br>');
+  }
+
+  async function loadData() {
+    if(!SCRIPT_URL) {
+      setStatus('Lỗi: Chưa có URL Apps Script!', true);
+      return;
+    }
+
+    setStatus('Đang tải dữ liệu...', false, true);
+    
+    // Show loading state
+    document.getElementById('reports-container').innerHTML = '<div class="no-data">Đang tải dữ liệu…</div>';
+    document.getElementById('feedbacks-container').innerHTML = '<div class="no-data">Đang tải dữ liệu…</div>';
+
+    try {
+      // Add timestamp to prevent caching
+      const url = `${SCRIPT_URL}?t=${Date.now()}`;
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
+      
+      const resp = await fetch(url, {
+        signal: controller.signal,
+        cache: 'no-store',
+        mode: 'cors'
+      });
+      
+      clearTimeout(timeoutId);
+      
+      if(!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const data = await resp.json();
+
+      if(!Array.isArray(data)) throw new Error('Dữ liệu không hợp lệ.');
+
+      // Sort by time (newest first)
+      data.sort((a,b) => (Date.parse(b.time) || 0) - (Date.parse(a.time) || 0));
+
+      // Render data
+      let repHtml = '', fbHtml = '', hasRep = false, hasFb = false;
+
+      data.forEach(item => {
+        const name = item.name || "Không có tên";
+        const time = item.time ? formatTime(item.time) : "Không có thời gian";
+
+        // Render Report
+        if (item.report && item.report.trim() !== "") {
+          hasRep = true;
+          repHtml += `
+            <div class="item">
+              <div class="item-header">
+                <div class="name">${escapeHtml(name)}</div>
+                <div class="time">${escapeHtml(time)}</div>
+              </div>
+              <div class="item-content">${escapeHtml(item.report)}</div>
+            </div>
+          `;
+        }
+
+        // Render Feedback
+        if (item.feedback && item.feedback.trim() !== "") {
+          hasFb = true;
+          fbHtml += `
+            <div class="item">
+              <div class="item-header">
+                <div class="name">${escapeHtml(name)}</div>
+                <div class="time">${escapeHtml(time)}</div>
+              </div>
+              <div class="item-content">${escapeHtml(item.feedback)}</div>
+            </div>
+          `;
+        }
+      });
+
+      document.getElementById('reports-container').innerHTML = hasRep ? repHtml : '<div class="no-data">Chưa có report nào</div>';
+      document.getElementById('feedbacks-container').innerHTML = hasFb ? fbHtml : '<div class="no-data">Chưa có góp ý nào</div>';
+      setStatus('Tải dữ liệu thành công.', false);
+
+    } catch (err) {
+      setStatus(`Lỗi khi tải dữ liệu: ${err.message}`, true);
+      console.error('Error loading data:', err);
+    }
+  }
+
+  // Auto load on page load
+  window.addEventListener('load', loadData);
+  
+  // Auto refresh every 30s
+  setInterval(loadData, 30000);
+  
+  // Handle page visibility change to refresh when tab becomes active
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+      loadData();
+    }
+  });
+</script>
+</body>
+</html>
