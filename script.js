@@ -1,4 +1,4 @@
-// script.js - Phiên bản Redesign (Tối ưu hóa + Fix lỗi)
+// script.js - Phiên bản Redesign (Tối ưu hóa + Fix lỗi + Tính năng Ngày mai)
 
 // Constants
 const API_URL = "https://script.google.com/macros/s/AKfycbw5sjUwJfwRtKBQQu5FgYrmgSjoQ22vvnmlv99H7YJHTVgVZRXm1vWB7fFJg8B2O2M7/exec";
@@ -61,7 +61,6 @@ const elements = {
     tkbFullPopup: document.getElementById("tkbFullPopup"),
     tkbFullClose: document.getElementById("tkbFullClose"),
     tkbFullContent: document.getElementById("tkbFullContent"),
-    // (Xóa các elements của tab-nav cũ)
 };
 
 // RequestIdleCallback polyfill
@@ -71,7 +70,6 @@ if (!('requestIdleCallback' in window)) {
 
 // --- Tối ưu hóa Canvas (Lazy-loading) ---
 
-// Các hàm trợ giúp cho canvas
 function createStars() {
     const canvas = elements.sky;
     if (!canvas) return;
@@ -95,7 +93,6 @@ function resizeCanvas() {
     createStars();
 }
 
-// Hàm khởi tạo canvas chính
 function initCanvas() {
     const canvas = elements.sky;
     if (!canvas) return;
@@ -125,7 +122,6 @@ function initCanvas() {
         if (isDarkMode) {
             ctx.fillStyle = "#0f172a";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            // Draw stars
             for (const star of state.stars) {
                 ctx.beginPath();
                 ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
@@ -134,7 +130,6 @@ function initCanvas() {
                 star.opacity += (Math.random() - 0.5) * star.blinkSpeed;
                 star.opacity = Math.min(1, Math.max(0.3, star.opacity));
             }
-            // Draw meteors
             for (let i = state.meteors.length - 1; i >= 0; i--) {
                 const m = state.meteors[i];
                 ctx.strokeStyle = `rgba(255,255,255,${m.opacity})`;
@@ -163,16 +158,13 @@ function initCanvas() {
     drawSky();
 }
 
-// Hàm đảm bảo canvas chỉ được init 1 lần
 function ensureCanvasInit() {
     if (state.canvasInitialized) return;
     state.canvasInitialized = true;
     initCanvas();
 }
 
-// Tạo hiệu ứng hạt nổi
 function createParticles() {
-    // (Giữ nguyên hàm createParticles từ file cũ của bạn)
     const particlesContainer = document.createElement('div');
     particlesContainer.className = 'particles';
     document.body.appendChild(particlesContainer);
@@ -218,7 +210,6 @@ function initTabNavigation() {
         button.addEventListener('click', () => switchTab(button));
     });
 
-    // Initialize
     const savedTabId = localStorage.getItem('activeTab') || 'btvn-panel';
     const savedTab = document.querySelector(`.header-nav button[aria-controls="${savedTabId}"]`);
     
@@ -232,7 +223,6 @@ function initTabNavigation() {
 
 // --- Menu (Giữ nguyên logic) ---
 function initMenu() {
-    // Toggle menu
     elements.menuBtn.addEventListener("click", (e) => {
         e.stopPropagation();
         const isExpanded = elements.menuBtn.getAttribute("aria-expanded") === "true";
@@ -241,7 +231,6 @@ function initMenu() {
         elements.menuPanel.style.display = isExpanded ? "none" : "block";
     });
 
-    // Close menu when clicking outside
     document.addEventListener("click", (ev) => {
         if (!elements.menuPanel.contains(ev.target) && ev.target !== elements.menuBtn) {
             elements.menuBtn.setAttribute("aria-expanded", "false");
@@ -250,7 +239,6 @@ function initMenu() {
         }
     });
 
-    // Dark mode toggle
     elements.menuDark.addEventListener("click", () => {
         showThemeLoading();
         setTimeout(() => {
@@ -268,7 +256,6 @@ function initMenu() {
         }, 500);
     });
 
-    // Liquid/Normal mode toggle
     elements.menuLiquid.addEventListener("click", () => {
         showThemeLoading();
         setTimeout(() => {
@@ -279,18 +266,15 @@ function initMenu() {
         }, 500);
     });
 
-    // Popup toggle
     elements.menuPopup.addEventListener("click", () => {
         openPopup(true);
     });
 
-    // Auto refresh toggle
     const menuAutoRefresh = document.getElementById("menuAutoRefresh");
     if (menuAutoRefresh) {
         menuAutoRefresh.addEventListener("click", toggleAutoRefresh);
     }
 
-    // Color theme selection
     elements.colorThemes.forEach(btn => {
         btn.addEventListener("click", () => {
             const theme = btn.dataset.theme;
@@ -334,7 +318,6 @@ function applyColorTheme(theme) {
 
     setTimeout(() => {
         document.body.classList.remove("changing-theme");
-        // TỐI ƯU: Loại bỏ hack 'display:none'
         window.requestAnimationFrame(() => {});
     }, 50);
 }
@@ -442,11 +425,14 @@ async function fetchData() {
     }
 }
 
-// --- Render functions (Đã tối ưu + Fix lỗi) ---
+// --- Render functions (Đã tối ưu + Thêm tính năng mới) ---
 
-// TỐI ƯU: Sử dụng DocumentFragment
-// FIX: Đã xóa logic hiển thị 'metaDiv' (item.date) theo yêu cầu
-function renderBTVN(data) {
+/**
+ * TỐI ƯU: Sử dụng DocumentFragment
+ * FIX: Đã xóa logic hiển thị 'metaDiv' (item.date)
+ * MỚI: Thêm tham số 'tomorrowsSubjectsSet' để đánh dấu môn ngày mai
+ */
+function renderBTVN(data, tomorrowsSubjectsSet = new Set()) {
     const container = elements.btvnContainer;
     const btvnData = (data && data.btvn) ? data.btvn : [];
     container.textContent = ''; // Xóa nhanh
@@ -480,6 +466,14 @@ function renderBTVN(data) {
             card.className = 'subject-card scroll-fade';
             card.setAttribute('data-subject', subjectName);
 
+            // --- TÍNH NĂNG MỚI ---
+            // Kiểm tra xem môn này có trong danh sách ngày mai không
+            const isTomorrow = tomorrowsSubjectsSet.has(subjectName);
+            if (isTomorrow) {
+                card.classList.add('is-tomorrow');
+            }
+            // --- KẾT THÚC TÍNH NĂNG MỚI ---
+
             const header = document.createElement('h3');
             header.className = 'subject-title';
             header.innerHTML = `${getSubjectIcon(subjectName)} ${subjectName}`;
@@ -497,11 +491,6 @@ function renderBTVN(data) {
                 contentDiv.textContent = item.content || item.note || '(Không có nội dung)';
                 
                 li.appendChild(contentDiv);
-                
-                // --- FIX LỖI ---
-                // Đã xóa 'metaDiv' (hiển thị ngày) khỏi đây
-                // --- HẾT FIX ---
-
                 list.appendChild(li);
             });
 
@@ -542,7 +531,6 @@ function renderTKB(data) {
     const minute = d.getMinutes();
     let showDay = day;
 
-    // (Logic tính showDay giữ nguyên)
     if (day === 1 || day === 3 || day === 5) {
         if (hour > 16 || (hour === 16 && minute >= 45)) showDay = (day + 1) % 7;
     } else if (day === 2 || day === 4) {
@@ -566,7 +554,7 @@ function renderTKB(data) {
     frag.appendChild(infoP);
 
     const noteDiv = document.createElement('div');
-    noteDiv.className = 'inline-note'; // (Bạn cần CSS class này nếu muốn)
+    noteDiv.className = 'inline-note';
     noteDiv.textContent = '❗Lưu ý: Hiển thị TKB hôm sau tùy theo khung giờ quy định.';
     frag.appendChild(noteDiv);
 
@@ -744,7 +732,7 @@ function getSubjectIcon(subject) {
     return icons[subject] || '📚';
 }
 
-// --- Load Data (Giữ nguyên logic) ---
+// --- Load Data (Đã cập nhật) ---
 async function loadAllData() {
     const data = await fetchData();
     const result = data?.result || data || {};
@@ -766,8 +754,17 @@ async function loadAllData() {
         state.lastData = JSON.parse(JSON.stringify(state.currentData));
     }
     
+    // --- TÍNH NĂNG MỚI ---
+    // Tính toán danh sách môn học ngày mai
+    const d = getVNDateObj();
+    const tomorrowDayIndex = (d.getDay() + 1) % 7; // 0 = CN, 1 = T2, ...
+    const tomorrowsTKB = state.currentData.tkb[tomorrowDayIndex] || [];
+    // Dùng Set để loại bỏ các môn trùng lặp
+    const tomorrowsSubjectsSet = new Set(tomorrowsTKB.map(item => item.subject.trim()));
+    // --- KẾT THÚC TÍNH NĂNG MỚI ---
+
     // Render
-    renderBTVN(state.currentData);
+    renderBTVN(state.currentData, tomorrowsSubjectsSet); // Gửi danh sách cho hàm render
     renderTKB(state.currentData);
     renderChangelog(state.currentData);
     renderNotices(state.currentData);
@@ -811,7 +808,7 @@ function hasDataChanged(newData, oldData) {
     return shallowHash(newData) !== shallowHash(oldData);
 }
 
-// --- Auto Refresh (Đã tối ưu) ---
+// --- Auto Refresh (Đã cập nhật) ---
 async function autoRefreshData() {
     try {
         const data = await fetchData();
@@ -824,8 +821,16 @@ async function autoRefreshData() {
                 changelog: data.changelog || [],
                 notices: data.notices || []
             };
+
+            // --- TÍNH NĂNG MỚI (Lặp lại logic) ---
+            const d = getVNDateObj();
+            const tomorrowDayIndex = (d.getDay() + 1) % 7;
+            const tomorrowsTKB = state.currentData.tkb[tomorrowDayIndex] || [];
+            const tomorrowsSubjectsSet = new Set(tomorrowsTKB.map(item => item.subject.trim()));
+            // --- KẾT THÚC TÍNH NĂNG MỚI ---
+
             // Update UI
-            renderBTVN(state.currentData);
+            renderBTVN(state.currentData, tomorrowsSubjectsSet); // Gửi danh sách
             renderTKB(state.currentData);
             renderChangelog(state.currentData);
             renderNotices(state.currentData);

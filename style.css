@@ -42,10 +42,10 @@
     --table-row-even-bg: rgba(0, 0, 0, 0.01);
     --heading-text: var(--text);
     --strong-text: var(--accent);
-    --popup-bg: var(--glass-bg);
-    --popup-border: var(--glass-border);
-    --menu-bg: var(--glass-bg);
-    --menu-border: var(--glass-border);
+    --popup-bg: var(--popup-bg);
+    --popup-border: var(--popup-border);
+    --menu-bg: var(--menu-bg);
+    --menu-border: var(--menu-border);
     --link-color: var(--accent);
     --bullet-color: var(--accent);
     
@@ -416,6 +416,9 @@ body.normal-mode:not(.dark) .button-primary:hover {
 /* Đây là các class được tạo bởi renderBTVN */
 .subject-card {
     margin-bottom: 24px;
+    border-left: 3px solid transparent; /* Chuẩn bị cho highlight */
+    padding-left: 12px;
+    transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
 }
 .subject-title {
     margin: 0 0 12px;
@@ -720,3 +723,48 @@ body.dark .day-container { background: var(--table-bg) !important; border: 1px s
 body.dark .session-table { background: var(--table-bg) !important; border: 1px solid var(--table-border) !important; }
 body.dark ul li { color: var(--text-secondary) !important; }
 body.dark .btvn-item::before, body.dark .changelog-list li::before { color: var(--bullet-color) !important; }
+
+
+/* --- CSS MỚI: Đánh dấu môn ngày mai --- */
+.subject-card.is-tomorrow {
+    border-left: 3px solid var(--theme-primary);
+    box-shadow: 0 4px 15px rgba(var(--theme-primary-rgb), 0.1);
+    /* Thêm một chút padding để bù cho border */
+    padding-left: 12px; 
+}
+
+.subject-card.is-tomorrow .subject-title {
+    position: relative;
+}
+
+.subject-card.is-tomorrow .subject-title::after {
+    /* Đây là huy hiệu "Ngày mai" */
+    content: "Ngày mai";
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--theme-primary);
+    background-color: rgba(var(--theme-primary-rgb), 0.1);
+    padding: 3px 8px;
+    border-radius: 12px;
+    margin-left: 10px;
+    vertical-align: middle;
+    text-transform: uppercase;
+    /* Ghi đè animation của gạch chân */
+    width: auto;
+    height: auto;
+    background-image: none;
+    position: static;
+    bottom: auto;
+    left: auto;
+}
+
+/* Tương thích Dark Mode cho huy hiệu */
+body.dark .subject-card.is-tomorrow {
+    border-left-color: var(--accent);
+    box-shadow: 0 4px 20px rgba(var(--theme-primary-rgb), 0.15);
+}
+
+body.dark .subject-card.is-tomorrow .subject-title::after {
+    color: var(--accent);
+    background-color: rgba(var(--theme-primary-rgb), 0.2);
+}
