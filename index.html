@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-92KE83JEYM"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -13,131 +12,109 @@
     <title>Bảng Thông Báo BTVN</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
     <meta name="description" content="Bảng thông báo bài tập về nhà và thời khóa biểu" />
-    <meta name="keywords" content="BTVN, thời khóa biểu, thông báo, học tập" />
-    <meta name="author" content="Vũ Duy Anh, Nguyễn Văn Hoàng Bách" />
     
-    <!-- Preload resources for better performance -->
     <link rel="preload" href="style.css" as="style">
     <link rel="preload" href="script.js" as="script">
     
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📘</text></svg>">
     
-    <!-- Web App Manifest for PWA features -->
     <link rel="manifest" href="site.webmanifest">
     <meta name="theme-color" content="#0066cc">
-    
-    <!-- Apple touch icon -->
     <link rel="apple-touch-icon" href="icon.png">
     
-    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body>
-    <!-- Màn hình loading -->
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-spinner"></div>
         <div class="loading-text">Đang tải bảng thông báo...</div>
-        <div class="loading-bar">
-            <div class="loading-progress"></div>
-        </div>
     </div>
 
-    <!-- Màn hình loading khi chuyển chủ đề -->
     <div class="theme-loading" id="themeLoading">
         <div class="theme-loading-spinner"></div>
         <div class="theme-loading-text">Đang áp dụng chủ đề...</div>
     </div>
 
-    <!-- Thêm canvas bầu trời sao -->
     <canvas id="sky"></canvas>
 
-    <!-- MENU -->
-    <nav class="menu" aria-label="Menu chính">
-        <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="menuPanel">
-            <i class="fas fa-bars" aria-hidden="true"></i>
-            <span>Menu</span>
-        </button>
-        <div class="menu-panel" id="menuPanel" role="menu" aria-hidden="true">
-            <button id="menuDark" role="menuitem" aria-label="Chuyển Dark/Light">
-                <i class="fas fa-moon" aria-hidden="true"></i>
-                <span>Dark Mode</span>
-            </button>
-            <button id="menuLiquid" role="menuitem" aria-label="Chuyển Liquid Glass/Thường">
-                <i class="fas fa-magic" aria-hidden="true"></i>
-                <span>Liquid Glass</span>
-            </button>
-            <button id="menuPopup" role="menuitem" aria-label="Bật bảng Lưu ý">
-                <i class="fas fa-info-circle" aria-hidden="true"></i>
-                <span>Bật bảng Lưu ý</span>
-            </button>
-            <button id="menuAutoRefresh" role="menuitem" aria-label="Bật làm mới tự động">
-                <i class="fas fa-sync-alt" aria-hidden="true"></i>
-                <span>Bật làm mới tự động</span>
-            </button>
-            <a href="Donate.html" target="_blank" class="donate-btn" role="menuitem">
-                <i class="fas fa-heart" aria-hidden="true"></i>
-                <span>Donate to us</span>
-            </a>
-            <a href="Report.html" class="report-link" role="menuitem">
-                <i class="fas fa-bug" aria-hidden="true"></i>
-                <span>Report</span>
-            </a>
+    <header class="main-header">
+        <div class="header-content">
+            <h1 class="header-title">Bảng thông báo</h1>
+            
+            <nav class="header-nav" role="tablist" aria-label="Điều hướng chính">
+                <button role="tab" aria-selected="true" aria-controls="btvn-panel" data-tab="btvn">
+                    <i class="fas fa-tasks" aria-hidden="true"></i>
+                    <span>BTVN</span>
+                </button>
+                <button role="tab" aria-selected="false" aria-controls="tkb-panel" data-tab="tkb">
+                    <i class="fas fa-calendar-alt" aria-hidden="true"></i>
+                    <span>TKB</span>
+                </button>
+                <button role="tab" aria-selected="false" aria-controls="changelog-panel" data-tab="changelog">
+                    <i class="fas fa-history" aria-hidden="true"></i>
+                    <span>Thay đổi</span>
+                </button>
+            </nav>
 
-            <!-- Tùy chọn màu chủ đề -->
-            <div class="color-theme-options">
-                <div class="color-theme-title">Chọn màu chủ đề:</div>
-                <div class="color-themes" role="radiogroup" aria-label="Chọn màu chủ đề">
-                    <div class="color-theme pink" data-theme="pink" title="Hồng" role="radio" aria-checked="false" tabindex="0"></div>
-                    <div class="color-theme blue" data-theme="blue" title="Xanh dương" role="radio" aria-checked="false" tabindex="0"></div>
-                    <div class="color-theme green" data-theme="green" title="Xanh lá" role="radio" aria-checked="false" tabindex="0"></div>
-                    <div class="color-theme fresh" data-theme="fresh" title="Màu tươi" role="radio" aria-checked="false" tabindex="0"></div>
-                    <div class="color-theme popular" data-theme="popular" title="Màu nhiều người thích nhất" role="radio" aria-checked="false" tabindex="0"></div>
-                    <div class="color-theme white" data-theme="white" title="Trắng" role="radio" aria-checked="false" tabindex="0"></div>
-                    <div class="color-theme aquaviolet" data-theme="aquaviolet" title="Xanh ngọc - Tím" role="radio" aria-checked="false" tabindex="0"></div>
-                    <div class="color-theme mint" data-theme="mint" title="Xanh bạc hà" role="radio" aria-checked="false" tabindex="0"></div>
-                </div>
+            <div class="header-actions">
+                <button id="refreshBtn" class="menu-btn" title="Làm mới dữ liệu" aria-label="Làm mới dữ liệu">
+                    <i class="fas fa-sync-alt" aria-hidden="true"></i>
+                </button>
+                <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="menuPanel" title="Mở menu">
+                    <i class="fas fa-bars" aria-hidden="true"></i>
+                </button>
             </div>
         </div>
-    </nav>
-    
-    <button id="refreshBtn" class="refresh-btn" title="Làm mới dữ liệu" aria-label="Làm mới dữ liệu">
-        <i class="fas fa-sync-alt" aria-hidden="true"></i>
-    </button>
-    
-    <!-- Tab Navigation Fixed Bottom Left -->
-    <div class="tab-navigation-fixed" id="tabNavigationFixed">
-        <div class="tab-container-fixed">
-            <button class="tab-btn-fixed active" data-tab="btvn" aria-selected="true" aria-controls="btvn-panel">
-                <i class="fas fa-tasks" aria-hidden="true"></i>
-                <span>BTVN</span>
-            </button>
-            <button class="tab-btn-fixed" data-tab="tkb" aria-selected="false" aria-controls="tkb-panel">
-                <i class="fas fa-calendar-alt" aria-hidden="true"></i>
-                <span>TKB</span>
-            </button>
-            <button class="tab-btn-fixed" data-tab="changelog" aria-selected="false" aria-controls="changelog-panel">
-                <i class="fas fa-history" aria-hidden="true"></i>
-                <span>Thay đổi</span>
-            </button>
+    </header>
+
+    <div class="menu-panel" id="menuPanel" role="menu" aria-hidden="true">
+        <button id="menuDark" role="menuitem" aria-label="Chuyển Dark/Light">
+            <i class="fas fa-moon" aria-hidden="true"></i>
+            <span>Dark Mode</span>
+        </button>
+        <button id="menuLiquid" role="menuitem" aria-label="Chuyển Liquid Glass/Thường">
+            <i class="fas fa-magic" aria-hidden="true"></i>
+            <span>Liquid Glass</span>
+        </button>
+        <button id="menuPopup" role="menuitem" aria-label="Bật bảng Lưu ý">
+            <i class="fas fa-info-circle" aria-hidden="true"></i>
+            <span>Bật bảng Lưu ý</span>
+        </button>
+        <button id="menuAutoRefresh" role="menuitem" aria-label="Bật làm mới tự động">
+            <i class="fas fa-sync-alt" aria-hidden="true"></i>
+            <span>Bật làm mới tự động</span>
+        </button>
+        <a href="Donate.html" target="_blank" class="donate-btn" role="menuitem">
+            <i class="fas fa-heart" aria-hidden="true"></i>
+            <span>Donate to us</span>
+        </a>
+        <a href="Report.html" class="report-link" role="menuitem">
+            <i class="fas fa-bug" aria-hidden="true"></i>
+            <span>Report</span>
+        </a>
+        <div class="color-theme-options">
+            <div class="color-theme-title">Chọn màu chủ đề:</div>
+            <div class="color-themes" role="radiogroup" aria-label="Chọn màu chủ đề">
+                <div class="color-theme pink" data-theme="pink" title="Hồng" role="radio" aria-checked="false" tabindex="0"></div>
+                <div class="color-theme blue" data-theme="blue" title="Xanh dương" role="radio" aria-checked="false" tabindex="0"></div>
+                <div class="color-theme green" data-theme="green" title="Xanh lá" role="radio" aria-checked="false" tabindex="0"></div>
+                <div class="color-theme fresh" data-theme="fresh" title="Màu tươi" role="radio" aria-checked="false" tabindex="0"></div>
+                <div class="color-theme popular" data-theme="popular" title="Màu nhiều người thích nhất" role="radio" aria-checked="false" tabindex="0"></div>
+                <div class="color-theme white" data-theme="white" title="Trắng" role="radio" aria-checked="false" tabindex="0"></div>
+                <div class="color-theme aquaviolet" data-theme="aquaviolet" title="Xanh ngọc - Tím" role="radio" aria-checked="false" tabindex="0"></div>
+                <div class="color-theme mint" data-theme="mint" title="Xanh bạc hà" role="radio" aria-checked="false" tabindex="0"></div>
+            </div>
         </div>
-        <div class="tab-indicator-fixed"></div>
     </div>
 
-    <!-- Nút mở rộng khi tab bị thu gọn -->
-    <button class="tab-expand-btn" id="tabExpandBtn" aria-label="Mở rộng tab">
-        <i class="fas fa-ellipsis-h" aria-hidden="true"></i>
-    </button>
-
-    <!-- POPUP -->
     <div class="popup" id="popup" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
         <div class="popup-card" id="popupCard">
             <button class="close" id="popupClose" aria-label="Đóng popup">
                 <i class="fas fa-times" aria-hidden="true"></i>
             </button>
-            <h3 id="popupTitle"><i class="fas fa-info-circle" aria-hidden="true"></i> Lưu ý [Nên xem qua trang status]</h3>
-            
+            <h3 id="popupTitle"><i class="fas fa-info-circle" aria-hidden="true"></i> Lưu ý</h3>
             <div class="popup-changelog">
                 <div class="changelog-header">
                     <i class="fas fa-clipboard-list" aria-hidden="true"></i>
@@ -199,7 +176,6 @@
         </div>
     </div>
     
-    <!-- Modal TKB Full -->
     <div class="popup" id="tkbFullPopup" role="dialog" aria-modal="true" aria-labelledby="tkbFullTitle">
         <div class="popup-card tkb-full-card" id="tkbFullCard">
             <button class="close" id="tkbFullClose" aria-label="Đóng popup TKB">
@@ -207,43 +183,31 @@
             </button>
             <h3 id="tkbFullTitle"><i class="fas fa-calendar-week" aria-hidden="true"></i> Thời khóa biểu cả tuần</h3>
             <div id="tkbFullContent" class="tkb-full-content">
-                <!-- Nội dung TKB full sẽ được thêm vào đây -->
-            </div>
+                </div>
         </div>
     </div>
     
-    <!-- MAIN -->
-    <main class="wrap">
-        <!-- Tab Content -->
-        <div class="tab-content">
-            <!-- BTVN Panel -->
-            <div id="btvn-panel" class="tab-panel active">
-                <div class="card">
-                    <h1 class="fade-in-text"><i class="fas fa-bullhorn"></i> Thông báo BTVN</h1>
-                    <div id="btvnContainer" aria-live="polite">Đang tải dữ liệu...</div>
-                    <div id="noticesContainer" class="note animate-item" aria-live="polite" style="display:none;"></div>
-                </div>
+    <main class="main-content">
+        <div id="btvn-panel" class="tab-panel active" role="tabpanel">
+            <div id="noticesContainer" class="note" aria-live="polite" style="display:none;"></div>
+            <div class="content-wrapper" id="btvnContainer" aria-live="polite">
+                Đang tải dữ liệu...
             </div>
-            
-            <!-- TKB Panel -->
-            <div id="tkb-panel" class="tab-panel">
-                <div class="card half" id="tkbCard">
-                    <h2 class="animate-item"><i class="fas fa-calendar-alt"></i> Thời khóa biểu</h2>
-                    <div id="tkbContainer" class="animate-item" aria-live="polite">Đang tải dữ liệu...</div>
-                    <button id="showFullBtn" class="animate-item liquid-effect" aria-expanded="false" aria-controls="fullTKB">
-                        <i class="fas fa-calendar-week" aria-hidden="true"></i>
-                        <span>Xem toàn bộ TKB</span>
-                    </button>
-                    <div id="fullTKB" style="display:none; margin-top:14px;" aria-hidden="true"></div>
-                </div>
+        </div>
+        
+        <div id="tkb-panel" class="tab-panel" role="tabpanel">
+            <div class="content-wrapper">
+                <div id="tkbContainer" aria-live="polite">Đang tải dữ liệu...</div>
+                <button id="showFullBtn" class="button-primary" aria-expanded="false" aria-controls="fullTKB">
+                    <i class="fas fa-calendar-week" aria-hidden="true"></i>
+                    <span>Xem toàn bộ TKB</span>
+                </button>
             </div>
-            
-            <!-- Changelog Panel -->
-            <div id="changelog-panel" class="tab-panel">
-                <div class="card">
-                    <h2 class="animate-item"><i class="fas fa-history"></i> Nhật ký thay đổi</h2>
-                    <div id="changelogContainer" class="animate-item" aria-live="polite">Đang tải dữ liệu...</div>
-                </div>
+        </div>
+        
+        <div id="changelog-panel" class="tab-panel" role="tabpanel">
+            <div class="content-wrapper" id="changelogContainer" aria-live="polite">
+                Đang tải dữ liệu...
             </div>
         </div>
     </main>
