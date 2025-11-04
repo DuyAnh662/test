@@ -38,6 +38,7 @@
     </div>
 
     <canvas id="sky"></canvas>
+    <div id="fireworks-container"></div>
 
     <header class="main-header">
         <div class="header-content">
@@ -120,12 +121,70 @@
                     <i class="fas fa-clipboard-list" aria-hidden="true"></i>
                     <span>Vui lòng xem trên status</span>
                 </div>
+                
                 <div class="changelog-content">
+                    <div class="change-category">
+                        <div class="category-title">
+                            <i class="fas fa-rocket" aria-hidden="true"></i>
+                            <span>Tính năng mới</span>
+                        </div>
+                        <ul class="change-list">
+                            <li>Hiện tại không có!</li>
+                        </ul>
                     </div>
+
+                    <div class="change-category">
+                        <div class="category-title">
+                            <i class="fas fa-sync-alt" aria-hidden="true"></i>
+                            <span>Thay đổi lớn</span>
+                        </div>
+                        <ul class="change-list">
+                            <li>Phương thức update mới!</li>
+                        </ul>
+                    </div>
+                    <div class="change-category">
+                        <div class="category-title">
+                            <i class="fas fa-tools" aria-hidden="true"></i>
+                            <span>Cải tiến & Sửa lỗi</span>
+                        </div>
+                        <ul class="change-list">
+                            <li>Phân tích, sửa chữa và cải tiến thêm nhiều thứ khác</li>
+                        </ul>
+                    </div>
+                    <div class="change-category">
+                        <div class="category-title">
+                            <i class="fas fa-exclamation-circle" aria-hidden="true"></i>
+                            <span>❗Lưu ý❗</span>
+                        </div>
+                        <ul class="change-list">
+                            <li>Muốn báo lỗi hoặc góp ý vui lòng nhập bấm nút menu rồi bấm report nhập thông tin bạn muốn báo/góp ý</li>
+                            <li>Thường hoạt động: 11h50 – 13h00; 17h00 – 20h45</li>
+                            <li>Thông tin có thể chưa chính xác, vui lòng kiểm tra lại</li>
+                            <li>Mục đích: tốt cho mọi người → nếu sai sót xin báo lại, không chửi tục</li>
+                            <li>Bạn đọc hay không là quyền của bạn, không vừa ý vui lòng tìm nguồn khác</li>
+                            <li>Sách không ghi cách diều hay kết nối chi thức thì nặc định nó là kết nối chi thức</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
+
             <div class="dev-info">
-                <i class="fas fa-code" aria-hidden="true"></i> Được làm ra và phát triển bởi...
+                <i class="fas fa-code" aria-hidden="true"></i> Được làm ra và phát triển bởi ChatGBT(WEB), Z AI(WEB), Gemini(WEB), Vũ Duy Anh(WEB&Dữ liệu), Nguyễn Văn Hoàng Bách(Dữ liệu), Hoàng Công Dương(Dữ liệu)
             </div>
+            <div class="donate-cta">
+                <i class="fas fa-heart" aria-hidden="true"></i> Donate chúng tôi nhé!^_^
+            </div>
+        </div>
+    </div>
+    
+    <!-- Popup cho dịp đặc biệt -->
+    <div class="event-popup" id="eventPopup" role="dialog" aria-modal="true" aria-labelledby="eventPopupTitle">
+        <div class="event-popup-card" id="eventPopupCard">
+            <button class="close" id="eventPopupClose" aria-label="Đóng popup">
+                <i class="fas fa-times" aria-hidden="true"></i>
+            </button>
+            <h3 id="eventPopupTitle"></h3>
+            <div id="eventPopupContent"></div>
         </div>
     </div>
     

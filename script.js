@@ -1,4 +1,4 @@
-// script.js - Phiên bản Redesign (Tối ưu hóa + Fix lỗi + Tính năng Ngày mai)
+// script.js - Phiên bản Redesign (Tối ưu hóa + Fix lỗi + Tính năng Ngày mai + Chủ đề đặc biệt)
 
 // Constants
 const API_URL = "https://script.google.com/macros/s/AKfycbw5sjUwJfwRtKBQQu5FgYrmgSjoQ22vvnmlv99H7YJHTVgVZRXm1vWB7fFJg8B2O2M7/exec";
@@ -15,6 +15,100 @@ const defaultData = {
 };
 
 const dayNames = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
+
+// Cấu hình các dịp đặc biệt
+const specialEvents = [
+    {
+        name: "Tết Nguyên Đán",
+        startDate: { month: 11, day: 4 }, // Ngày bắt đầu (tháng, ngày)
+        endDate: { month: 1, day: 7 }, // Ngày kết thúc (tháng, ngày)
+        theme: "tet", // Tên chủ đề
+        showFireworks: true, // Hiển thị pháo hoa
+        disableMeteors: true, // Tắt sao băng
+        popup: {
+            title: "Chúc Mừng Năm Mới!",
+            content: "Chúc bạn và gia đình một năm mới an khang, thịnh vượng và vạn sự như ý!"
+        },
+        background: {
+            day: "linear-gradient(135deg, #ff0000 0%, #ffcc00 100%)", // Nền ban ngày
+            night: "linear-gradient(135deg, #8b0000 0%, #ff6600 100%)", // Nền ban đêm
+            patterns: ["hoa-mai", "hoa-dao", "dong-tien"] // Họa tiết trang trí
+        }
+    },
+    {
+        name: "Sinh nhật",
+        startDate: { month: 5, day: 15 }, // Ngày bắt đầu (tháng, ngày)
+        endDate: { month: 5, day: 15 }, // Ngày kết thúc (tháng, ngày)
+        theme: "birthday",
+        showFireworks: true,
+        disableMeteors: false,
+        popup: {
+            title: "Chúc Mừng Sinh Nhật!",
+            content: "Hôm nay là sinh nhật của một người đặc biệt! Hãy cùng gửi lời chúc tốt đẹp nhất đến họ nhé!"
+        },
+        background: {
+            day: "linear-gradient(135deg, #ff99cc 0%, #cc99ff 100%)",
+            night: "linear-gradient(135deg, #660066 0%, #993399 100%)",
+            patterns: ["balloon", "cake", "gift"]
+        }
+    },
+    {
+        name: "Cá tháng Tư",
+        startDate: { month: 4, day: 1 },
+        endDate: { month: 4, day: 1 },
+        theme: "april-fools",
+        showFireworks: false,
+        disableMeteors: false,
+        popup: {
+            title: "Cá Tháng Tư!",
+            content: "Hôm nay là ngày 1 tháng Tư! Hãy cẩn thận với những trò đùa nhé!",
+            showForSeconds: 10, // Hiển thị popup trong 10 giây
+            secondPopup: {
+                title: "Đùa thôi cá tháng tư ui!",
+                content: "Chúc bạn một ngày 1 tháng Tư vui vẻ!"
+            }
+        },
+        background: {
+            day: "linear-gradient(135deg, #ff3366 0%, #ffcc33 100%)",
+            night: "linear-gradient(135deg, #cc0033 0%, #cc9900 100%)",
+            patterns: ["joke", "fish"]
+        }
+    },
+    {
+        name: "Halloween",
+        startDate: { month: 10, day: 31 },
+        endDate: { month: 10, day: 31 },
+        theme: "halloween",
+        showFireworks: false,
+        disableMeteors: false,
+        popup: {
+            title: "Happy Halloween!",
+            content: "Chúc bạn một mùa Halloween vui vẻ và đáng nhớ!"
+        },
+        background: {
+            day: "linear-gradient(135deg, #ff6600 0%, #993300 100%)",
+            night: "linear-gradient(135deg, #330033 0%, #660033 100%)",
+            patterns: ["pumpkin", "ghost", "witch"]
+        }
+    },
+    {
+        name: "Giáng Sinh",
+        startDate: { month: 12, day: 24 },
+        endDate: { month: 12, day: 25 },
+        theme: "christmas",
+        showFireworks: true,
+        disableMeteors: true,
+        popup: {
+            title: "Merry Christmas!",
+            content: "Chúc bạn và gia đình một mùa Giáng Sinh an lành và ấm áp!"
+        },
+        background: {
+            day: "linear-gradient(135deg, #009900 0%, #cc0000 100%)",
+            night: "linear-gradient(135deg, #003300 0%, #660000 100%)",
+            patterns: ["snow", "tree", "santa"]
+        }
+    }
+];
 
 // Global state
 const state = {
@@ -34,7 +128,9 @@ const state = {
     meteorInterval: null,
     stars: [],
     meteors: [],
-    canvasInitialized: false // Cờ cho lazy-init canvas
+    canvasInitialized: false, // Cờ cho lazy-init canvas
+    currentEvent: null, // Dịp đặc biệt hiện tại
+    fireworksInterval: null
 };
 
 // Cache DOM elements
@@ -61,6 +157,11 @@ const elements = {
     tkbFullPopup: document.getElementById("tkbFullPopup"),
     tkbFullClose: document.getElementById("tkbFullClose"),
     tkbFullContent: document.getElementById("tkbFullContent"),
+    eventPopup: document.getElementById("eventPopup"),
+    eventPopupClose: document.getElementById("eventPopupClose"),
+    eventPopupTitle: document.getElementById("eventPopupTitle"),
+    eventPopupContent: document.getElementById("eventPopupContent"),
+    fireworksContainer: document.getElementById("fireworks-container")
 };
 
 // RequestIdleCallback polyfill
@@ -143,7 +244,7 @@ function initCanvas() {
                 m.opacity -= 0.02;
                 if (m.opacity <= 0) state.meteors.splice(i, 1);
             }
-            if (state.meteorInterval === null) {
+            if (state.meteorInterval === null && (!state.currentEvent || !state.currentEvent.disableMeteors)) {
                 state.meteorInterval = setInterval(createMeteor, 5000);
             }
         } else {
@@ -179,6 +280,246 @@ function createParticles() {
             particle.style.animationDelay = `${Math.random() * 15}s`;
             particlesContainer.appendChild(particle);
         }
+    }
+}
+
+// --- Pháo hoa ---
+function createFirework() {
+    const firework = document.createElement('div');
+    firework.className = 'firework';
+    
+    // Vị trí ngẫu nhiên
+    const x = Math.random() * window.innerWidth;
+    const y = Math.random() * window.innerHeight * 0.5; // Chỉ ở nửa trên màn hình
+    
+    firework.style.left = `${x}px`;
+    firework.style.top = `${y}px`;
+    
+    // Màu ngẫu nhiên
+    const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffa500', '#ff69b4'];
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    
+    // Tạo các hạt pháo hoa
+    for (let i = 0; i < 30; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'firework-particle';
+        
+        // Góc và tốc độ ngẫu nhiên
+        const angle = (Math.PI * 2 * i) / 30;
+        const velocity = 2 + Math.random() * 4;
+        
+        particle.style.backgroundColor = color;
+        particle.style.width = `${4 + Math.random() * 4}px`;
+        particle.style.height = particle.style.width;
+        
+        // Animation
+        particle.style.animation = `firework-explode ${1 + Math.random()}s ease-out forwards`;
+        particle.style.transform = `translate(${Math.cos(angle) * velocity * 20}px, ${Math.sin(angle) * velocity * 20}px)`;
+        
+        firework.appendChild(particle);
+    }
+    
+    elements.fireworksContainer.appendChild(firework);
+    
+    // Xóa pháo hoa sau khi animation kết thúc
+    setTimeout(() => {
+        if (elements.fireworksContainer.contains(firework)) {
+            elements.fireworksContainer.removeChild(firework);
+        }
+    }, 2000);
+}
+
+function startFireworks() {
+    if (state.fireworksInterval) return;
+    
+    // Tạo pháo hoa ban đầu
+    for (let i = 0; i < 3; i++) {
+        setTimeout(() => createFirework(), i * 500);
+    }
+    
+    // Tạo pháo hoa định kỳ
+    state.fireworksInterval = setInterval(() => {
+        createFirework();
+    }, 2000);
+}
+
+function stopFireworks() {
+    if (state.fireworksInterval) {
+        clearInterval(state.fireworksInterval);
+        state.fireworksInterval = null;
+    }
+    
+    // Xóa tất cả pháo hoa hiện có
+    while (elements.fireworksContainer.firstChild) {
+        elements.fireworksContainer.removeChild(elements.fireworksContainer.firstChild);
+    }
+}
+
+// --- Kiểm tra dịp đặc biệt ---
+function checkSpecialEvent() {
+    const today = new Date();
+    const currentMonth = today.getMonth() + 1; // getMonth() trả về 0-11
+    const currentDay = today.getDate();
+    const currentHour = today.getHours();
+    
+    // Kiểm tra xem có phải ban đêm không (từ 18h đến 6h sáng)
+    const isNightTime = currentHour >= 18 || currentHour < 6;
+    
+    // Tìm dịp đặc biệt hiện tại
+    for (const event of specialEvents) {
+        const startDate = event.startDate;
+        const endDate = event.endDate;
+        
+        // Kiểm tra xem ngày hiện tại có nằm trong khoảng thời gian của dịp đặc biệt không
+        let isEventActive = false;
+        
+        if (startDate.month === endDate.month) {
+            // Cùng tháng
+            isEventActive = currentMonth === startDate.month && 
+                           currentDay >= startDate.day && 
+                           currentDay <= endDate.day;
+        } else if (startDate.month < endDate.month) {
+            // Tháng bắt đầu < tháng kết thúc (không qua năm)
+            isEventActive = (currentMonth === startDate.month && currentDay >= startDate.day) ||
+                           (currentMonth > startDate.month && currentMonth < endDate.month) ||
+                           (currentMonth === endDate.month && currentDay <= endDate.day);
+        } else {
+            // Tháng bắt đầu > tháng kết thúc (qua năm)
+            isEventActive = (currentMonth === startDate.month && currentDay >= startDate.day) ||
+                           (currentMonth > startDate.month || currentMonth < endDate.month) ||
+                           (currentMonth === endDate.month && currentDay <= endDate.day);
+        }
+        
+        if (isEventActive) {
+            state.currentEvent = event;
+            applyEventTheme(event, isNightTime);
+            
+            // Hiển thị popup cho sự kiện
+            if (event.popup) {
+                showEventPopup(event);
+            }
+            
+            // Bắt đầu pháo hoa nếu có yêu cầu
+            if (event.showFireworks && isNightTime) {
+                startFireworks();
+            } else {
+                stopFireworks();
+            }
+            
+            return event;
+        }
+    }
+    
+    // Không có dịp đặc biệt nào
+    if (state.currentEvent) {
+        state.currentEvent = null;
+        resetTheme();
+        stopFireworks();
+    }
+    
+    return null;
+}
+
+function applyEventTheme(event, isNightTime) {
+    // Áp dụng nền cho dịp đặc biệt
+    const background = isNightTime ? event.background.night : event.background.day;
+    document.body.style.background = background;
+    
+    // Thêm class cho chủ đề đặc biệt
+    document.body.classList.add(`event-${event.theme}`);
+    
+    // Thêm họa tiết trang trí
+    addEventPatterns(event);
+    
+    // Tắt canvas sao băng nếu có yêu cầu
+    if (event.disableMeteors) {
+        const canvas = document.getElementById('sky');
+        if (canvas) {
+            canvas.style.display = 'none';
+        }
+    }
+}
+
+function resetTheme() {
+    // Xóa class của chủ đề đặc biệt
+    specialEvents.forEach(event => {
+        document.body.classList.remove(`event-${event.theme}`);
+    });
+    
+    // Khôi phục nền mặc định
+    document.body.style.background = '';
+    
+    // Hiển thị lại canvas sao băng
+    const canvas = document.getElementById('sky');
+    if (canvas) {
+        canvas.style.display = '';
+    }
+    
+    // Xóa họa tiết trang trí
+    removeEventPatterns();
+}
+
+function addEventPatterns(event) {
+    // Xóa họa tiết cũ trước khi thêm mới
+    removeEventPatterns();
+    
+    // Tạo container cho họa tiết
+    const patternsContainer = document.createElement('div');
+    patternsContainer.className = 'event-patterns';
+    patternsContainer.id = 'event-patterns';
+    
+    // Thêm các họa tiết theo chủ đề
+    event.background.patterns.forEach(pattern => {
+        for (let i = 0; i < 5; i++) {
+            const patternElement = document.createElement('div');
+            patternElement.className = `event-pattern pattern-${pattern}`;
+            patternElement.style.left = `${Math.random() * 100}%`;
+            patternElement.style.top = `${Math.random() * 100}%`;
+            patternElement.style.animationDelay = `${Math.random() * 5}s`;
+            patternsContainer.appendChild(patternElement);
+        }
+    });
+    
+    document.body.appendChild(patternsContainer);
+}
+
+function removeEventPatterns() {
+    const patternsContainer = document.getElementById('event-patterns');
+    if (patternsContainer) {
+        document.body.removeChild(patternsContainer);
+    }
+}
+
+function showEventPopup(event) {
+    elements.eventPopupTitle.textContent = event.popup.title;
+    elements.eventPopupContent.textContent = event.popup.content;
+    elements.eventPopup.classList.add('open');
+    document.body.classList.add('popup-open');
+    document.body.style.overflow = "hidden";
+    
+    // Nếu có popup thứ hai (ví dụ: Cá tháng Tư)
+    if (event.popup.secondPopup && event.popup.showForSeconds) {
+        setTimeout(() => {
+            elements.eventPopup.classList.remove('open');
+            document.body.classList.remove('popup-open');
+            document.body.style.overflow = "";
+            
+            // Hiển thị popup thứ hai sau một khoảng thời gian ngắn
+            setTimeout(() => {
+                elements.eventPopupTitle.textContent = event.popup.secondPopup.title;
+                elements.eventPopupContent.textContent = event.popup.secondPopup.content;
+                elements.eventPopup.classList.add('open');
+                document.body.classList.add('popup-open');
+                document.body.style.overflow = "hidden";
+                
+                // Tự động đóng popup sau 5 giây
+                setTimeout(() => {
+                    elements.eventPopup.classList.remove('open');
+                    document.body.classList.remove('popup-open');
+                    document.body.style.overflow = "";
+                }, 5000);
+            }, 500);
+        }, event.popup.showForSeconds * 1000);
     }
 }
 
@@ -219,7 +560,6 @@ function initTabNavigation() {
         switchTab(tabButtons[0]); // Default về tab đầu tiên
     }
 }
-
 
 // --- Menu (Giữ nguyên logic) ---
 function initMenu() {
@@ -362,6 +702,17 @@ function initPopup() {
             closePopup();
         }
     });
+    
+    // Popup cho dịp đặc biệt
+    elements.eventPopupClose.addEventListener("click", closeEventPopup);
+    elements.eventPopup.addEventListener("click", (e) => {
+        if (e.target === elements.eventPopup) closeEventPopup();
+    });
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && elements.eventPopup.classList.contains("open")) {
+            closeEventPopup();
+        }
+    });
 }
 function openPopup(force = false) {
     const today = new Date().toLocaleDateString('vi-VN');
@@ -385,9 +736,15 @@ function closePopup() {
     document.body.style.overflow = "";
 }
 
+function closeEventPopup() {
+    elements.eventPopup.classList.remove("open");
+    document.body.classList.remove("popup-open");
+    document.body.style.overflow = "";
+}
+
 // --- Data functions (Giữ nguyên logic) ---
 const SUBJECT_LIST = [
-    "Toán - Đại số", "Toán - Hình học", "Ngữ văn", "Tiếng Anh", "Vật lý",
+    "Toán học - Đại số", "Toán học - Hình học", "Ngữ văn", "Tiếng Anh", "Vật lý",
     "Hóa học", "Sinh học", "Lịch sử", "Địa lí", "GDCD",
     "Tin học", "Công nghệ", "GDTC", "GDĐP", "Mĩ thuật", "Âm nhạc", "HĐTN"
 ];
@@ -452,7 +809,7 @@ function renderBTVN(data, tomorrowsSubjectsSet = new Set()) {
     }, {});
 
     const SUBJECT_ORDER = [
-        "Toán - Đại số", "Toán - Hình học", "Ngữ văn", "Tiếng Anh", "Vật lý",
+        "Toán học - Đại số", "Toán học - Hình học", "Ngữ văn", "Tiếng Anh", "Vật lý",
         "Hóa học", "Sinh học", "Lịch sử", "Địa lí", "GDCD", "Tin học", "Công nghệ",
         "GDTC", "GDĐP", "Mĩ thuật", "Âm nhạc", "HĐTN"
     ];
@@ -516,7 +873,6 @@ function renderBTVN(data, tomorrowsSubjectsSet = new Set()) {
     }, 100);
 }
 
-
 // TỐI ƯU: Sử dụng DocumentFragment
 function renderTKB(data) {
     const container = elements.tkbContainer;
@@ -539,6 +895,9 @@ function renderTKB(data) {
         showDay = 1;
     } else if (day === 0) {
         showDay = 1;
+    }
+    if (showDay === 0 || showDay === 6 || !data.tkb[showDay] || data.tkb[showDay].length === 0) {
+    showDay = 1; // Mặc định hiển thị thứ Hai
     }
 
     let targetDate = new Date(d);
@@ -723,7 +1082,7 @@ function renderNotices(data) {
 
 function getSubjectIcon(subject) {
     const icons = {
-        'Địa lí': '📘', 'Toán - Đại số': '➗', 'Toán - Hình học': '📐', 'Ngữ văn': '✍',
+        'Địa lí': '📘', 'Toán học - Đại số': '➗', 'Toán học - Hình học': '📐', 'Ngữ văn': '✍',
         'Tiếng Anh': '🇬🇧', 'Vật lý': '🔬', 'Hóa học': '⚗', 'Sinh học': '🧬',
         'Lịch sử': '📜', 'Địa lí': '🌍', 'GDCD': '👥', 'Tin học': '💻',
         'Công nghệ': '🔧', 'GDTC': '⚽', 'GDĐP': '🏠', 'Mĩ thuật': '🎨',
@@ -757,7 +1116,11 @@ async function loadAllData() {
     // --- TÍNH NĂNG MỚI ---
     // Tính toán danh sách môn học ngày mai
     const d = getVNDateObj();
-    const tomorrowDayIndex = (d.getDay() + 1) % 7; // 0 = CN, 1 = T2, ...
+    let tomorrowDayIndex = (d.getDay() + 1) % 7; // 0 = CN, 1 = T2, ...
+    // Bỏ qua CN, Thứ 7 → cho về Thứ 2
+    if (tomorrowDayIndex === 0 || tomorrowDayIndex === 6) {
+    tomorrowDayIndex = 1;
+    }
     const tomorrowsTKB = state.currentData.tkb[tomorrowDayIndex] || [];
     // Dùng Set để loại bỏ các môn trùng lặp
     const tomorrowsSubjectsSet = new Set(tomorrowsTKB.map(item => item.subject.trim()));
@@ -1023,6 +1386,12 @@ function initApp() {
     initRefreshButton();
     state.refreshTimer = setInterval(renderTodayTKB, 60 * 1000);
     
+    // Kiểm tra dịp đặc biệt
+    checkSpecialEvent();
+    
+    // Cập nhật dịp đặc biệt mỗi phút
+    setInterval(checkSpecialEvent, 60000);
+    
     if (isMobileDevice()) optimizeForMobile();
     
     document.body.classList.add("loaded");
@@ -1076,4 +1445,5 @@ window.addEventListener("beforeunload", () => {
     if (state.meteorInterval) clearInterval(state.meteorInterval);
     if (state.refreshTimer) clearInterval(state.refreshTimer);
     if (state.autoRefreshInterval) clearInterval(state.autoRefreshInterval);
+    if (state.fireworksInterval) clearInterval(state.fireworksInterval);
 });

@@ -16,14 +16,15 @@ document.addEventListener("DOMContentLoaded", () => {
     btvn_content: document.getElementById("btvn_content"),
     updateBTVN: document.getElementById("updateBTVN"),
     addNewBTVN: document.getElementById("addNewBTVN"),
-    // TKB elements
+    // TKB elements (ĐÃ THAY ĐỔI)
     tkbForm: document.getElementById("tkbForm"),
     tkb_day: document.getElementById("tkb_day"),
     tkb_truc: document.getElementById("tkb_truc"),
-    periodsContainer: document.getElementById("periodsContainer"),
-    addPeriod: document.getElementById("addPeriod"),
+    tkbSangContainer: document.getElementById("tkb-sang-container"), // MỚI
+    tkbChieuContainer: document.getElementById("tkb-chieu-container"), // MỚI
     updateTKB: document.getElementById("updateTKB"),
     addNewTKB: document.getElementById("addNewTKB"),
+    // (Đã xóa addPeriod và periodsContainer)
     // Changelog elements
     changelogForm: document.getElementById("changelogForm"),
     changelog_text: document.getElementById("changelog_text"),
@@ -67,18 +68,14 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // ----- LOGIN -----
-  // Kiểm tra trạng thái đăng nhập
+  // (Giữ nguyên logic Login, Logout, showAdmin)
   if (localStorage.getItem("adminLogged") === "true") {
     showAdmin();
   }
-
-  // Xử lý form đăng nhập
   elements.loginForm.addEventListener("submit", (e) => {
     e.preventDefault();
     handleLogin();
   });
-
-  // Xử lý đăng xuất
   elements.logoutBtn.addEventListener("click", handleLogout);
 
   async function handleLogin() {
@@ -112,7 +109,6 @@ document.addEventListener("DOMContentLoaded", () => {
   function showAdmin() {
     elements.loginBox.style.display = "none";
     elements.adminPanel.style.display = "block";
-    // Thêm hiệu ứng fade-in cho các phần tử
     document.querySelectorAll('.card').forEach((card, index) => {
       setTimeout(() => {
         card.classList.add('fade-in');
@@ -121,22 +117,17 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ----- TOAST -----
+  // (Giữ nguyên logic showToast)
   function showToast(message, type = "info") {
-    // Xóa toast cũ nếu có
     const existingToast = document.querySelector(".toast");
     if (existingToast) {
       existingToast.remove();
     }
-
     const toast = document.createElement("div");
     toast.className = `toast ${type}`;
     toast.textContent = message;
     document.body.appendChild(toast);
-
-    // Hiển thị toast
     setTimeout(() => toast.classList.add("show"), 10);
-
-    // Ẩn toast sau một khoảng thời gian
     setTimeout(() => {
       toast.classList.remove("show");
       setTimeout(() => toast.remove(), 300);
@@ -144,6 +135,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ----- BTVN -----
+  // (Giữ nguyên logic BTVN)
   function getBTVNData() {
     return {
       subject: elements.subject.value,
@@ -151,8 +143,6 @@ document.addEventListener("DOMContentLoaded", () => {
       note: ""
     };
   }
-
-  // Cập nhật BTVN (ghi đè)
   elements.updateBTVN.addEventListener("click", () => {
     const data = getBTVNData();
     if (!data.subject || !data.content) {
@@ -161,8 +151,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     postData({ action: "overwriteBTVN", item: data });
   });
-
-  // Thêm mới BTVN
   elements.addNewBTVN.addEventListener("click", () => {
     const data = getBTVNData();
     if (!data.subject || !data.content) {
@@ -172,89 +160,124 @@ document.addEventListener("DOMContentLoaded", () => {
     postData({ action: "addBTVN", item: data });
   });
 
-  // ----- TKB -----
-  elements.addPeriod.addEventListener("click", addPeriod);
+  // ----- TKB (ĐÃ VIẾT LẠI HOÀN TOÀN) -----
+  
+  // Danh sách môn học TKB để tái sử dụng
+  const subjectOptions = [
+    { value: "Nghỉ", text: "Nghỉ" }, // 'Nghỉ' là trạng thái mặc định
+    { value: "Toán học - Đại số", text: "Toán học - Đại số" },
+    { value: "Toán học - Hình học", text: "Toán học - Hình học" },
+    { value: "Ngữ văn", text: "Ngữ văn" },
+    { value: "Tiếng Anh", text: "Tiếng Anh" },
+    { value: "Vật lý", text: "Vật lý" },
+    { value: "Hóa học", text: "Hóa học" },
+    { value: "Sinh học", text: "Sinh học" },
+    { value: "Lịch sử", text: "Lịch sử" },
+    { value: "Địa lí", text: "Địa lí" },
+    { value: "GDCD", text: "GDCD" },
+    { value: "Tin học", text: "Tin học" },
+    { value: "Công nghệ", text: "Công nghệ" },
+    { value: "GDTC", text: "GDTC" },
+    { value: "HĐTN", text: "HĐTN" },
+    { value: "GDĐP", text: "GDĐP" },
+    { value: "Mĩ thuật", text: "Mĩ Thuật" },
+    { value: "Âm nhạc", text: "Âm nhạc" }
+  ];
+
+  /**
+   * Tạo một hàng tiết học (gồm Label "Tiết X" và Select môn học)
+   * @param {string} buoi - "Sáng" hoặc "Chiều"
+   * @param {number} tiet - 1, 2, 3, 4, 5
+   */
+  function createPeriodRow(buoi, tiet) {
+    const periodRow = document.createElement("div");
+    periodRow.className = "period-row-new fade-in"; // Dùng class mới
+    
+    // Tạo nhãn (Tiết 1, Tiết 2...)
+    const label = document.createElement("label");
+    label.textContent = `Tiết ${tiet}`;
+    
+    // Tạo ô chọn môn học
+    const select = document.createElement("select");
+    select.className = "period-subject";
+    // Thêm thông tin vào dataset để dễ dàng lấy ra khi lưu
+    select.dataset.buoi = buoi;
+    select.dataset.tiet = tiet; 
+    
+    // Thêm các option môn học vào
+    subjectOptions.forEach(opt => {
+      const option = document.createElement("option");
+      option.value = opt.value;
+      option.textContent = opt.text;
+      select.appendChild(option);
+    });
+    
+    // Mặc định chọn "Nghỉ"
+    select.value = "Nghỉ"; 
+    
+    periodRow.appendChild(label);
+    periodRow.appendChild(select);
+    return periodRow;
+  }
+
+  /**
+   * Khởi tạo 10 ô tiết học (5 sáng, 5 chiều)
+   */
+  function initTKBGrid() {
+    // 5 tiết sáng
+    for (let i = 1; i <= 5; i++) {
+      elements.tkbSangContainer.appendChild(createPeriodRow("Sáng", i));
+    }
+    // 5 tiết chiều
+    for (let i = 1; i <= 5; i++) {
+      elements.tkbChieuContainer.appendChild(createPeriodRow("Chiều", i));
+    }
+  }
+
+  // Gán sự kiện cho các nút lưu TKB
   elements.updateTKB.addEventListener("click", () => saveAllPeriods(true));
   elements.addNewTKB.addEventListener("click", () => saveAllPeriods(false));
 
-  function addPeriod() {
-    const periodRow = document.createElement("div");
-    periodRow.className = "period-row fade-in";
-    periodRow.innerHTML = `
-      <select class="period-buoi" required>
-        <option value="Sáng">Sáng</option>
-        <option value="Chiều">Chiều</option>
-      </select>
-      <select class="period-tiet" required>
-        ${[1, 2, 3, 4, 5].map(i => `<option value="${i}">Tiết ${i}</option>`).join("")}
-      </select>
-      <select class="period-subject" required>
-        <option value="">-- Môn học --</option>
-        <option value="Toán">Toán</option>
-        <option value="Ngữ văn">Ngữ văn</option>
-        <option value="Tiếng Anh">Tiếng Anh</option>
-        <option value="Vật lý">Vật lý</option>
-        <option value="Hóa học">Hóa học</option>
-        <option value="Sinh học">Sinh học</option>
-        <option value="Lịch sử">Lịch sử</option>
-        <option value="Địa lí">Địa lí</option>
-        <option value="GDCD">GDCD</option>
-        <option value="Tin học">Tin học</option>
-        <option value="Công nghệ">Công nghệ</option>
-        <option value="GDTC">GDTC</option>
-        <option value="HĐTN">HĐTN</option>
-        <option value="GDĐP">GDĐP</option>
-        <option value="Mĩ thuật">Mĩ Thuật</option>
-        <option value="Âm nhạc">Âm nhạc</option>
-        <option value="Nghỉ">Nghỉ</option>
-      </select>
-      <button type="button" class="removePeriod" aria-label="Xóa tiết">❌</button>
-    `;
-    
-    periodRow.querySelector(".removePeriod").addEventListener("click", () => {
-      periodRow.style.transform = "translateX(100%)";
-      periodRow.style.opacity = "0";
-      setTimeout(() => periodRow.remove(), 300);
-    });
-    
-    elements.periodsContainer.appendChild(periodRow);
-  }
-
+  /**
+   * Thu thập dữ liệu từ grid TKB mới và gửi đi
+   * @param {boolean} overwrite - True: Cập nhật, False: Thêm mới
+   */
   async function saveAllPeriods(overwrite) {
     const day = elements.tkb_day.value;
     const truc = elements.tkb_truc.value;
-    const periodRows = elements.periodsContainer.querySelectorAll(".period-row");
 
-    if (!day || periodRows.length === 0) {
-      showToast("Chọn thứ và nhập ít nhất 1 tiết", "error");
+    if (!day) {
+      showToast("Vui lòng chọn Thứ", "error");
       return;
     }
-    
     if (!truc) {
-      showToast("Chọn tổ trực cho ngày này", "error");
+      showToast("Vui lòng chọn Tổ trực", "error");
       return;
     }
 
-    // Thu thập dữ liệu các tiết
     const periods = [];
-    let hasError = false;
+    // Lấy tất cả các ô <select> môn học trong form TKB
+    const allSubjectSelects = elements.tkbForm.querySelectorAll(".period-subject");
     
-    periodRows.forEach(row => {
-      const buoi = row.querySelector(".period-buoi").value;
-      const tiet = row.querySelector(".period-tiet").value;
-      const subject = row.querySelector(".period-subject").value;
+    allSubjectSelects.forEach(select => {
+      const subject = select.value;
       
-      if (!subject) {
-        showToast("Vui lòng chọn môn học cho tất cả các tiết", "error");
-        hasError = true;
-        return;
+      // Chỉ lưu những tiết có môn học (khác "Nghỉ")
+      if (subject !== "Nghỉ") {
+        periods.push({
+          buoi: select.dataset.buoi,
+          tiet: select.dataset.tiet,
+          subject: subject
+        });
       }
-      
-      periods.push({ buoi, tiet, subject });
     });
-    
-    if (hasError) return;
 
+    if (periods.length === 0) {
+      showToast("Bạn chưa chọn môn học nào (tất cả đều đang 'Nghỉ')", "info");
+      // Vẫn cho phép gửi đi để cập nhật 1 ngày trống
+    }
+
+    // Gửi dữ liệu
     postData({
       action: "updateTKB",
       item: { day, truc, periods: JSON.stringify(periods) },
@@ -263,10 +286,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ----- CHANGELOG -----
+  // (Giữ nguyên logic Changelog)
   function getChangelogData() {
     return { text: elements.changelog_text.value };
   }
-
   elements.updateChangelog.addEventListener("click", () => {
     const data = getChangelogData();
     if (!data.text) {
@@ -275,7 +298,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     postData({ action: "updateChangelog", item: data, overwrite: true });
   });
-
   elements.addNewChangelog.addEventListener("click", () => {
     const data = getChangelogData();
     if (!data.text) {
@@ -289,14 +311,13 @@ document.addEventListener("DOMContentLoaded", () => {
   elements.refreshData.addEventListener("click", loadData);
 
   // ----- COMMON -----
+  // (Giữ nguyên logic postData và loadData)
   async function postData(data) {
     if (window.isLoading) {
       showToast("Đang xử lý yêu cầu trước đó, vui lòng đợi...", "info");
       return;
     }
-    
     window.isLoading = true;
-    
     try {
       const formData = new FormData();
       formData.append("action", data.action);
@@ -307,18 +328,13 @@ document.addEventListener("DOMContentLoaded", () => {
           formData.append(key, data.item[key] ?? "");
         }
       }
-
-      // Hiển thị trạng thái đang tải
       showToast("Đang xử lý...", "info");
-      
       const response = await fetch(CONFIG.SCRIPT_URL, {
         method: "POST",
         body: formData
       });
-      
       const result = await response.json();
       console.log("RESPONSE:", result);
-
       if (result.status === "success") {
         showToast("✅ " + (result.result?.action || "Thành công"), "success");
         loadData();
@@ -336,7 +352,6 @@ document.addEventListener("DOMContentLoaded", () => {
   async function loadData() {
     const dataViewer = elements.dataViewer;
     dataViewer.textContent = "Đang tải dữ liệu...";
-    
     try {
       const response = await fetch(CONFIG.SCRIPT_URL + "?action=getAll");
       const data = await response.json();
@@ -346,6 +361,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Tải dữ liệu ban đầu
+  // ----- TẢI DỮ LIỆU BAN ĐẦU -----
   loadData();
+  initTKBGrid(); // <--- Chạy hàm khởi tạo TKB mới
 });

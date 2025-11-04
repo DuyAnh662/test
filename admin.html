@@ -7,11 +7,9 @@
   <link rel="stylesheet" href="admin.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📘</text></svg>">
   <meta name="description" content="Trang quản trị hệ thống Bài Tập Về Nhà">
-  <!-- Preload resources for better performance -->
   <link rel="preload" href="admin.js" as="script">
 </head>
 <body>
-  <!-- Đăng nhập -->
   <div id="login-box" class="card fade-in">
     <h2>🔑 Đăng nhập quản trị</h2>
     <form id="loginForm">
@@ -22,7 +20,6 @@
     <p id="loginMsg"></p>
   </div>
 
-  <!-- Admin panel -->
   <div id="admin-panel" style="display:none;">
     <header>
       <h1>Trang Quản Trị BTVN</h1>
@@ -35,15 +32,14 @@
     </header>
 
     <main class="container">
-      <!-- BTVN -->
       <section class="card fade-in">
         <h2>📝 Bài Tập Về Nhà</h2>
         <form id="btvnForm">
           <label for="subject">Môn học</label>
           <select id="subject" required>
             <option value="">-- Chọn môn học --</option>
-            <option value="Toán - Đại số">Toán - Đại số</option>
-            <option value="Toán - Hình học">Toán - Hình học</option>
+            <option value="Toán - Đại số">Toán học - Đại số</option>
+            <option value="Toán - Hình học">Toán học - Hình học</option>
             <option value="Ngữ văn">Ngữ văn</option>
             <option value="Tiếng Anh">Tiếng Anh</option>
             <option value="Vật lý">Vật lý</option>
@@ -69,7 +65,6 @@
         </form>
       </section>
 
-      <!-- TKB -->
       <section class="card fade-in">
         <h2>📅 Thời Khoá Biểu</h2>
         <form id="tkbForm">
@@ -92,9 +87,18 @@
             <option value="Tổ 4">Tổ 4</option>
           </select>
 
-          <div id="periodsContainer"></div>
-          <button type="button" id="addPeriod">➕ Thêm tiết</button>
-
+          <div class="tkb-grid">
+            <div class="tkb-session">
+              <h3>Buổi Sáng</h3>
+              <div id="tkb-sang-container">
+                </div>
+            </div>
+            <div class="tkb-session">
+              <h3>Buổi Chiều</h3>
+              <div id="tkb-chieu-container">
+                </div>
+            </div>
+          </div>
           <div class="btn-group mt-20">
             <button type="button" id="updateTKB" class="btn-update">🔁 Cập nhật (ghi đè)</button>
             <button type="button" id="addNewTKB" class="btn-new">➕ Thêm mới (xoá toàn bộ ngày cũ)</button>
@@ -102,7 +106,6 @@
         </form>
       </section>
 
-      <!-- Changelog -->
       <section class="card fade-in">
         <h2>📜 Cập nhật thay đổi</h2>
         <form id="changelogForm">
@@ -115,7 +118,6 @@
         </form>
       </section>
 
-      <!-- Data viewer -->
       <section class="card fade-in">
         <h2>📊 Xem dữ liệu</h2>
         <button id="refreshData">Tải lại</button>

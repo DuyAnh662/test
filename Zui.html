@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bánh Trôi Nước - Hồ Xuân Hương</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Sans+Pro:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #2c3e50;
+        }
+        
+        .poem-container {
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .poem-container::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+            z-index: 0;
+        }
+        
+        .poem-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #34495e;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .poem-author {
+            font-size: 1.2rem;
+            font-weight: 300;
+            margin-bottom: 40px;
+            color: #7f8c8d;
+            font-style: italic;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .poem-content {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            line-height: 2.2;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .poem-line {
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s forwards;
+            position: relative;
+        }
+        
+        .poem-line:nth-child(1) { animation-delay: 0.2s; }
+        .poem-line:nth-child(2) { animation-delay: 0.4s; }
+        .poem-line:nth-child(3) { animation-delay: 0.6s; }
+        .poem-line:nth-child(4) { animation-delay: 0.8s; }
+        
+        .poem-line:hover {
+            color: #e74c3c;
+            transform: scale(1.02);
+            transition: all 0.3s ease;
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .decoration {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, rgba(231, 76, 60, 0.1), rgba(52, 73, 94, 0.1));
+            z-index: 0;
+        }
+        
+        .decoration-1 {
+            top: -30px;
+            left: -30px;
+        }
+        
+        .decoration-2 {
+            bottom: -40px;
+            right: -40px;
+            width: 150px;
+            height: 150px;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: #95a5a6;
+            position: relative;
+            z-index: 1;
+        }
+        
+        @media (max-width: 600px) {
+            .poem-title {
+                font-size: 2rem;
+            }
+            
+            .poem-content {
+                font-size: 1.2rem;
+            }
+            
+            .poem-container {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="poem-container">
+        <div class="decoration decoration-1"></div>
+        <div class="decoration decoration-2"></div>
+        
+        <h1 class="poem-title">Bánh Trôi Nước</h1>
+        <p class="poem-author">Hồ Xuân Hương</p>
+        
+        <div class="poem-content">
+            <p class="poem-line">Thân em vừa trắng lại vừa tròn,</p>
+            <p class="poem-line">Bảy nổi ba chìm với nước non.</p>
+            <p class="poem-line">Rắn nát mặc dầu tay kẻ nặn.</p>
+            <p class="poem-line">Mà em vẫn giữ tấm lòng son.</p>
+        </div>
+        
+        <div class="footer">
+            <p>© Truyền thống thơ ca Việt Nam</p>
+        </div>
+    </div>
+</body>
+</html>
