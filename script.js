@@ -20,7 +20,7 @@ const dayNames = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ N
 const specialEvents = [
     {
         name: "Tết Nguyên Đán",
-        startDate: { month: 11, day: 4 }, // Ngày bắt đầu (tháng, ngày)
+        startDate: { month: 1, day: 29 }, // Ngày bắt đầu (tháng, ngày)
         endDate: { month: 1, day: 7 }, // Ngày kết thúc (tháng, ngày)
         theme: "tet", // Tên chủ đề
         showFireworks: true, // Hiển thị pháo hoa
@@ -30,21 +30,72 @@ const specialEvents = [
             content: "Chúc bạn và gia đình một năm mới an khang, thịnh vượng và vạn sự như ý!"
         },
         background: {
-            day: "linear-gradient(135deg, #ff0000 0%, #ffcc00 100%)", // Nền ban ngày
-            night: "linear-gradient(135deg, #8b0000 0%, #ff6600 100%)", // Nền ban đêm
-            patterns: ["hoa-mai", "hoa-dao", "dong-tien"] // Họa tiết trang trí
+            day: "linear-gradient(135deg, rgba(139, 0, 0, 0.8) 0%, rgba(255, 214, 10, 0.8) 100%)", // Nền ban ngày
+            night: "linear-gradient(135deg, rgba(139, 0, 0, 0.9) 0%, rgba(255, 140, 66, 0.8) 100%)", // Nền ban đêm
+            patterns: ["hoa-mai", "hoa-dao", "dong-tien", "phao", "mam-qua"] // Họa tiết trang trí
         }
     },
     {
         name: "Sinh nhật",
-        startDate: { month: 5, day: 15 }, // Ngày bắt đầu (tháng, ngày)
-        endDate: { month: 5, day: 15 }, // Ngày kết thúc (tháng, ngày)
+        startDate: { month: 5, day: 12 }, // Ngày bắt đầu (tháng, ngày)
+        endDate: { month: 5, day: 12 }, // Ngày kết thúc (tháng, ngày)
         theme: "birthday",
         showFireworks: true,
         disableMeteors: false,
         popup: {
-            title: "Chúc Mừng Sinh Nhật!",
-            content: "Hôm nay là sinh nhật của một người đặc biệt! Hãy cùng gửi lời chúc tốt đẹp nhất đến họ nhé!"
+            title: "Chúc Mừng Sinh Nhật Tường Vy!",
+            content: "Hôm nay là sinh nhật của Tường Vy! Hãy cùng gửi lời chúc tốt đẹp nhất đến họ nhé!"
+        },
+        background: {
+            day: "linear-gradient(135deg, #ff99cc 0%, #cc99ff 100%)",
+            night: "linear-gradient(135deg, #660066 0%, #993399 100%)",
+            patterns: ["balloon", "cake", "gift"]
+        }
+    },
+    {
+        name: "Sinh nhật",
+        startDate: { month: 12, day: 6 }, // Ngày bắt đầu (tháng, ngày)
+        endDate: { month: 12, day: 6 }, // Ngày kết thúc (tháng, ngày)
+        theme: "birthday",
+        showFireworks: true,
+        disableMeteors: false,
+        popup: {
+            title: "Chúc Mừng Sinh Nhật Huyền!",
+            content: "Hôm nay là sinh nhật của Huyền! Hãy cùng gửi lời chúc tốt đẹp nhất đến họ nhé!"
+        },
+        background: {
+            day: "linear-gradient(135deg, #ff99cc 0%, #cc99ff 100%)",
+            night: "linear-gradient(135deg, #660066 0%, #993399 100%)",
+            patterns: ["balloon", "cake", "gift"]
+        }
+    },
+    {
+        name: "Sinh nhật",
+        startDate: { month: 9, day: 2 }, // Ngày bắt đầu (tháng, ngày)
+        endDate: { month: 9, day: 2 }, // Ngày kết thúc (tháng, ngày)
+        theme: "birthday",
+        showFireworks: true,
+        disableMeteors: false,
+        popup: {
+            title: "Chúc Mừng Sinh Nhật Khánh Anh!",
+            content: "Hôm nay là sinh nhật của Khánh Anh! Hãy cùng gửi lời chúc tốt đẹp nhất đến họ nhé!"
+        },
+        background: {
+            day: "linear-gradient(135deg, #ff99cc 0%, #cc99ff 100%)",
+            night: "linear-gradient(135deg, #660066 0%, #993399 100%)",
+            patterns: ["balloon", "cake", "gift"]
+        }
+    },
+    {
+        name: "Sinh nhật",
+        startDate: { month: 3, day: 8 }, // Ngày bắt đầu (tháng, ngày)
+        endDate: { month: 3, day: 8 }, // Ngày kết thúc (tháng, ngày)
+        theme: "birthday",
+        showFireworks: true,
+        disableMeteors: false,
+        popup: {
+            title: "Chúc Mừng Sinh Nhật Phương!",
+            content: "Hôm nay là sinh nhật của Phương! Hãy cùng gửi lời chúc tốt đẹp nhất đến họ nhé!"
         },
         background: {
             day: "linear-gradient(135deg, #ff99cc 0%, #cc99ff 100%)",
@@ -89,7 +140,8 @@ const specialEvents = [
             day: "linear-gradient(135deg, #ff6600 0%, #993300 100%)",
             night: "linear-gradient(135deg, #330033 0%, #660033 100%)",
             patterns: ["pumpkin", "ghost", "witch"]
-        }
+        },
+        isDarkMode: true // Halloween luôn là dark mode
     },
     {
         name: "Giáng Sinh",
@@ -438,6 +490,17 @@ function applyEventTheme(event, isNightTime) {
             canvas.style.display = 'none';
         }
     }
+    
+    // Nếu là Halloween, luôn áp dụng dark mode
+    if (event.isDarkMode) {
+        document.body.classList.add("dark");
+        // Vô hiệu hóa nút chuyển dark mode
+        if (elements.menuDark) {
+            elements.menuDark.disabled = true;
+            elements.menuDark.style.opacity = "0.5";
+            elements.menuDark.style.cursor = "not-allowed";
+        }
+    }
 }
 
 function resetTheme() {
@@ -457,6 +520,13 @@ function resetTheme() {
     
     // Xóa họa tiết trang trí
     removeEventPatterns();
+    
+    // Kích hoạt lại nút chuyển dark mode
+    if (elements.menuDark) {
+        elements.menuDark.disabled = false;
+        elements.menuDark.style.opacity = "";
+        elements.menuDark.style.cursor = "";
+    }
 }
 
 function addEventPatterns(event) {
@@ -580,6 +650,11 @@ function initMenu() {
     });
 
     elements.menuDark.addEventListener("click", () => {
+        // Kiểm tra xem có phải Halloween không
+        if (state.currentEvent && state.currentEvent.isDarkMode) {
+            return; // Không cho phép thay đổi dark mode khi là Halloween
+        }
+        
         showThemeLoading();
         setTimeout(() => {
             const isDarkMode = document.body.classList.contains("dark");
@@ -617,6 +692,11 @@ function initMenu() {
 
     elements.colorThemes.forEach(btn => {
         btn.addEventListener("click", () => {
+            // Kiểm tra xem có phải Halloween không
+            if (state.currentEvent && state.currentEvent.isDarkMode) {
+                return; // Không cho phép thay đổi chủ đề khi là Halloween
+            }
+            
             const theme = btn.dataset.theme;
             showThemeLoading();
             setTimeout(() => {

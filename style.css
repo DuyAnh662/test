@@ -102,7 +102,7 @@ body.theme-mint { --theme-primary: #32D74B; --theme-secondary: #30D158; --theme-
 
 /* Dark mode */
 body.dark {
-    --bg: #000000; --card: rgba(30, 30, 30, 0.9); --text: #F0F0F0;
+    --bg: #1a1a1a; --card: rgba(30, 30, 30, 0.9); --text: #F0F0F0;
     --text-secondary: #D0D0D0; --text-tertiary: #A0A0A0; --accent: #0A84FF;
     --note-bg: rgba(58, 46, 0, 0.7); --note-border: #FFCC00;
     --glass-bg: rgba(30, 30, 30, 0.9); --glass-border: rgba(255, 255, 255, 0.1);
@@ -115,7 +115,7 @@ body.dark {
     --popup-border: rgba(255, 255, 255, 0.1); --menu-bg: rgba(30, 30, 30, 0.95);
     --menu-border: rgba(255, 255, 255, 0.1); --link-color: var(--accent);
     --bullet-color: var(--accent);
-    --theme-bg: #121212; --theme-primary: #0A84FF; --theme-secondary: #64D2FF;
+    --theme-bg: #1a1a1a; --theme-primary: #0A84FF; --theme-secondary: #64D2FF;
     --theme-accent: #0A84FF; --normal-card: #1E1E1E;
     --normal-border: rgba(255, 255, 255, 0.1);
     --theme-primary-rgb: 10, 132, 255;
@@ -144,7 +144,7 @@ body.dark .color-theme-options { display: none; }
 
 /* Canvas (Giữ nguyên) */
 #sky { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; display: none; }
-body.dark #sky { display: block; }
+body.dark #sky { display: none; } /* Thay đổi: Ẩn canvas trong dark mode */
 
 /* Pháo hoa */
 #fireworks-container {
@@ -856,231 +856,26 @@ body.dark .subject-card.is-tomorrow .subject-title::after {
     100% { transform: translateY(-100vh) rotate(360deg); }
 }
 
-/* Chủ đề Tết */
+/* Chủ đề Tết - Nền đỏ, viền vàng */
 body.event-tet {
-    --theme-primary: #ff0000;
-    --theme-secondary: #ffcc00;
-    --theme-primary-rgb: 255, 0, 0;
+    background: #b10000 !important; /* Nền đỏ đô */
 }
 
-body.event-tet .event-popup-card {
-    background: linear-gradient(135deg, rgba(255, 0, 0, 0.9) 0%, rgba(255, 204, 0, 0.9) 100%);
-    color: #ffffff;
-    border: 2px solid #ffcc00;
-}
-
-body.event-tet .event-popup-card h3 {
-    color: #ffffff;
-}
-
-body.event-tet .event-popup-card .close {
-    color: #ffffff;
-}
-
-body.event-tet .pattern-hoa-mai::before {
-    content: "🌸";
-    font-size: 40px;
-}
-
-body.event-tet .pattern-hoa-dao::before {
-    content: "🌺";
-    font-size: 40px;
-}
-
-body.event-tet .pattern-dong-tien::before {
-    content: "💰";
-    font-size: 40px;
-}
-
-/* Chủ đề Sinh nhật */
-body.event-birthday {
-    --theme-primary: #ff99cc;
-    --theme-secondary: #cc99ff;
-    --theme-primary-rgb: 255, 153, 204;
-}
-
-body.event-birthday .event-popup-card {
-    background: linear-gradient(135deg, rgba(255, 153, 204, 0.9) 0%, rgba(204, 153, 255, 0.9) 100%);
-    color: #ffffff;
-    border: 2px solid #ffffff;
-}
-
-body.event-birthday .event-popup-card h3 {
-    color: #ffffff;
-}
-
-body.event-birthday .event-popup-card .close {
-    color: #ffffff;
-}
-
-body.event-birthday .pattern-balloon::before {
-    content: "🎈";
-    font-size: 40px;
-}
-
-body.event-birthday .pattern-cake::before {
-    content: "🎂";
-    font-size: 40px;
-}
-
-body.event-birthday .pattern-gift::before {
-    content: "🎁";
-    font-size: 40px;
-}
-
-/* Chủ đề Cá tháng Tư */
-body.event-april-fools {
-    --theme-primary: #ff3366;
-    --theme-secondary: #ffcc33;
-    --theme-primary-rgb: 255, 51, 102;
-}
-
-body.event-april-fools .event-popup-card {
-    background: linear-gradient(135deg, rgba(255, 51, 102, 0.9) 0%, rgba(255, 204, 51, 0.9) 100%);
-    color: #ffffff;
-    border: 2px solid #ffffff;
-}
-
-body.event-april-fools .event-popup-card h3 {
-    color: #ffffff;
-}
-
-body.event-april-fools .event-popup-card .close {
-    color: #ffffff;
-}
-
-body.event-april-fools .pattern-joke::before {
-    content: "😂";
-    font-size: 40px;
-}
-
-body.event-april-fools .pattern-fish::before {
-    content: "🐟";
-    font-size: 40px;
-}
-
-/* Chủ đề Halloween */
-body.event-halloween {
-    --theme-primary: #ff6600;
-    --theme-secondary: #993300;
-    --theme-primary-rgb: 255, 102, 0;
-}
-
-body.event-halloween .event-popup-card {
-    background: linear-gradient(135deg, rgba(255, 102, 0, 0.9) 0%, rgba(153, 51, 0, 0.9) 100%);
-    color: #ffffff;
-    border: 2px solid #ff6600;
-}
-
-body.event-halloween .event-popup-card h3 {
-    color: #ffffff;
-}
-
-body.event-halloween .event-popup-card .close {
-    color: #ffffff;
-}
-
-body.event-halloween .pattern-pumpkin::before {
-    content: "🎃";
-    font-size: 40px;
-}
-
-body.event-halloween .pattern-ghost::before {
-    content: "👻";
-    font-size: 40px;
-}
-
-body.event-halloween .pattern-witch::before {
-    content: "🧙‍♀️";
-    font-size: 40px;
-}
-
-/* Chủ đề Giáng Sinh */
-body.event-christmas {
-    --theme-primary: #009900;
-    --theme-secondary: #cc0000;
-    --theme-primary-rgb: 0, 153, 0;
-}
-
-body.event-christmas .event-popup-card {
-    background: linear-gradient(135deg, rgba(0, 153, 0, 0.9) 0%, rgba(204, 0, 0, 0.9) 100%);
-    color: #ffffff;
-    border: 2px solid #ffffff;
-}
-
-body.event-christmas .event-popup-card h3 {
-    color: #ffffff;
-}
-
-body.event-christmas .event-popup-card .close {
-    color: #ffffff;
-}
-
-body.event-christmas .pattern-snow::before {
-    content: "❄️";
-    font-size: 40px;
-}
-
-body.event-christmas .pattern-tree::before {
-    content: "🎄";
-    font-size: 40px;
-}
-
-body.event-christmas .pattern-santa::before {
-    content: "🎅";
-    font-size: 40px;
-}
-/* --- CSS MỚI: Chủ đề đặc biệt --- */
-/* Container cho họa tiết trang trí */
-.event-patterns {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: -1;
-    overflow: hidden;
-}
-
-.event-pattern {
-    position: absolute;
-    opacity: 0.1;
-    animation: float-pattern 20s infinite linear;
-}
-
-@keyframes float-pattern {
-    0% { transform: translateY(100vh) rotate(0deg); }
-    100% { transform: translateY(-100vh) rotate(360deg); }
-}
-
-/* Chủ đề Tết */
-body.event-tet {
-    --theme-primary: rgba(204, 0, 0, 0.7);
-    --theme-secondary: rgba(255, 215, 0, 0.8);
-    --theme-primary-rgb: 204, 0, 0;
-}
-
-/* Toàn bộ UI có nền đỏ nhạt và viền vàng óng cho Tết */
 body.event-tet .main-header {
-    background: rgba(204, 0, 0, 0.7) !important;
-    border-bottom: 3px solid rgba(255, 215, 0, 0.8) !important;
+    background: #b10000 !important;
+    border-bottom: 3px solid #ffd900 !important;
     box-shadow: 0 0 15px rgba(255, 215, 0, 0.3), 0 0 10px rgba(255, 215, 0, 0.2) !important;
-    backdrop-filter: blur(5px) !important;
-    -webkit-backdrop-filter: blur(5px) !important;
 }
 
 body.event-tet .content-wrapper {
-    background: rgba(204, 0, 0, 0.7) !important;
-    border: 3px solid rgba(255, 215, 0, 0.8) !important;
+    background: #b10000 !important;
+    border: 3px solid #ffd900 !important;
     color: #ffffff !important;
     box-shadow: 0 0 15px rgba(255, 215, 0, 0.3), 0 0 10px rgba(255, 215, 0, 0.2) !important;
     position: relative;
-    backdrop-filter: blur(5px) !important;
-    -webkit-backdrop-filter: blur(5px) !important;
 }
 
-/* Hiệu ứng viền vàng óng ánh */
+/* Hiệu ứng viền vàng kim óng ánh */
 body.event-tet .content-wrapper::before {
     content: '';
     position: absolute;
@@ -1088,7 +883,7 @@ body.event-tet .content-wrapper::before {
     left: -3px;
     right: -3px;
     bottom: -3px;
-    background: linear-gradient(45deg, rgba(255, 215, 0, 0.8), rgba(255, 237, 78, 0.8), rgba(255, 215, 0, 0.8), rgba(255, 237, 78, 0.8));
+    background: linear-gradient(45deg, #cf0000, #bb0000, #be0101, #c00000);
     z-index: -1;
     border-radius: inherit;
     opacity: 0.7;
@@ -1102,42 +897,68 @@ body.event-tet .content-wrapper::before {
 }
 
 body.event-tet .menu-panel {
-    background: rgba(204, 0, 0, 0.7) !important;
-    border: 3px solid rgba(255, 215, 0, 0.8) !important;
+    background: #8B0000 !important;
+    border: 3px solid #ffd900 !important;
     box-shadow: 0 0 15px rgba(255, 215, 0, 0.3), 0 0 10px rgba(255, 215, 0, 0.2) !important;
-    backdrop-filter: blur(5px) !important;
-    -webkit-backdrop-filter: blur(5px) !important;
 }
 
-body.event-tet .popup-card {
-    background: rgba(204, 0, 0, 0.7) !important;
-    border: 3px solid rgba(255, 215, 0, 0.8) !important;
+/* THÊM MỚI: Các nút trong menu panel */
+body.event-tet .menu-panel button, body.event-tet .menu-panel a {
     color: #ffffff !important;
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3), 0 0 10px rgba(255, 215, 0, 0.2) !important;
-    backdrop-filter: blur(5px) !important;
-    -webkit-backdrop-filter: blur(5px) !important;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.3) !important;
 }
 
-body.event-tet .event-popup-card {
-    background: rgba(204, 0, 0, 0.7) !important;
-    border: 3px solid rgba(255, 215, 0, 0.8) !important;
+body.event-tet .menu-panel button:hover, body.event-tet .menu-panel a:hover {
+    background: rgba(255, 215, 0, 0.2) !important;
+}
+
+/* THÊM MỚI: Nút chuyển tab */
+body.event-tet .header-nav button[role="tab"] {
+    color: #ffffff !important;
+}
+
+body.event-tet .header-nav button[role="tab"].active {
+    color: #FFD700 !important;
+}
+
+body.event-tet .header-nav button[role="tab"]::after {
+    background: #FFD700 !important;
+}
+
+/* THÊM MỚI: Nút menu và refresh */
+body.event-tet .menu-btn {
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 215, 0, 0.5) !important;
+}
+
+body.event-tet .menu-btn:hover {
+    background: rgba(255, 215, 0, 0.2) !important;
+}
+
+body.event-tet .popup-card, body.event-tet .event-popup-card {
+    background: #8B0000 !important;
+    border: 3px solid #FFD700 !important;
     color: #ffffff !important;
     box-shadow: 0 0 15px rgba(255, 215, 0, 0.3), 0 0 10px rgba(255, 215, 0, 0.2) !important;
-    backdrop-filter: blur(5px) !important;
-    -webkit-backdrop-filter: blur(5px) !important;
 }
 
 body.event-tet .subject-title {
-    color: #ffffff !important;
+    color: #FFD700 !important;
     text-shadow: 0 0 5px rgba(0, 0, 0, 0.5) !important;
 }
 
+body.event-tet .subject-title::before {
+    content: "🌸";
+    margin-right: 8px;
+    font-size: 0.9em;
+}
+
 body.event-tet .subject-title::after {
-    background: rgba(255, 215, 0, 0.8) !important;
+    background: #FFD700 !important;
 }
 
 body.event-tet .btvn-item::before {
-    color: rgba(255, 215, 0, 0.8) !important;
+    color: #FFD700 !important;
 }
 
 body.event-tet .btvn-content {
@@ -1145,11 +966,11 @@ body.event-tet .btvn-content {
 }
 
 body.event-tet .changelog-version {
-    color: rgba(255, 215, 0, 0.8) !important;
+    color: #FFD700 !important;
 }
 
 body.event-tet .changelog-list li::before {
-    color: rgba(255, 215, 0, 0.8) !important;
+    color: #FFD700 !important;
 }
 
 body.event-tet .changelog-list li {
@@ -1157,42 +978,41 @@ body.event-tet .changelog-list li {
 }
 
 body.event-tet .button-primary {
-    background: rgba(204, 0, 0, 0.7) !important;
-    border: 3px solid rgba(255, 215, 0, 0.8) !important;
+    background: #c40000 !important;
+    border: 3px solid #000000 !important;
     color: #ffffff !important;
     box-shadow: 0 0 15px rgba(255, 215, 0, 0.3), 0 0 10px rgba(255, 215, 0, 0.2) !important;
-    backdrop-filter: blur(5px) !important;
-    -webkit-backdrop-filter: blur(5px) !important;
-    text-shadow: 0 0 3px rgba(0, 0, 0, 0.5) !important;
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.3) !important;
+    transition: all 0.3s ease !important;
 }
 
 body.event-tet .button-primary:hover {
-    background: rgba(153, 0, 0, 0.7) !important;
+    background: #FFD700 !important;
+    color: #c40000 !important;
+    transform: translateY(-2px) !important;
 }
 
 body.event-tet .day-container {
-    background: rgba(204, 0, 0, 0.7) !important;
-    border: 3px solid rgba(255, 215, 0, 0.8) !important;
+    background: #c40000 !important;
+    border: 3px solid #ffd900 !important;
     box-shadow: 0 0 15px rgba(255, 215, 0, 0.3), 0 0 10px rgba(255, 215, 0, 0.2) !important;
-    backdrop-filter: blur(5px) !important;
-    -webkit-backdrop-filter: blur(5px) !important;
 }
 
 body.event-tet .day-header {
-    background: rgba(153, 0, 0, 0.7) !important;
-    color: #ffffff !important;
-    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5) !important;
+    background: #FFD700 !important;
+    color: #c40000 !important;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.3) !important;
 }
 
 body.event-tet .session-table {
-    background: rgba(204, 0, 0, 0.7) !important;
-    border: 3px solid rgba(255, 215, 0, 0.8) !important;
+    background: #c40000 !important;
+    border: 3px solid #FFD700 !important;
 }
 
 body.event-tet .session-table th {
-    background: rgba(153, 0, 0, 0.7) !important;
-    color: #ffffff !important;
-    text-shadow: 0 0 3px rgba(0, 0, 0, 0.5) !important;
+    background: #FFD700 !important;
+    color: #ff0000 !important;
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.3) !important;
 }
 
 body.event-tet .session-table td {
@@ -1201,42 +1021,74 @@ body.event-tet .session-table td {
 }
 
 body.event-tet .session-header {
-    color: #ffffff !important;
+    color: #FFD700 !important;
     text-shadow: 0 0 5px rgba(0, 0, 0, 0.5) !important;
 }
 
 body.event-tet .tkb-full-card {
-    background: rgba(204, 0, 0, 0.7) !important;
-    border: 3px solid rgba(255, 215, 0, 0.8) !important;
+    background: #c40000 !important;
+    border: 3px solid #FFD700 !important;
     color: #ffffff !important;
     box-shadow: 0 0 15px rgba(255, 215, 0, 0.3), 0 0 10px rgba(255, 215, 0, 0.2) !important;
-    backdrop-filter: blur(5px) !important;
-    -webkit-backdrop-filter: blur(5px) !important;
 }
 
 body.event-tet .event-popup-card h3 {
-    color: #ffffff;
+    color: #FFD700 !important;
     text-shadow: 0 0 5px rgba(0, 0, 0, 0.5) !important;
 }
 
 body.event-tet .event-popup-card .close {
-    color: #ffffff;
+    color: #ffffff !important;
 }
 
-body.event-tet .pattern-hoa-mai::before {
-    content: "🌸";
-    font-size: 40px;
+/* THÊM MỚI: Nút đóng popup */
+body.event-tet .popup-card .close {
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 215, 0, 0.5) !important;
 }
 
-body.event-tet .pattern-hoa-dao::before {
-    content: "🌺";
-    font-size: 40px;
+body.event-tet .popup-card .close:hover {
+    background: rgba(255, 215, 0, 0.2) !important;
 }
 
-body.event-tet .pattern-dong-tien::before {
-    content: "💰";
-    font-size: 40px;
+/* THÊM MỚI: Bảng trong popup */
+body.event-tet .popup-card table {
+    border: 1px solid #FFD700 !important;
 }
+
+body.event-tet .popup-card th {
+    background: rgba(255, 215, 0, 0.3) !important;
+    color: #ffffff !important;
+}
+
+body.event-tet .popup-card td {
+    border-bottom: 1px solid rgba(255, 215, 0, 0.2) !important;
+}
+
+/* THÊM MỚI: Các mục trong changelog */
+body.event-tet .change-category {
+    border-bottom: 1px solid rgba(255, 215, 0, 0.3) !important;
+}
+
+body.event-tet .category-title {
+    color: #FFD700 !important;
+}
+
+/* THÊM MỚI: Dev info và donate CTA */
+body.event-tet .dev-info {
+    border-top: 1px solid rgba(255, 215, 0, 0.3) !important;
+}
+
+body.event-tet .donate-cta {
+    color: #FFD700 !important;
+}
+
+/* Thêm các icon Tết */
+body.event-tet .pattern-hoa-mai::before { content: "🌸"; font-size: 40px; }
+body.event-tet .pattern-hoa-dao::before { content: "🌺"; font-size: 40px; }
+body.event-tet .pattern-dong-tien::before { content: "💰"; font-size: 40px; }
+body.event-tet .pattern-phao::before { content: "🧧"; font-size: 40px; }
+body.event-tet .pattern-mam-qua::before { content: "🎋"; font-size: 40px; }
 
 /* Chủ đề Sinh nhật */
 body.event-birthday {
@@ -1249,8 +1101,6 @@ body.event-birthday .event-popup-card {
     background: linear-gradient(135deg, rgba(255, 153, 204, 0.7) 0%, rgba(204, 153, 255, 0.7) 100%);
     color: #ffffff;
     border: 2px solid rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(5px) !important;
-    -webkit-backdrop-filter: blur(5px) !important;
 }
 
 body.event-birthday .event-popup-card h3 {
@@ -1262,20 +1112,9 @@ body.event-birthday .event-popup-card .close {
     color: #ffffff;
 }
 
-body.event-birthday .pattern-balloon::before {
-    content: "🎈";
-    font-size: 40px;
-}
-
-body.event-birthday .pattern-cake::before {
-    content: "🎂";
-    font-size: 40px;
-}
-
-body.event-birthday .pattern-gift::before {
-    content: "🎁";
-    font-size: 40px;
-}
+body.event-birthday .pattern-balloon::before { content: "🎈"; font-size: 40px; }
+body.event-birthday .pattern-cake::before { content: "🎂"; font-size: 40px; }
+body.event-birthday .pattern-gift::before { content: "🎁"; font-size: 40px; }
 
 /* Chủ đề Cá tháng Tư */
 body.event-april-fools {
@@ -1288,8 +1127,6 @@ body.event-april-fools .event-popup-card {
     background: linear-gradient(135deg, rgba(255, 51, 102, 0.7) 0%, rgba(255, 204, 51, 0.7) 100%);
     color: #ffffff;
     border: 2px solid rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(5px) !important;
-    -webkit-backdrop-filter: blur(5px) !important;
 }
 
 body.event-april-fools .event-popup-card h3 {
@@ -1302,54 +1139,50 @@ body.event-april-fools .event-popup-card .close {
     display: none !important;
 }
 
-body.event-april-fools .pattern-joke::before {
-    content: "😂";
-    font-size: 40px;
-}
+body.event-april-fools .pattern-joke::before { content: "😂"; font-size: 40px; }
+body.event-april-fools .pattern-fish::before { content: "🐟"; font-size: 40px; }
 
-body.event-april-fools .pattern-fish::before {
-    content: "🐟";
-    font-size: 40px;
-}
-
-/* Chủ đề Halloween */
-body.event-halloween {
-    --theme-primary: rgba(255, 102, 0, 0.7);
-    --theme-secondary: rgba(153, 51, 0, 0.8);
+/* Chủ đề Halloween - Dark mode mặc định, nền tối */
+body.event-halloween, body.event-halloween.dark {
+    background: #1a0505 !important; /* Nền tối sẫm */
+    --theme-primary: #ff6600;
+    --theme-secondary: #993300;
     --theme-primary-rgb: 255, 102, 0;
 }
 
-body.event-halloween .event-popup-card {
-    background: linear-gradient(135deg, rgba(255, 102, 0, 0.7) 0%, rgba(153, 51, 0, 0.7) 100%);
-    color: #ffffff;
-    border: 2px solid rgba(255, 102, 0, 0.8);
-    backdrop-filter: blur(5px) !important;
-    -webkit-backdrop-filter: blur(5px) !important;
+body.event-halloween .main-header {
+    background: rgba(26, 5, 5, 0.9) !important;
+    border-bottom: 1px solid rgba(255, 102, 0, 0.5) !important;
+}
+
+body.event-halloween .content-wrapper {
+    background: rgba(26, 5, 5, 0.9) !important;
+    border: 1px solid rgba(255, 102, 0, 0.5) !important;
+    color: #F0F0F0 !important;
+}
+
+body.event-halloween .menu-panel {
+    background: rgba(26, 5, 5, 0.9) !important;
+    border: 1px solid rgba(255, 102, 0, 0.5) !important;
+}
+
+body.event-halloween .popup-card, body.event-halloween .event-popup-card {
+    background: rgba(26, 5, 5, 0.9) !important;
+    border: 1px solid rgba(255, 102, 0, 0.5) !important;
+    color: #F0F0F0 !important;
 }
 
 body.event-halloween .event-popup-card h3 {
-    color: #ffffff;
-    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5) !important;
+    color: #ff6600 !important;
 }
 
 body.event-halloween .event-popup-card .close {
-    color: #ffffff;
+    color: #F0F0F0 !important;
 }
 
-body.event-halloween .pattern-pumpkin::before {
-    content: "🎃";
-    font-size: 40px;
-}
-
-body.event-halloween .pattern-ghost::before {
-    content: "👻";
-    font-size: 40px;
-}
-
-body.event-halloween .pattern-witch::before {
-    content: "🧙‍♀️";
-    font-size: 40px;
-}
+body.event-halloween .pattern-pumpkin::before { content: "🎃"; font-size: 40px; }
+body.event-halloween .pattern-ghost::before { content: "👻"; font-size: 40px; }
+body.event-halloween .pattern-witch::before { content: "🧙‍♀️"; font-size: 40px; }
 
 /* Chủ đề Giáng Sinh */
 body.event-christmas {
@@ -1362,8 +1195,6 @@ body.event-christmas .event-popup-card {
     background: linear-gradient(135deg, rgba(0, 153, 0, 0.7) 0%, rgba(204, 0, 0, 0.7) 100%);
     color: #ffffff;
     border: 2px solid rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(5px) !important;
-    -webkit-backdrop-filter: blur(5px) !important;
 }
 
 body.event-christmas .event-popup-card h3 {
@@ -1375,17 +1206,6 @@ body.event-christmas .event-popup-card .close {
     color: #ffffff;
 }
 
-body.event-christmas .pattern-snow::before {
-    content: "❄️";
-    font-size: 40px;
-}
-
-body.event-christmas .pattern-tree::before {
-    content: "🎄";
-    font-size: 40px;
-}
-
-body.event-christmas .pattern-santa::before {
-    content: "🎅";
-    font-size: 40px;
-}
+body.event-christmas .pattern-snow::before { content: "❄️"; font-size: 40px; }
+body.event-christmas .pattern-tree::before { content: "🎄"; font-size: 40px; }
+body.event-christmas .pattern-santa::before { content: "🎅"; font-size: 40px; }
