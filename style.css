@@ -1209,3 +1209,86 @@ body.event-christmas .event-popup-card .close {
 body.event-christmas .pattern-snow::before { content: "❄️"; font-size: 40px; }
 body.event-christmas .pattern-tree::before { content: "🎄"; font-size: 40px; }
 body.event-christmas .pattern-santa::before { content: "🎅"; font-size: 40px; }
+
+/* --- CSS cho App Announcement Popup MỚI --- */
+#app-announcement {
+    /* Ghi đè style .popup mặc định để nó không mờ toàn bộ */
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.app-popup-card {
+    text-align: center; /* Căn giữa nội dung */
+}
+
+.app-popup-card .app-icon {
+    margin: 0 auto 16px auto; /* Căn giữa icon */
+    background: linear-gradient(180deg, var(--theme-primary), var(--theme-secondary));
+}
+
+.app-popup-card h3 {
+    padding-right: 0; /* Ghi đè padding-right của .popup-card h3 */
+}
+
+.app-popup-card .app-card-desc {
+    color: var(--text-secondary);
+    font-size: 15px;
+    margin-bottom: 24px;
+}
+
+.app-popup-card .app-buttons {
+    display: flex;
+    flex-direction: column; /* Xếp 2 nút dọc */
+    gap: 12px;
+}
+
+/* Style cho các nút .btn (giữ nguyên từ file cũ của bạn) */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center; /* Căn giữa text/icon */
+    gap: 8px;
+    padding: 12px 16px; /* Tăng padding 1 chút */
+    border-radius: 12px; /* Bo tròn giống .button-primary */
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    transition: transform .12s ease, background .12s ease;
+    border: none;
+    cursor: pointer;
+}
+.btn:active { transform: translateY(1px); }
+
+.btn-ios { 
+    background: linear-gradient(180deg,#2563eb,#1d4ed8); 
+    box-shadow: 0 6px 14px rgba(13,42,148,0.12); 
+}
+.btn-ios:hover { background: linear-gradient(180deg,#1d4ed8,#1542c7); }
+
+.btn-android { 
+    background: linear-gradient(180deg,#22c55e,#16a34a); 
+    box-shadow: 0 6px 14px rgba(16,98,46,0.12); 
+}
+.btn-android:hover { background: linear-gradient(180deg,#16a34a,#14833f); }
+
+/* Nút đóng của app-popup (nút 'X') */
+.app-popup-card .close {
+    /* Ghi đè style .close mặc định để nó không bị lệch */
+    position: absolute;
+    right: 16px;
+    top: 16px;
+}
+
+/* CSS cho Popup Hướng dẫn iOS */
+#ios-guide-popup ol {
+    padding-left: 20px;
+}
+#ios-guide-popup li {
+    margin: 8px 0;
+    color: var(--text-secondary);
+}
+body.dark #ios-guide-popup li {
+    color: var(--text-secondary) !important;
+}

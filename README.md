@@ -13,9 +13,7 @@ Chào mừng bạn đến với **TBBTVN8A4TTHCSGB** 🎉
 ## 🛠️ Cách sử dụng
 1. Clone repo về máy:
    ```bash
-   git clone https://github.com/DuyAnh662/TBBTVN8A4TTHCSGB.git
-
-
+   git clone https://github.com/DuyAnh662/TBBTVN8A4TTHCSGB.git```
 # English
 # 📚 TBBTVN8A4TTHCSGB
 

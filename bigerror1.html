@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Bigerror</title>
+  <style>
+    :root{
+      --bg1:#0f1724;
+      --bg2:#07112a;
+      --accent1:#ff6b6b;
+      --accent2:#ffb86b;
+      --card:#0b1220cc;
+      --glass: rgba(255,255,255,0.03);
+    }
+
+    /* reset tối thiểu */
+    *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;}
+
+    html,body{height:100%}
+    body{
+      background: radial-gradient(1200px 600px at 10% 10%, rgba(255,110,110,0.06), transparent),
+                  radial-gradient(900px 500px at 90% 90%, rgba(255,190,110,0.03), transparent),
+                  linear-gradient(180deg,var(--bg1),var(--bg2));
+      color:#e6eef8;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding:24px;
+    }
+
+    .notice {
+      width:min(900px, 96%);
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:20px;
+      padding:28px;
+      box-shadow: 0 12px 40px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+      display:flex;
+      gap:20px;
+      align-items:center;
+      border:1px solid rgba(255,255,255,0.04);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .glow {
+      position:absolute;
+      inset:-30%;
+      background: radial-gradient(circle at 20% 20%, rgba(255,107,107,0.08), transparent 7%),
+                  radial-gradient(circle at 80% 80%, rgba(255,184,107,0.06), transparent 8%);
+      filter: blur(40px);
+      pointer-events:none;
+      mix-blend-mode:screen;
+      animation: slow-rotate 18s linear infinite;
+    }
+
+    @keyframes slow-rotate{
+      from{transform:rotate(0deg)}
+      to{transform:rotate(360deg)}
+    }
+
+    .icon {
+      flex:0 0 96px;
+      height:96px;
+      display:grid;
+      place-items:center;
+      border-radius:14px;
+      background:linear-gradient(135deg,var(--accent1),var(--accent2));
+      box-shadow:0 8px 24px rgba(255,107,107,0.18);
+    }
+
+    .content h1{
+      font-size:1.45rem;
+      margin-bottom:6px;
+      letter-spacing:0.2px;
+    }
+
+    .content p{
+      opacity:0.92;
+      line-height:1.45;
+      margin-bottom:12px;
+    }
+
+    .cta {
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+
+    .btn {
+      background:transparent;
+      border:1px solid rgba(255,255,255,0.08);
+      color:inherit;
+      padding:10px 14px;
+      border-radius:10px;
+      cursor:pointer;
+      backdrop-filter: blur(6px);
+      transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+      font-weight:600;
+    }
+    .btn:focus {outline:3px solid rgba(255,184,107,0.12); outline-offset:3px}
+    .btn-retry{
+      background:linear-gradient(90deg,var(--accent1),var(--accent2));
+      color:#08101a;
+      box-shadow: 0 10px 30px rgba(255,107,107,0.14);
+    }
+    .btn:hover{transform:translateY(-3px)}
+    .btn-retry:hover{box-shadow:0 18px 40px rgba(255,107,107,0.2); transform:translateY(-4px) scale(1.01)}
+
+    /* nhỏ hơn màn hình di động */
+    @media (max-width:560px){
+      .notice{flex-direction:column; text-align:center; padding:20px;}
+      .icon{width:84px;height:84px;border-radius:12px}
+    }
+
+    /* tôn trọng reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      .glow, .btn:hover, .btn-retry:hover {animation:none; transition:none; transform:none}
+    }
+    .notice .btn-report {
+      background: linear-gradient(90deg, #ff4d4d, #ff9966);
+      color: #08101a;
+      box-shadow: 0 10px 30px rgba(255,77,77,0.2);
+    }
+
+    .notice .btn-report:hover {
+      box-shadow: 0 18px 40px rgba(255,77,77,0.3);
+      transform: translateY(-4px) scale(1.01);
+    }
+
+  </style>
+</head>
+<body>
+  <main role="main" aria-labelledby="err-title" style="width:100%;max-width:1100px;">
+    <section class="notice" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="glow" aria-hidden="true"></div>
+
+      <div class="icon" aria-hidden="true">
+        <!-- warning SVG -->
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+          <path d="M11.001 7h2v6h-2z" fill="#08101A"/>
+          <path d="M11 15h2v2h-2z" fill="#08101A"/>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M12 3.25c.45 0 .9.25 1.1.67l7.2 12.5A1.5 1.5 0 0 1 19.3 19H4.7a1.5 1.5 0 0 1-1.0-2.58l7.2-12.5c.2-.42.65-.67 1.1-.67z" fill="#08101A" opacity="0.12"/>
+        </svg>
+      </div>
+
+      <div class="content" style="flex:1;">
+        <h1 id="err-title">Hệ thống gặp sự cố</h1>
+        <p><strong>Hệ thống đang bị một vài lỗi khá nghiêm trọng — vui lòng thử lại sau.</strong></p>
+        <div class="cta">
+          <button class="btn" onclick="copyMessage()" title="Sao chép thông báo">Sao chép thông báo</button>
+          <button class="btn btn-retry" onclick="window.location.href='admin.html'" title="Tải lại trang">Tải lại trang</button>
+          <button class="btn btn-report" onclick="window.location.href='Report.html'" title="Báo lỗi cho quản trị viên">Báo lỗi</button>
+        </div>
+        <p style="margin-top:8px;opacity:0.75;font-size:0.92rem;">
+          Nếu vẫn còn lỗi, hãy liên hệ quản trị viên hoặc thử lại sau.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    function copyMessage(){
+      const txt = "Hệ thống đang bị một vài lỗi khá nghiêm trọng vui lòng thử lại sau";
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(txt).then(()=> {
+          alert("Đã sao chép thông báo vào khay nhớ tạm.");
+        }).catch(()=> {
+          fallbackCopy(txt);
+        });
+      } else {
+        fallbackCopy(txt);
+      }
+    }
+
+    function fallbackCopy(text){
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); alert("Đã sao chép thông báo vào khay nhớ tạm."); }
+      catch(e){ alert("Không thể sao chép — vui lòng copy thủ công."); }
+      ta.remove();
+    }
+  </script>
+</body>
+</html>

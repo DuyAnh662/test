@@ -2,12 +2,19 @@
 
 // Constants
 const API_URL = "https://script.google.com/macros/s/AKfycbw5sjUwJfwRtKBQQu5FgYrmgSjoQ22vvnmlv99H7YJHTVgVZRXm1vWB7fFJg8B2O2M7/exec";
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwEVbGj72KB2zZQbrTaqWqEGAVVirGBuel-NjOlKgq230fdOx31ciN0783sO1EQTq16/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxObu-YqqCMTR-M2uNR4n2lGMUCSCQ09-NxEAlDSrwAAHFxYMyaT7TNeLMxg8ZThIsi/exec";
 
 // Default data
 const defaultData = {
     tkb: {
-        0: ["Nghỉ"], 1: ["Null"], 2: ["Null"], 3: ["Null"], 4: ["Null"], 5: ["Null"], 6: ["Nghỉ"]
+        // Cấu trúc mới là mảng object, không phải mảng string
+        0: [{ buoi: "Nghỉ", tiet: 0, subject: "Nghỉ", truc: "Chủ nhật: Không trực" }],
+        1: [{ buoi: "Sáng", tiet: 1, subject: "(Chưa có TKB)", truc: "Null" }],
+        2: [{ buoi: "Sáng", tiet: 1, subject: "(Chưa có TKB)", truc: "Null" }],
+        3: [{ buoi: "Sáng", tiet: 1, subject: "(Chưa có TKB)", truc: "Null" }],
+        4: [{ buoi: "Sáng", tiet: 1, subject: "(Chưa có TKB)", truc: "Null" }],
+        5: [{ buoi: "Sáng", tiet: 1, subject: "(Chưa có TKB)", truc: "Null" }],
+        6: [{ buoi: "Nghỉ", tiet: 0, subject: "Nghỉ", truc: "Thứ 7: Không trực" }]
     },
     truc: {
         0: "Chủ nhật: Không trực", 1: "Null", 2: "Null", 3: "Null", 4: "Null", 5: "Null", 6: "Null",
@@ -843,23 +850,56 @@ function ensureAllSubjects(btvnArray) {
     });
     return Object.values(grouped).flat();
 }
-
+// ĐỊNH NGHĨA HÀM NÀY, nếu chưa có!
+function processTKBData(data) {
+    // Nếu data là mảng, group lại theo 'day'
+    if (!Array.isArray(data)) return data;
+    const result = {};
+    data.forEach(item => {
+        const day = item.day;
+        if (!result[day]) result[day] = [];
+        result[day].push(item);
+    });
+    return result;
+}
+// ⚙️ Lấy dữ liệu từ Supabase thay cho Google Sheets
+// --- Debug: sửa tạm thời fetchData để in response từ Supabase ---
 async function fetchData() {
-    if (state.isLoading) return null;
-    state.isLoading = true;
-    try {
-        const response = await fetch(`${SCRIPT_URL}?action=getAll`);
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        const data = await response.json();
-        if (!data?.result) return null;
-        data.result.btvn = ensureAllSubjects(data.result.btvn || []);
-        return data.result;
-    } catch (error) {
-        console.error("Error fetching data:", error);
-        return null;
-    } finally {
-        state.isLoading = false;
+  if (state.isLoading) return null;
+  state.isLoading = true;
+
+  try {
+    const [btvnRes, tkbRes, changelogRes] = await Promise.all([
+      supabase.from("btvn").select("*"),
+      supabase.from("tkb").select("*").order('tiet', { ascending: true }),
+      supabase.from("changelog").select("*")
+    ]);
+
+    // Kiểm tra lỗi trên từng response
+    if (btvnRes.error || tkbRes.error || changelogRes.error) {
+      throw new Error(
+        btvnRes.error?.message ||
+        tkbRes.error?.message ||
+        changelogRes.error?.message
+      );
     }
+
+    const processedTKB = processTKBData(tkbRes.data);
+
+    const result = {
+      btvn: ensureAllSubjects(btvnRes.data || []),
+      tkb: processedTKB,
+      // Nếu changelogRes.data là mảng object, cố gắng lấy text hoặc fallback
+      changelog: (changelogRes.data || []).map(r => r.text ?? r.message ?? r.content ?? JSON.stringify(r))
+    };
+
+    return result;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return null;
+  } finally {
+    state.isLoading = false;
+  }
 }
 
 // --- Render functions (Đã tối ưu + Thêm tính năng mới) ---
@@ -1071,32 +1111,69 @@ function renderTKB(data) {
 // TỐI ƯU: Sử dụng DocumentFragment
 function renderChangelog(data) {
     const container = elements.changelogContainer;
-    if (!data?.changelog?.length) {
+    const raw = data?.changelog || [];
+
+    container.textContent = ''; // xóa nhanh
+
+    if (!raw.length) {
         container.innerHTML = "<p>Chưa có dữ liệu changelog.</p>";
         return;
     }
 
-    const parsedLogs = data.changelog.map(line => {
-        const parts = line.split(" - ");
-        const header = parts[0] || "";
-        const content = parts.slice(1).join(" - ") || "";
-        const dateMatch = header.match(/\[(.*?)\]/);
-        const numMatch = header.match(/#(\d+)/);
-        const date = dateMatch ? dateMatch[1] : "";
-        const version = numMatch ? `#${numMatch[1]}` : "";
-        return { date, version, content: content.trim() };
+    // Chuẩn hoá mỗi mục thành object { date, version, items: [..strings..] }
+    const parsedLogs = raw.map(entry => {
+        // entry có thể là string hoặc object
+        let text = "";
+        if (typeof entry === "string") {
+            text = entry;
+        } else if (entry && typeof entry === "object") {
+            // thử các trường phổ biến rồi fallback stringify
+            text = entry.text ?? entry.message ?? entry.content ?? Object.values(entry).join("\n") ?? JSON.stringify(entry);
+        } else {
+            text = String(entry);
+        }
+
+        // tách theo dòng, loại bỏ dòng rỗng
+        const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+
+        // lấy dòng đầu làm header nếu có chứa ngày/version hoặc dấu ' - '
+        const first = lines.length ? lines.shift() : "";
+
+        // regex nhẹ nhàng để bắt [date] và #version (nếu có)
+        const metaMatch = first.match(/^\s*(?:\[(.*?)\])?\s*(?:#(\d+))?\s*(?:-\s*(.*))?$/);
+        let date = "", version = "", rest = "";
+        if (metaMatch) {
+            date = metaMatch[1] || "";
+            version = metaMatch[2] ? `#${metaMatch[2]}` : "";
+            rest = metaMatch[3] || "";
+        }
+
+        const items = [];
+        if (rest) items.push(rest);
+        // Thêm các dòng còn lại
+        items.push(...lines);
+
+        // Nếu vẫn chưa có items (ví dụ header không tách được) thì push toàn bộ raw text
+        if (items.length === 0 && first) items.push(first);
+
+        return { date, version, items };
     });
 
-    const grouped = {};
+    // Gom nhóm theo date+version (giữ trật tự xuất hiện)
+    const groups = [];
     parsedLogs.forEach(log => {
-        const key = `${log.date} ${log.version}`;
-        if (!grouped[key]) grouped[key] = [];
-        grouped[key].push(log.content);
+        const key = `${log.date}|${log.version}`;
+        // tìm group có cùng key
+        let g = groups.find(x => x.key === key);
+        if (!g) {
+            g = { key, date: log.date, version: log.version, items: [] };
+            groups.push(g);
+        }
+        g.items.push(...log.items);
     });
 
-    container.textContent = ''; // Xóa nhanh
+    // Build DOM
     const frag = document.createDocumentFragment();
-
     const section = document.createElement('div');
     section.className = 'changelog-section';
 
@@ -1104,25 +1181,47 @@ function renderChangelog(data) {
     title.textContent = '📝 Nhật ký thay đổi';
     section.appendChild(title);
 
-    Object.keys(grouped).forEach(key => {
-        const [date, version] = key.split(" ");
+    groups.forEach(g => {
         const card = document.createElement('div');
         card.className = 'changelog-card scroll-fade';
 
         const header = document.createElement('div');
         header.className = 'changelog-header';
-        header.innerHTML = `<span class="changelog-version">❗ ${version}</span>` +
-            (date ? `<span class="changelog-date">📅 ${date}</span>` : "");
+
+        const leftSpan = document.createElement('span');
+        leftSpan.className = 'changelog-version';
+        leftSpan.textContent = g.version ? `❗ ${g.version}` : '❗ Update';
+
+        const rightSpan = document.createElement('span');
+        rightSpan.className = 'changelog-date';
+        rightSpan.textContent = g.date ? `📅 ${g.date}` : '';
+
+        header.appendChild(leftSpan);
+        if (rightSpan.textContent) header.appendChild(rightSpan);
         card.appendChild(header);
 
         const list = document.createElement('ul');
         list.className = 'changelog-list';
-        grouped[key].forEach(item => {
-            const li = document.createElement('li');
-            li.className = 'scroll-fade';
-            li.textContent = `🔹 ${item}`;
-            list.appendChild(li);
+
+        // mỗi item có thể chứa nhiều nội dung phân dòng bởi dấu ' - ' hoặc dấu xuống dòng
+        g.items.forEach(item => {
+            // nếu item chứa ' - ' theo định dạng "Mục - chi tiết", tách sẽ cho trải nghiệm tốt hơn
+            const sublines = String(item).split(/\s*-\s*/).map(s => s.trim()).filter(Boolean);
+
+            if (sublines.length > 1) {
+                // hiển thị từng subline như li riêng
+                sublines.forEach(s => {
+                    const li = document.createElement('li');
+                    li.textContent = `🔹 ${s}`;
+                    list.appendChild(li);
+                });
+            } else {
+                const li = document.createElement('li');
+                li.textContent = `🔹 ${item}`;
+                list.appendChild(li);
+            }
         });
+
         card.appendChild(list);
         section.appendChild(card);
     });
@@ -1130,7 +1229,7 @@ function renderChangelog(data) {
     frag.appendChild(section);
     container.appendChild(frag);
 
-    // Kích hoạt Observer
+    // Kích hoạt IntersectionObserver cho animation fade-in (nếu có)
     setTimeout(() => {
         const scrollElements = container.querySelectorAll('.scroll-fade');
         const observer = new IntersectionObserver(entries => {
@@ -1173,16 +1272,18 @@ function getSubjectIcon(subject) {
 
 // --- Load Data (Đã cập nhật) ---
 async function loadAllData() {
-    const data = await fetchData();
-    const result = data?.result || data || {};
+    const data = await fetchData(); // Đã lấy dữ liệu được xử lý
+    
+    // SỬA LỖI: `data` chính là `result`, không cần `data?.result`
+    const result = data || {};
 
     if (result && (result.btvn || result.tkb)) {
         state.currentData = {
             tkb: result.tkb || defaultData.tkb,
-            truc: result.truc || defaultData.truc,
+            truc: defaultData.truc, // 'truc' đã được gộp vào TKB, giữ đây cho an toàn
             btvn: result.btvn || [],
             changelog: result.changelog || [],
-            notices: result.notices || []
+            notices: result.notices || [] // <-- Đã thêm
         };
         state.lastData = JSON.parse(JSON.stringify(state.currentData));
     } else {
@@ -1194,20 +1295,19 @@ async function loadAllData() {
     }
     
     // --- TÍNH NĂNG MỚI ---
-    // Tính toán danh sách môn học ngày mai
+    // (Phần này đã đúng, giữ nguyên)
     const d = getVNDateObj();
-    let tomorrowDayIndex = (d.getDay() + 1) % 7; // 0 = CN, 1 = T2, ...
-    // Bỏ qua CN, Thứ 7 → cho về Thứ 2
+    let tomorrowDayIndex = (d.getDay() + 1) % 7;
     if (tomorrowDayIndex === 0 || tomorrowDayIndex === 6) {
-    tomorrowDayIndex = 1;
+        tomorrowDayIndex = 1;
     }
+    // SỬA LỖI: Lấy TKB từ state đã được xử lý
     const tomorrowsTKB = state.currentData.tkb[tomorrowDayIndex] || [];
-    // Dùng Set để loại bỏ các môn trùng lặp
     const tomorrowsSubjectsSet = new Set(tomorrowsTKB.map(item => item.subject.trim()));
     // --- KẾT THÚC TÍNH NĂNG MỚI ---
 
     // Render
-    renderBTVN(state.currentData, tomorrowsSubjectsSet); // Gửi danh sách cho hàm render
+    renderBTVN(state.currentData, tomorrowsSubjectsSet);
     renderTKB(state.currentData);
     renderChangelog(state.currentData);
     renderNotices(state.currentData);
@@ -1254,16 +1354,18 @@ function hasDataChanged(newData, oldData) {
 // --- Auto Refresh (Đã cập nhật) ---
 async function autoRefreshData() {
     try {
-        const data = await fetchData();
+        const data = await fetchData(); // Dùng fetchData đã sửa, đã xử lý TKB
+        
         if (data && hasDataChanged(data, state.lastData)) {
-            state.lastData = JSON.parse(JSON.stringify(data));
+            // SỬA LỖI: Cập nhật state từ `data` đã được xử lý
             state.currentData = {
                 tkb: data.tkb || defaultData.tkb,
-                truc: data.truc || defaultData.truc,
+                truc: defaultData.truc,
                 btvn: data.btvn || [],
                 changelog: data.changelog || [],
                 notices: data.notices || []
             };
+            state.lastData = JSON.parse(JSON.stringify(state.currentData)); // Cập nhật lastData từ state MỚI
 
             // --- TÍNH NĂNG MỚI (Lặp lại logic) ---
             const d = getVNDateObj();
@@ -1273,7 +1375,7 @@ async function autoRefreshData() {
             // --- KẾT THÚC TÍNH NĂNG MỚI ---
 
             // Update UI
-            renderBTVN(state.currentData, tomorrowsSubjectsSet); // Gửi danh sách
+            renderBTVN(state.currentData, tomorrowsSubjectsSet);
             renderTKB(state.currentData);
             renderChangelog(state.currentData);
             renderNotices(state.currentData);
@@ -1282,7 +1384,6 @@ async function autoRefreshData() {
         console.error("Lỗi khi làm mới tự động:", error);
     }
 }
-
 function toggleAutoRefresh() {
     state.isAutoRefreshEnabled = !state.isAutoRefreshEnabled;
     if (state.isAutoRefreshEnabled) {

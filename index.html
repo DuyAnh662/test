@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-92KE83JEYM"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.3/dist/umd/supabase.min.js"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag() {dataLayer.push(arguments);}
@@ -19,18 +19,49 @@
     <link rel="stylesheet" href="style.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📘</text></svg>">
     
-    <link rel="manifest" href="site.webmanifest">
     <meta name="theme-color" content="#0066cc">
     <link rel="apple-touch-icon" href="icon.png">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+      // ⚙️ Cấu hình Supabase (Giữ nguyên)
+      const SUPABASE_URL = "https://nlmwiyoplederbthjvzz.supabase.co";
+      const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5sbXdpeW9wbGVkZXJidGhqdnp6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI4MzYxOTEsImV4cCI6MjA3ODQxMjE5MX0.fzyVeeLaSnYJyaIv63i9C7q6C-9UqtmL1HZuNYP-FJE";
+      const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    </script>
+    <link rel="manifest" href="/TBBTVN8A4TTHCSGB/manifest.json">
+    <meta name="theme-color" content="#0a84ff">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="/TBBTVN8A4TTHCSGB/icons/icon-192.png">
+
+    <script>
+    // đăng ký service worker (tạo sw.js ở gốc site nếu chưa có)
+    if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/TBBTVN8A4TTHCSGB/sw.js')
+      .catch(err => console.error('SW register failed:', err));
+    }
+    </script>
+
+    <style>
+    .a2hs-guide{ position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.45); z-index:2000; }
+    .a2hs-guide.hidden{ display:none; }
+    .a2hs-card{ background:var(--card,#fff); padding:18px; border-radius:12px; max-width:420px; width:90%; box-shadow:0 12px 40px rgba(0,0,0,0.3); position:relative; }
+    .a2hs-close{ position:absolute; right:12px; top:12px; background:transparent; border:none; font-size:18px; cursor:pointer; }
+    .a2hs-card h3{ margin-top:0; margin-bottom:8px; }
+    .a2hs-card ol{ padding-left:1.2em; margin:0 0 12px 0; }
+    .a2hs-card .btn.btn-android{ display:inline-block; padding:10px 14px; border-radius:8px; background:linear-gradient(180deg,#22c55e,#16a34a); color:#fff; border:none; cursor:pointer; }
+    </style>
 </head>
 <script>
-  const isError = true;
+  const isError = false;
   if (isError) {
     window.location.href = "bigerror.html";
   }
 </script>
+<script src="/TBBTVN8A4TTHCSGB/assets/app-banner.js" defer></script>
 <body>
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-spinner"></div>
@@ -74,6 +105,45 @@
             </div>
         </div>
     </header>
+    
+<div id="app-announcement" class="popup hidden" role="dialog" aria-modal="true" aria-labelledby="app-popup-title">
+    <div class="popup-card app-popup-card">
+        <button id="dismiss-banner" class="close" aria-label="Đóng">
+            <i class="fas fa-times" aria-hidden="true"></i>
+        </button>
+        <div class="app-icon" aria-hidden="true">
+            <svg width="56" height="56" viewBox="0 0 24 24" aria-hidden="true">
+                <rect rx="6" ry="6" width="24" height="24" fill="#0ea5a4"></rect>
+                <text x="12" y="16" font-size="10" text-anchor="middle" fill="white" font-family="Arial, sans-serif">APP</text>
+            </svg>
+        </div>
+        <h3 id="app-popup-title">Đã có app trên iOS và Android</h3>
+        <p class="app-card-desc">
+            Cài đặt ứng dụng để mở nhanh và mượt hơn. Thông báo này sẽ chỉ xuất hiện 1 lần/tuần.
+        </p>
+        <div class="app-buttons">
+            <button id="btn-ios" class="btn btn-ios" role="button">
+                <i class="fab fa-apple"></i> Tải cho iOS
+            </button>
+            <a id="btn-android" class="btn btn-android" href="#" data-android-url="https://duyanh662.github.io/TBBTVN8A4TTHCSGB/" role="button" aria-label="Cài đặt Android">
+                <i class="fab fa-android"></i> Cài đặt Android
+            </a>
+        </div>
+    </div>
+</div>
+
+    <div id="a2hs-guide" class="a2hs-guide hidden" role="dialog" aria-hidden="true">
+      <div class="a2hs-card">
+        <button id="a2hs-close" class="a2hs-close" aria-label="Đóng">✕</button>
+        <h3>Thêm vào Màn hình chính (Android)</h3>
+        <ol>
+          <li>Mở menu trình duyệt (⋮)</li>
+          <li>Chọn "Add to Home screen" hoặc "Thêm vào Màn hình chính"</li>
+          <li>Làm theo hướng dẫn để thêm ứng dụng</li>
+        </ol>
+        <button id="a2hs-ok" class="btn btn-android">Đã hiểu</button>
+      </div>
+    </div>
 
     <div class="menu-panel" id="menuPanel" role="menu" aria-hidden="true">
         <button id="menuDark" role="menuitem" aria-label="Chuyển Dark/Light">
@@ -110,7 +180,7 @@
                 <div class="color-theme popular" data-theme="popular" title="Màu nhiều người thích nhất" role="radio" aria-checked="false" tabindex="0"></div>
                 <div class="color-theme white" data-theme="white" title="Trắng" role="radio" aria-checked="false" tabindex="0"></div>
                 <div class="color-theme aquaviolet" data-theme="aquaviolet" title="Xanh ngọc - Tím" role="radio" aria-checked="false" tabindex="0"></div>
-                <div class="color-theme mint" data-theme="mint" title="Xanh bạc hà" role="radio" aria-checked="false" tabindex="0"></div>
+                <div class="color-theme mint" data-theme="mint" title="Xanh bạc hà" role="radio"aria-checked="false" tabindex="0"></div>
             </div>
         </div>
     </div>
@@ -182,7 +252,6 @@
         </div>
     </div>
     
-    <!-- Popup cho dịp đặc biệt -->
     <div class="event-popup" id="eventPopup" role="dialog" aria-modal="true" aria-labelledby="eventPopupTitle">
         <div class="event-popup-card" id="eventPopupCard">
             <button class="close" id="eventPopupClose" aria-label="Đóng popup">
@@ -227,8 +296,60 @@
                 Đang tải dữ liệu...
             </div>
         </div>
+        <div class="popup" id="ios-guide-popup" role="dialog" aria-modal="true" aria-labelledby="ios-guide-title">
+    <div class="popup-card">
+        <button class="close" id="ios-guide-close" aria-label="Đóng popup">
+            <i class="fas fa-times" aria-hidden="true"></i>
+        </button>
+        <h3 id="ios-guide-title"><i class="fab fa-apple"></i> Cài đặt iOS (Cấu hình)</h3>
+        <p>Do chính sách của Apple, bạn cần cài đặt một "Hồ sơ cấu hình" để thêm icon vào màn hình chính.</p>
+
+        <a id="ios-download-link" 
+           href="https://duyanh662.github.io/TBBTVN8A4TTHCSGB/TB8A4.mobileconfig" 
+           class="button-primary" 
+           style="width: 100%; text-decoration: none; margin-bottom: 20px;">
+            <i class="fas fa-download"></i> 1. Tải hồ sơ cấu hình
+        </a>
+
+        <strong>2. Làm theo các bước sau:</strong>
+        <ol style="margin-left: 20px; margin-top: 10px; line-height: 1.6;">
+            <li>Sau khi tải, mở ứng dụng <strong>Cài đặt</strong> (Settings).</li>
+            <li>Bạn sẽ thấy mục <strong>"Đã tải về hồ sơ"</strong> ở ngay trên cùng, hãy bấm vào đó.</li>
+            <li>Bấm <strong>"Cài đặt"</strong> (Install) ở góc trên bên phải.</li>
+            <li>Nhập mật khẩu của bạn (nếu được hỏi).</li>
+            <li>Bấm <strong>"Cài đặt"</strong> một lần nữa để xác nhận.</li>
+            <li>Ra lại màn hình chính và xem kết quả!</li>
+        </ol>
+    </div>
+</div>
     </main>
-    
+
+    <script>
+    (function(){
+      const guide = document.getElementById('a2hs-guide');
+      const closeBtn = document.getElementById('a2hs-close');
+      const okBtn = document.getElementById('a2hs-ok');
+
+      function hideGuide(){
+        if(!guide) return;
+        guide.classList.add('hidden');
+        guide.setAttribute('aria-hidden','true');
+      }
+      function showGuide(){
+        if(!guide) return;
+        guide.classList.remove('hidden');
+        guide.setAttribute('aria-hidden','false');
+      }
+
+      if(closeBtn) closeBtn.addEventListener('click', hideGuide);
+      if(okBtn) okBtn.addEventListener('click', hideGuide);
+
+      // expose helper so app-banner.js (or other code) can call showA2HSGuide() when needed
+      window.showA2HSGuide = showGuide;
+      window.hideA2HSGuide = hideGuide;
+    })();
+    </script>
+
     <script src="script.js" defer></script>
 </body>
 </html>
