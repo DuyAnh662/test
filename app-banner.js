@@ -1,17 +1,51 @@
-// app-banner.js - Phiên bản nâng cấp (Popup Modal + Hướng dẫn iOS)
+// app-banner.js - Phiên bản Pro (Check Mobile, Check Installed, Debug Mode)
 
+// ---------------------------------------------------------------------
+// 🚀 CHẾ ĐỘ DEBUG CHO DEV 🚀
+//
+// Đặt là 'true' để popup hiện MỖI LẦN tải trang (dùng để test).
+// Đặt là 'false' cho chế độ bình thường (hiện 1 tuần/lần).
+//
+const DEBUG_APP_POPUP = true;
+//
+// ---------------------------------------------------------------------
+
+
+/**
+ * 🕵️ Helper: Kiểm tra xem có phải thiết bị di động không
+ * (Yêu cầu 1: Không hiện trên PC)
+ */
+function isMobileDevice() {
+    // Thêm 'iPad' và 'tablet' để bắt cả máy tính bảng
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|Tablet/i.test(navigator.userAgent);
+}
+
+/**
+ * 🕵️ Helper: Kiểm tra xem app đã được cài đặt (PWA/Homescreen) chưa
+ * (Yêu cầu 2: Không hiện khi đã cài)
+ */
+function isAppInstalled() {
+    // 1. Kiểm tra PWA (Chrome, Edge, Samsung Internet...)
+    const isStandalonePWA = window.matchMedia('(display-mode: standalone)').matches;
+    
+    // 2. Kiểm tra iOS "Add to Home Screen" hoặc MobileConfig
+    // 'standalone' là thuộc tính riêng của Safari/iOS
+    const isStandaloneIOS = window.navigator.standalone === true; 
+    
+    return isStandalonePWA || isStandaloneIOS;
+}
+
+
+// --- Logic PWA (Giữ nguyên) ---
 let deferredInstallPrompt = null;
 
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredInstallPrompt = e;
-    // Chúng ta không cần thêm class 'pwa-install-available' nữa
-    // vì logic PWA đã nằm trong nút Android
 });
 
 window.addEventListener('appinstalled', (evt) => {
     console.log('PWA installed', evt);
-    // Ẩn popup ngay lập tức nếu user vừa cài đặt
     try { 
         localStorage.setItem('appAnnouncementLastShown', String(Date.now())); 
         const banner = document.getElementById('app-announcement');
@@ -19,16 +53,13 @@ window.addEventListener('appinstalled', (evt) => {
     } catch(e){}
 });
 
-// --- Helpers cho Popup ---
-// (Các hàm show/hideA2HSGuide đã có sẵn trong index.html và script.js,
-// nhưng chúng ta định nghĩa lại ở đây để đảm bảo file này chạy độc lập)
+// --- Helpers cho Popup (Giữ nguyên) ---
 if (!window.showA2HSGuide) {
     window.showA2HSGuide = function(){
         const g = document.getElementById('a2hs-guide');
         if(!g) return;
         g.classList.add('open');
         g.setAttribute('aria-hidden','false');
-        // Đảm bảo body bị khóa
         if (!document.body.classList.contains('popup-open')) {
              document.body.classList.add('popup-open');
         }
@@ -44,7 +75,6 @@ if (!window.hideA2HSGuide) {
     };
 }
 
-// Hàm helper mới cho popup chính
 function showAppPopup() {
     const banner = document.getElementById('app-announcement');
     if (banner) {
@@ -84,11 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Logic Popup chính (1 tuần/lần) ---
     const KEY = 'appAnnouncementLastShown';
     const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
-    
-    // Popup chính
     const banner = document.getElementById('app-announcement');
-    
-    // Các nút trong popup chính
     const btnIOS = document.getElementById('btn-ios');
     const btnAndroid = document.getElementById('btn-android');
     const dismissBtn = document.getElementById('dismiss-banner');
@@ -97,33 +123,24 @@ document.addEventListener('DOMContentLoaded', () => {
     function setLastShown(ts){ try { localStorage.setItem(KEY, String(ts)); } catch(e){} }
     function shouldShow(){ const last = getLastShown(); return (Date.now() - last) >= WEEK_MS || last === 0; }
 
-    // Xử lý nút iOS (MỚI)
+    // Xử lý nút iOS (Mở popup hướng dẫn)
     if (btnIOS && iosGuidePopup) {
         btnIOS.addEventListener('click', (e) => {
             e.preventDefault();
-            
-            // Ẩn popup chính, hiện popup iOS
             hideAppPopup();
             iosGuidePopup.classList.add('open');
-            document.body.classList.add('popup-open'); // Body vẫn bị khóa
-
-            // Đánh dấu đã xem
+            document.body.classList.add('popup-open');
             setLastShown(Date.now());
         });
     }
 
-    // Xử lý nút Android (LOGIC CŨ - RẤT TỐT, GIỮ NGUYÊN)
+    // Xử lý nút Android (Ưu tiên PWA, fallback A2HS Guide)
     if (btnAndroid) {
         btnAndroid.addEventListener('click', async (e) => {
             e.preventDefault();
-            
-            // Đánh dấu đã xem
             setLastShown(Date.now());
-            
-            // Ẩn popup chính
             hideAppPopup();
 
-            // Nếu trình duyệt CÓ hỗ trợ PWA (deferredInstallPrompt đã được lưu từ đầu)
             if (deferredInstallPrompt) {
                 try {
                     deferredInstallPrompt.prompt();
@@ -133,11 +150,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     console.warn('A2HS userChoice not available', err);
                     window.showA2HSGuide(); // Fallback nếu prompt lỗi
                 }
-                deferredInstallPrompt = null; // Chỉ cho 1 lần
+                deferredInstallPrompt = null;
                 return;
             }
-
-            // Fallback: Nếu không hỗ trợ PWA, hiện hướng dẫn A2HS thủ công
             window.showA2HSGuide();
         });
     }
@@ -150,12 +165,37 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- KIỂM TRA VÀ HIỂN THỊ POPUP ---
+    // --- KIỂM TRA VÀ HIỂN THỊ POPUP (LOGIC NÂNG CAO) ---
     if (banner) {
-        if (shouldShow()) {
-            // Dùng setTimeout để đảm bảo trang tải xong
+        
+        // (Yêu cầu Dev) Bật chế độ DEBUG?
+        if (DEBUG_APP_POPUP) {
+            console.log("APP BANNER (DEBUG): Bật chế độ test, buộc hiển thị popup.");
+            setTimeout(showAppPopup, 500); // Hiện nhanh hơn để test
+        } 
+        
+        // (Yêu cầu 2) Đã cài đặt rồi?
+        else if (isAppInstalled()) {
+            console.log("APP BANNER: App đã được cài đặt (standalone/PWA). Không hiển thị popup.");
+            banner.classList.add('hidden');
+        } 
+        
+        // (Yêu cầu 1) Không phải di động?
+        else if (!isMobileDevice()) {
+            console.log("APP BANNER: Đây là máy tính (PC). Không hiển thị popup.");
+            banner.classList.add('hidden');
+        } 
+        
+        // Chế độ bình thường: (Chưa cài) + (Là di động)
+        // Giờ mới kiểm tra logic 1 tuần/lần
+        else if (shouldShow()) {
+            console.log("APP BANNER: OK (Mobile, chưa cài, đúng lịch 1 tuần/lần). Hiển thị popup.");
             setTimeout(showAppPopup, 1000);
-        } else {
+        } 
+        
+        // Đã xem trong tuần này rồi
+        else {
+            console.log("APP BANNER: Đã hiển thị trong tuần này. Bỏ qua.");
             banner.classList.add('hidden');
         }
     }
