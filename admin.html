@@ -2,11 +2,10 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin - BTVN System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Admin</title>
   <link rel="stylesheet" href="admin.css"> 
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📘</text></svg>">
-  <meta name="description" content="Trang quản trị hệ thống Bài Tập Về Nhà">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍎</text></svg>">
   
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.3/dist/umd/supabase.min.js"></script>
 </head>
@@ -16,166 +15,262 @@
   const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5sbXdpeW9wbGVkZXJidGhqdnp6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI4MzYxOTEsImV4cCI6MjA3ODQxMjE5MX0.fzyVeeLaSnYJyaIv63i9C7q6C-9UqtmL1HZuNYP-FJE";
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 </script>
-<script>
-  const isError = false; 
-  if (isError) {
-    window.location.href = "bigerror1.html";
-  }
-</script>
+
 <body>
+  
+  <div class="macos-wallpaper"></div>
+
   <div id="login-box" class="login-container fade-in">
-    <div class="login-card">
-      <h2>🔑 Đăng nhập quản trị</h2>
+    <div class="login-glass">
+      <div class="user-avatar"><span>👤</span></div>
+      <h2 class="user-name">Administrator</h2>
       <form id="loginForm">
-        <div class="form-group">
-          <label for="username">Tên đăng nhập</label>
-          <input type="text" id="username" placeholder="admin" required autocomplete="username">
+        <input type="text" id="username" placeholder="Tên đăng nhập" required autocomplete="username" class="mac-input">
+        <div class="password-wrapper">
+          <input type="password" id="password" placeholder="Mật khẩu" required autocomplete="current-password" class="mac-input">
+          <button type="submit" class="login-arrow">➔</button>
         </div>
-        <div class="form-group">
-          <label for="password">Mật khẩu</label>
-          <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
-        </div>
-        <button type="submit" id="loginBtn" class="btn btn-primary">Đăng nhập</button>
       </form>
       <p id="loginMsg"></p>
     </div>
   </div>
 
   <div id="admin-panel" style="display:none;">
-    <header class="admin-header">
-      <h1>Trang Quản Trị BTVN</h1>
-      <div class="header-actions">
-        <button id="darkModeToggle" class="dark-toggle" aria-label="Chuyển đổi chế độ sáng/tối">
-          <span id="modeIcon">🌙</span>
-        </button>
-        <button id="logoutBtn" class="btn btn-danger">Đăng xuất</button>
-      </div>
-    </header>
-
-    <nav class="admin-nav">
-      <button class="nav-tab active" data-tab="tab-btvn">📝 BTVN</button>
-      <button class="nav-tab" data-tab="tab-tkb">📅 TKB</button>
-      <button class="nav-tab" data-tab="tab-changelog">📜 Changelog</button>
-      <button class="nav-tab" data-tab="tab-data">📊 Dữ liệu</button>
-    </nav>
-
-    <main class="admin-content">
+    <div class="mac-window">
       
-      <section id="tab-btvn" class="admin-tab-content card active fade-in">
-        <h2>📝 Bài Tập Về Nhà</h2>
-        <form id="btvnForm">
-          <div class="form-group">
-            <label for="subject">Môn học</label>
-            <select id="subject" required>
-              <option value="">-- Chọn môn học --</option>
-              <option value="Toán học - Đại số">Toán học - Đại số</option>
-              <option value="Toán học - Hình học">Toán học - Hình học</option>
-              <option value="Ngữ văn">Ngữ văn</option>
-              <option value="Tiếng Anh">Tiếng Anh</option>
-              <option value="Vật lý">Vật lý</option>
-              <option value="Hóa học">Hóa học</option>
-              <option value="Sinh học">Sinh học</option>
-              <option value="Lịch sử">Lịch sử</option>
-              <option value="Địa lí">Địa lí</option>
-              <option value="GDCD">GDCD</option>
-              <option value="Tin học">Tin học</option>
-              <option value="Công nghệ">Công nghệ</option>
-              <option value="GDTC">GDTC</option>
-              <option value="GDĐP">GDĐP</option>
-              <option value="Mĩ thuật">Mĩ thuật</option>
-              <option value="Âm nhạc">Âm nhạc</option>
-              <option value="HĐTN">HĐTN</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="btvn_content">Nội dung</label>
-            <textarea id="btvn_content" placeholder="Nội dung bài tập" rows="4" required></textarea>
-          </div>
-          <div class="btn-group">
-            <button type="button" id="updateBTVN" class="btn btn-primary">➕ Thêm mới</button>
-            <button type="button" id="addNewBTVN" class="btn btn-success">🔁 Cập nhật (ghi đè)</button>
-          </div>
-        </form>
-      </section>
+      <aside class="mac-sidebar">
+        <div class="traffic-lights">
+          <span class="light red"></span><span class="light yellow"></span><span class="light green"></span>
+        </div>
+        <div class="sidebar-title">System Settings</div>
+        <nav class="admin-nav desktop-only">
+          <button class="nav-tab active" data-tab="tab-btvn"><span class="icon">📝</span> BTVN</button>
+          <button class="nav-tab" data-tab="tab-tkb"><span class="icon">📅</span> Thời Khóa Biểu</button>
+          <button class="nav-tab" data-tab="tab-changelog"><span class="icon">📜</span> Changelog</button>
+          <button class="nav-tab" data-tab="tab-data"><span class="icon">📊</span> Dữ liệu</button>
+        </nav>
+        <div class="sidebar-footer">
+           <button id="darkModeToggle" class="mac-action-btn">🌙</button>
+           <button id="liquidToggle" class="mac-action-btn" title="Chế độ Kính Lỏng">💧</button> <button id="shortcutBtn" class="mac-action-btn" title="Phím tắt">⌨️</button>
+           <button id="logoutBtn" class="mac-action-btn danger">🛑</button>
+        </div>
+      </aside>
 
-      <section id="tab-tkb" class="admin-tab-content card fade-in">
-        <h2>📅 Thời Khoá Biểu</h2>
-        <form id="tkbForm">
+      <main class="mac-content">
+        <header class="content-header">
+          <h1 id="pageTitle">Quản lý BTVN</h1>
+  
+            <div class="header-actions mobile-only">
+              
+              <button id="mobileDarkBtn" class="mac-btn icon-only" title="Giao diện tối">🌙</button>
+              <button id="mobileShortcutBtn" class="mac-btn icon-only" title="Phím tắt">⌨️</button>
+            </div>
+        </header>
+
+        <div class="scrollable-content" id="mainScroll">
           
-          <div class="tkb-controls">
-            <div class="form-group">
-              <label for="tkb_day">Chọn thứ</label>
-              <select id="tkb_day" required>
-                <option value="">-- Chọn thứ --</option>
-                <option value="1">Thứ 2</option>
-                <option value="2">Thứ 3</option>
-                <option value="3">Thứ 4</option>
-                <option value="4">Thứ 5</option>
-                <option value="5">Thứ 6</option>
-              </select>
-            </div>
-            
-            <div class="form-group">
-              <label for="tkb_truc">Tổ trực trong ngày</label>
-              <select id="tkb_truc" required>
-                <option value="">-- Chọn tổ trực --</option>
-                <option value="Tổ 1">Tổ 1</option>
-                <option value="Tổ 2">Tổ 2</option>
-                <option value="Tổ 3">Tổ 3</option>
-                <option value="Tổ 4">Tổ 4</option>
-              </select>
-            </div>
-            
-            <button type="button" id="updateTrucOnly" class="btn btn-warning">
-              Cập nhật (chỉ) Tổ Trực
-            </button>
-          </div>
-
-          <div class="tkb-grid">
-            <div class="tkb-session">
-              <h3>Buổi Sáng</h3>
-              <div id="tkb-sang-container" class="tkb-period-list">
+          <section id="tab-btvn" class="admin-tab-content active fade-in">
+            <div class="mac-card">
+              <form id="btvnForm">
+                <div class="form-group">
+                  <label>Môn học</label>
+                  <div class="select-wrapper">
+                    <select id="subject" required>
+                      <option value="">-- Chọn môn --</option>
+                      <option value="Toán học - Đại số">Toán học - Đại số</option>
+                      <option value="Toán học - Hình học">Toán học - Hình học</option>
+                      <option value="Ngữ văn">Ngữ văn</option>
+                      <option value="Tiếng Anh">Tiếng Anh</option>
+                      <option value="Vật lý">Vật lý</option>
+                      <option value="Hóa học">Hóa học</option>
+                      <option value="Sinh học">Sinh học</option>
+                      <option value="Lịch sử">Lịch sử</option>
+                      <option value="Địa lí">Địa lí</option>
+                      <option value="GDCD">GDCD</option>
+                      <option value="Tin học">Tin học</option>
+                      <option value="Công nghệ">Công nghệ</option>
+                      <option value="GDTC">GDTC</option>
+                      <option value="GDĐP">GDĐP</option>
+                      <option value="Mĩ thuật">Mĩ thuật</option>
+                      <option value="Âm nhạc">Âm nhạc</option>
+                      <option value="HĐTN">HĐTN</option>
+                    </select>
+                  </div>
                 </div>
-            </div>
-            <div class="tkb-session">
-              <h3>Buổi Chiều</h3>
-              <div id="tkb-chieu-container" class="tkb-period-list">
+                <div class="form-group">
+                  <label>Nội dung</label>
+                  <textarea id="btvn_content" class="auto-expand" placeholder="Nhập nội dung..." rows="5" required></textarea>
+                  <small style="color:var(--text-secondary); font-size: 0.8rem;">Gợi ý: Gõ 'kbt' -> 'Không có bài tập'</small>
                 </div>
+                <div class="btn-group">
+                  <button type="button" id="updateBTVN" class="mac-btn primary">Thêm mới</button>
+                  <button type="button" id="addNewBTVN" class="mac-btn secondary">Ghi đè</button>
+                </div>
+              </form>
             </div>
-          </div>
+          </section>
 
-          <div class="tkb-actions">
-            <button type="button" id="updateTKB" class="btn btn-primary">🔁 Cập nhật TKB (Ghi đè)</button>
-          </div>
-        </form>
-      </section>
+          <section id="tab-tkb" class="admin-tab-content fade-in">
+            <div class="mac-card">
+              <form id="tkbForm">
+                <div class="tkb-controls-mac">
+                  <div class="control-group-mobile">
+                    <div class="control-item">
+                        <label>Thứ</label>
+                        <select id="tkb_day" required>
+                        <option value="">Chọn...</option>
+                        <option value="1">Thứ 2</option>
+                        <option value="2">Thứ 3</option>
+                        <option value="3">Thứ 4</option>
+                        <option value="4">Thứ 5</option>
+                        <option value="5">Thứ 6</option>
+                        </select>
+                    </div>
+                    <div class="control-item">
+                        <label>Tổ trực</label>
+                        <select id="tkb_truc" required>
+                        <option value="">Chọn...</option>
+                        <option value="Tổ 1">Tổ 1</option>
+                        <option value="Tổ 2">Tổ 2</option>
+                        <option value="Tổ 3">Tổ 3</option>
+                        <option value="Tổ 4">Tổ 4</option>
+                        </select>
+                    </div>
+                  </div>
+                  <button type="button" id="updateTrucOnly" class="mac-btn secondary small full-width-mobile">
+                    Cập nhật mỗi Tổ Trực
+                  </button>
+                </div>
 
-      <section id="tab-changelog" class="admin-tab-content card fade-in">
-        <h2>📜 Cập nhật thay đổi</h2>
-        <form id="changelogForm">
-          <div class="form-group">
-            <label for="changelog_text">Nội dung changelog</label>
-            <textarea id="changelog_text" placeholder="Nhập nội dung changelog..." rows="4" required></textarea>
-          </div>
-          <div class="btn-group">
-            <button type="button" id="updateChangelog" class="btn btn-primary">🔁 Ghi đè (Không xóa)</button>
-            <button type="button" id="addNewChangelog" class="btn btn-success">➕ Thêm (Xóa cũ)</button>
-          </div>
-        </form>
-      </section>
+                <div class="tkb-split-view">
+                  <div class="tkb-column">
+                    <h3>Sáng</h3>
+                    <div id="tkb-sang-container" class="tkb-list"></div>
+                  </div>
+                  <div class="tkb-column">
+                    <h3>Chiều</h3>
+                    <div id="tkb-chieu-container" class="tkb-list"></div>
+                  </div>
+                </div>
+                <div class="form-actions right">
+                  <button type="button" id="updateTKB" class="mac-btn primary full-width-mobile">Lưu TKB</button>
+                </div>
+              </form>
+            </div>
+          </section>
 
-      <section id="tab-data" class="admin-tab-content card fade-in">
-        <h2>📊 Xem dữ liệu</h2>
-        <button id="refreshData" class="btn btn-secondary">Tải lại</button>
-        <pre id="dataViewer" class="data-viewer">(chưa tải)</pre>
-      </section>
+          <section id="tab-changelog" class="admin-tab-content fade-in">
+            <div class="mac-card">
+              <form id="changelogForm">
+                <div class="form-group">
+                  <label>Nội dung (Đã hỗ trợ gõ tắt!)</label>
+                  <textarea id="changelog_text" class="auto-expand" placeholder="Nội dung..." rows="6" required></textarea>
+                </div>
+                <div class="btn-group">
+                  <button type="button" id="updateChangelog" class="mac-btn primary">Ghi đè (Giữ cũ)</button>
+                  <button type="button" id="addNewChangelog" class="mac-btn secondary">Thêm mới (Xóa cũ)</button>
+                </div>
+              </form>
+            </div>
+          </section>
 
-    </main>
+          <section id="tab-data" class="admin-tab-content fade-in">
+            <div class="mac-card">
+              <button id="refreshData" class="mac-btn small">🔄 Tải lại</button>
+              <div class="code-block-wrapper">
+                <pre id="dataViewer" class="data-viewer">Loading...</pre>
+              </div>
+            </div>
+          </section>
+
+        </div> </main>
+    </div>
   </div>
 
-  <script>
-    window.isLoading = false;
-  </script>
+  <nav class="mobile-bottom-nav">
+    <button class="nav-tab active" data-tab="tab-btvn">
+      <span class="icon">📝</span>
+      <span class="label">BTVN</span>
+    </button>
+    <button class="nav-tab" data-tab="tab-tkb">
+      <span class="icon">📅</span>
+      <span class="label">TKB</span>
+    </button>
+    <button class="nav-tab" data-tab="tab-changelog">
+      <span class="icon">📜</span>
+      <span class="label">Log</span>
+    </button>
+    <button class="nav-tab" data-tab="tab-data">
+      <span class="icon">📊</span>
+      <span class="label">Data</span>
+    </button>
+    <button class="nav-tab" id="mobileLogout"> 
+        <span class="icon">⚙️</span>
+        <span class="label">Thoát</span>
+    </button>
+</nav>
+
+<div id="confirmModal" class="modal">
+    <div class="modal-content mac-card">
+      <div class="modal-header">
+        <h3>⚠️ Xác nhận gửi</h3>
+        <span class="close-modal" data-target="confirmModal">&times;</span>
+      </div>
+      <div class="modal-body">
+        <p>Hệ thống đã tự động xử lý các từ viết tắt. Vui lòng kiểm tra lại nội dung trước khi gửi:</p>
+        
+        <div class="confirm-preview">
+          <label>Môn học:</label>
+          <div id="previewSubject" class="preview-box bold"></div>
+        </div>
+        
+        <div class="confirm-preview">
+          <label>Nội dung chi tiết:</label>
+          <pre id="previewContent" class="preview-box"></pre>
+        </div>
+
+        <div class="modal-actions">
+          <button id="cancelSend" class="mac-btn secondary">Hủy bỏ</button>
+          <button id="confirmSend" class="mac-btn primary">🚀 Gửi ngay</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="shortcutModal" class="modal">
+    <div class="modal-content mac-card">
+      <div class="modal-header">
+        <h3>⌨️ Bảng mã phím tắt</h3>
+        <span class="close-modal" data-target="shortcutModal">&times;</span>
+      </div>
+      <div class="modal-body">
+        <p>Gõ mã + dấu cách (hoặc Enter) để tự động thay thế:</p>
+        <table class="shortcut-table">
+          <thead><tr><th>Mã</th><th>Thay thế thành</th></tr></thead>
+          <tbody id="shortcutTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEW: Logout confirmation modal -->
+  <div id="logoutModal" class="modal">
+    <div class="modal-content mac-card">
+      <div class="modal-header">
+        <h3>🔒 Đăng xuất</h3>
+        <span class="close-modal" data-target="logoutModal">&times;</span>
+      </div>
+      <div class="modal-body">
+        <p>Bạn có chắc chắn muốn đăng xuất không?</p>
+        <div class="modal-actions">
+          <button id="cancelLogout" class="mac-btn secondary">Không</button>
+          <button id="confirmLogout" class="mac-btn primary">Xác nhận</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>window.isLoading = false;</script>
   <script src="admin.js" defer></script>
 </body>
 </html>
