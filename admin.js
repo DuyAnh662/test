@@ -76,6 +76,11 @@ function showAdmin() {
   if (loginBox) loginBox.style.display = "none";
   if (adminPanel) adminPanel.style.display = "flex";
   
+  // Request notification permission khi vào admin
+  try {
+    if (window.Notif) window.Notif.ensurePermission().catch(e => console.warn('Notif perm request failed', e));
+  } catch (e) { /* ignore */ }
+  
   // Load dữ liệu ngay khi vào
   loadData();
 }
@@ -546,6 +551,88 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 8. DATA VIEWER
   document.getElementById("refreshData")?.addEventListener("click", loadData);
+
+  // 8.5. ADMIN NOTIFICATION HANDLERS (Gửi thông báo tự do)
+  try {
+    const adminNotifPass = document.getElementById('admin-notif-pass');
+    const adminNotifTitle = document.getElementById('admin-notif-title');
+    const adminNotifBody = document.getElementById('admin-notif-body');
+    const btnAdminTestPerm = document.getElementById('btn-admin-test-perm');
+    const btnAdminSendNotif = document.getElementById('btn-admin-send-notif');
+
+    const ADMIN_PASSWORD_PLAIN = '12345678900987645'; // Mật khẩu admin (đã cập nhật)
+
+    if (btnAdminTestPerm) {
+      btnAdminTestPerm.addEventListener('click', async () => {
+        try {
+          // Gọi Notif module từ script.js (nó được expose lên window)
+          if (window.Notif) {
+            // Force request quyền (không chỉ check)
+            const ok = await window.Notif.requestPermission();
+            showToast(ok ? '✓ Quyền thông báo: Đã cấp' : '✗ Quyền thông báo: Bị từ chối hoặc chưa cấp', ok ? 'success' : 'error');
+          } else {
+            showToast('⚠️ Module Notif chưa sẵn sàng', 'error');
+          }
+        } catch (e) {
+          console.warn('Test permission failed', e);
+          showToast('❌ Lỗi: ' + e.message, 'error');
+        }
+      });
+    }
+
+    if (btnAdminSendNotif) {
+      btnAdminSendNotif.addEventListener('click', async () => {
+        const pass = adminNotifPass ? adminNotifPass.value : '';
+        const title = adminNotifTitle ? adminNotifTitle.value.trim() : '';
+        const body = adminNotifBody ? adminNotifBody.value.trim() : '';
+
+        // Kiểm tra mật khẩu
+        if (pass !== ADMIN_PASSWORD_PLAIN) {
+          showToast('❌ Mật khẩu sai!', 'error');
+          return;
+        }
+
+        // Kiểm tra tiêu đề và nội dung
+        if (!title || !body) {
+          showToast('⚠️ Vui lòng nhập đủ tiêu đề và nội dung', 'error');
+          return;
+        }
+
+        try {
+            // Gửi thông báo qua BroadcastChannel tới index.html
+            let sent = false;
+            try {
+              const bc = new BroadcastChannel('admin-notif');
+              bc.postMessage({ title, body, data: { type: 'admin-manual' } });
+              sent = true;
+              showToast('✓ Đã gửi thông báo tới trang chính!', 'success');
+            } catch (e) {
+              // Nếu không hỗ trợ BroadcastChannel, gửi local
+              if (window.Notif) {
+                const ok = await window.Notif.requestPermission();
+                if (ok) {
+                  window.Notif.show(title, body, { type: 'admin-manual' });
+                  showToast('✓ Đã gửi thông báo cục bộ!', 'success');
+                  sent = true;
+                }
+              }
+              if (!sent) showToast('❌ Không gửi được thông báo (trình duyệt không hỗ trợ)', 'error');
+            }
+            // Clear form nếu gửi thành công
+            if (sent) {
+              adminNotifPass.value = '';
+              adminNotifTitle.value = '';
+              adminNotifBody.value = '';
+            }
+        } catch (e) {
+          console.error('Send notification failed', e);
+          showToast('❌ Lỗi gửi thông báo: ' + e.message, 'error');
+        }
+      });
+    }
+  } catch (e) {
+    console.warn('Admin notification handlers setup failed', e);
+  }
 
 
 // admin.js - MỤC 9. AUTHENTICATION (Thay thế toàn bộ)

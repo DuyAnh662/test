@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#1D1D1F">
+    <meta name="theme-color" content="#f5f7fa">
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -12,7 +12,7 @@
     <title>Bảng Thông Báo 8A4</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css">
 
@@ -27,46 +27,29 @@
 
     <div id="loading-screen">
         <div class="spinner"></div>
-        <div class="loading-text">Đang tải dữ liệu...</div>
+        <div class="loading-text" style="margin-top: 10px; font-size: 12px; opacity: 0.7;">Đang khởi động hệ thống...</div>
     </div>
 
-    <div class="background-layer">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-        <div class="blob blob-3"></div>
-    </div>
-    <div class="noise-overlay"></div>
-
-    <main class="app-container" id="appWindow">
+    <canvas id="sky"></canvas>
+    <div id="fireworks-container"></div>
+    <div id="particles-js"></div> <main class="app-container" id="appWindow">
         <header class="window-header">
-            <div class="window-controls">
-                <span class="control red"></span>
-                <span class="control yellow"></span>
-                <span class="control green"></span>
-            </div>
             <div class="header-title">Bảng thông tin</div>
             <div class="header-actions">
-                <button id="btn-theme-toggle" class="icon-btn"><i class="fas fa-moon"></i></button>
+                <button id="btn-theme-toggle" class="icon-btn" type="button" aria-label="Chuyển đổi sáng/tối"><i class="fas fa-moon"></i></button>
             </div>
         </header>
 
         <nav class="tab-navigation">
-            <div class="tab-indicator"></div> <div class="tab-item active" data-tab="btvn">
-                <i class="fas fa-book-open"></i> BTVN
-            </div>
-            <div class="tab-item" data-tab="tkb">
-                <i class="fas fa-calendar-day"></i> TKB
-            </div>
-            <div class="tab-item" data-tab="updates">
-                <i class="fas fa-bullhorn"></i> Tin tức
-            </div>
+            <div class="tab-indicator"></div> 
+            <div class="tab-item active" data-tab="btvn"><i class="fas fa-book-open"></i> BTVN</div>
+            <div class="tab-item" data-tab="tkb"><i class="fas fa-calendar-day"></i> TKB</div>
+            <div class="tab-item" data-tab="updates"><i class="fas fa-bullhorn"></i> Tin tức</div>
         </nav>
 
         <div class="content-area">
             <div id="panel-btvn" class="tab-panel active">
-                <div class="panel-scroll" id="container-btvn">
-                    <div class="skeleton-card"></div>
-                </div>
+                <div class="panel-scroll" id="container-btvn"></div>
             </div>
 
             <div id="panel-tkb" class="tab-panel">
@@ -86,13 +69,9 @@
 
     <div class="dock-wrapper">
         <div class="glass-dock">
-            <div class="dock-icon" data-action="refresh" title="Làm mới">
-                <i class="fas fa-sync-alt"></i>
-            </div>
+            <div class="dock-icon" data-action="refresh"><i class="fas fa-sync-alt"></i></div>
             <div class="separator"></div>
-            <div class="dock-icon" data-action="settings" title="Cài đặt">
-                <i class="fas fa-cog"></i>
-            </div>
+            <div class="dock-icon" data-action="settings"><i class="fas fa-cog"></i></div>
         </div>
     </div>
 
@@ -113,92 +92,124 @@
                 <button class="btn-close" data-close="modal-settings"><i class="fas fa-times"></i></button>
             </div>
             <div class="modal-body">
-                
-                <div class="setting-group-wrapper">
-                    <div class="group-title">Giao diện</div>
+                <div class="card" style="background:transparent; border:none; padding:0;">
+                    <div class="setting-item" style="display:block; margin-bottom: 15px;">
+                        <div class="setting-label" style="margin-bottom: 10px;">
+                            <i class="fas fa-palette"></i> Màu chủ đạo
+                        </div>
+                        <div class="color-picker-container">
+                            <div class="color-dot blue" data-color="blue"></div>
+                            <div class="color-dot pink" data-color="pink"></div>
+                            <div class="color-dot green" data-color="green"></div>
+                            <div class="color-dot purple" data-color="purple"></div>
+                        </div>
+                    </div>
+                    <hr style="border:0; border-top:1px solid var(--glass-border); margin-bottom:15px;">
+
                     <div class="setting-item">
                         <div class="setting-label"><i class="fas fa-moon"></i> Chế độ tối</div>
-                        <label class="switch">
-                            <input type="checkbox" id="switch-darkmode">
-                            <span class="slider"></span>
-                        </label>
+                        <label class="switch"><input type="checkbox" id="switch-darkmode"><span class="slider"></span></label>
                     </div>
                     <div class="setting-item">
-                        <div class="setting-label"><i class="fas fa-water"></i> Hiệu ứng lỏng</div>
-                        <label class="switch">
-                            <input type="checkbox" id="switch-liquid" checked>
-                            <span class="slider"></span>
-                        </label>
+                        <div class="setting-label">
+                            <i class="fas fa-water"></i>Hiệu ứng tốt hơn
+                            <div style="font-size:10px; color:var(--text-sec); font-weight:400; margin-left:5px;">(Mờ kính, 3D, Particles)</div>
+                        </div>
+                        <label class="switch"><input type="checkbox" id="switch-liquid" checked><span class="slider"></span></label>
                     </div>
-                </div>
-
-                <div class="setting-group-wrapper">
-                    <div class="group-title">Hệ thống</div>
                     <div class="setting-item">
                         <div class="setting-label"><i class="fas fa-sync"></i> Tự động làm mới</div>
-                        <label class="switch">
-                            <input type="checkbox" id="switch-autorefresh">
-                            <span class="slider"></span>
-                        </label>
+                        <label class="switch"><input type="checkbox" id="switch-autorefresh"><span class="slider"></span></label>
                     </div>
-                </div>
 
-                <div class="setting-group-wrapper">
-                    <div class="group-title">Màu chủ đề</div>
-                    <div class="color-picker-container">
-                        <div class="color-dot blue active" data-color="blue"></div>
-                        <div class="color-dot pink" data-color="pink"></div>
-                        <div class="color-dot green" data-color="green"></div>
-                        <div class="color-dot purple" data-color="purple"></div>
-                    </div>
-                </div>
+                    <hr style="border:0; border-top:1px solid var(--glass-border); margin: 15px 0;">
 
-                <div class="app-info">Liquid mode v2.2 • Ultimate</div>
+                </div>
+                <div style="text-align:center; margin-top:20px; font-size:11px; color:var(--text-sec);">Liquid OS v4.0 • Final Stable</div>
             </div>
         </div>
     </div>
 
-    <div id="app-announcement" class="app-banner hidden">
-        <button class="banner-close" id="dismiss-banner"><i class="fas fa-times"></i></button>
-        <div class="banner-content">
-            <div class="banner-icon"><i class="fas fa-rocket"></i></div>
-            <div class="banner-text">
-                <strong>Cài đặt App</strong>
-                <span>Trải nghiệm mượt mà hơn</span>
-            </div>
-        </div>
-        <div class="banner-actions">
-            <button id="btn-ios" class="btn-install ios"><i class="fab fa-apple"></i> iPhone</button>
-            <button id="btn-android" class="btn-install android"><i class="fab fa-android"></i> Android</button>
+    <div class="event-popup" id="eventPopup">
+        <div class="event-popup-card">
+            <button class="close" id="eventPopupClose"><i class="fas fa-times"></i></button>
+            <h3 id="eventPopupTitle">Title</h3>
+            <div id="eventPopupContent">Content</div>
         </div>
     </div>
+<div id="popup-selector" class="popup-overlay">
+    <div class="selector-card">
+        <div class="selector-header">
+            <h3>Cài đặt Ứng dụng</h3>
+            <p>Chọn thiết bị của bạn để tiếp tục</p>
+            <button onclick="closeSelectorPopup()" class="btn-close-abs"><i class="fas fa-times"></i></button>
+        </div>
 
-    <div class="modal-overlay" id="ios-guide-popup">
-        <div class="modal-glass small guide-content">
-            <div class="guide-icon-large"><i class="fab fa-apple"></i></div>
-            <h3>Cài trên iOS</h3>
-            <p>Vui lòng tải Hồ sơ cấu hình để cài đặt.</p>
-            <a href="assets/profile.mobileconfig" download class="btn-primary full-width" style="justify-content:center; margin-bottom:15px; text-decoration:none;">
-                <i class="fas fa-download"></i> Tải Hồ sơ
+        <div class="platform-options">
+            <div class="platform-option android" onclick="handleAndroidClick()">
+                <div class="plat-icon"><i class="fab fa-android"></i></div>
+                <div class="plat-text">
+                    <b>Dành cho Android và PC</b>
+                    <span>Cài đặt trực tiếp (.apk/PWA)</span>
+                </div>
+            </div>
+
+            <div class="platform-option ios" onclick="handleIOSClick()">
+                <div class="plat-icon"><i class="fab fa-apple"></i></div>
+                <div class="plat-text">
+                    <b>Dành cho iOS</b>
+                    <span>Cài đặt Profile cấu hình</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="popup-ios-guide" class="popup-overlay">
+    <div class="guide-card ios-mode">
+        <div class="guide-header">
+            <div>
+                <h3>Cài đặt trên iPhone / iPad</h3>
+                <div style="font-size:12px; color:var(--text-sec); margin-top:6px">Hướng dẫn từng bước để cài cấu hình (mobileconfig)</div>
+            </div>
+        </div>
+
+        <div class="guide-body">
+            <div class="ios-step">
+                <div class="step-icon"><i class="fas fa-cloud-download-alt"></i></div>
+                <div class="step-info">
+                    <b>Bước 1 — Tải hồ sơ</b>
+                    <p>Nhấn nút "Tải Hồ sơ" bên dưới. Nếu trình duyệt hỏi, chọn <b>Cho phép / Allow</b>.</p>
+                </div>
+            </div>
+
+            <div class="ios-step">
+                <div class="step-icon"><i class="fas fa-file-signature"></i></div>
+                <div class="step-info">
+                    <b>Bước 2 — Mở Cài đặt</b>
+                    <p>Mở <b>Cài đặt</b> → vào phần <b>Đã tải về Hồ sơ</b> hoặc <b>General → Profile</b> để xem hồ sơ vừa tải.</p>
+                </div>
+            </div>
+
+            <div class="ios-step">
+                <div class="step-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="step-info">
+                    <b>Bước 3 — Cài và Xác nhận</b>
+                    <p>Chọn hồ sơ, sau đó nhấn <b>Install</b> và xác nhận mã PIN nếu được yêu cầu. Sau khi cài xong, quay lại ứng dụng.</p>
+                </div>
+            </div>
+
+            <a href="TB8A4.mobileconfig" download class="btn-primary full-width mt-3">
+                <i class="fab fa-apple"></i> Tải Hồ sơ (Config)
             </a>
-            <div class="guide-note">Vào Cài đặt > Đã tải về hồ sơ > Cài đặt.</div>
-            <button class="guide-close btn-close" id="ios-guide-close"><i class="fas fa-times"></i></button>
-        </div>
-    </div>
 
-    <div class="modal-overlay" id="a2hs-guide">
-        <div class="modal-glass small guide-content">
-            <div class="guide-icon-large"><i class="fab fa-chrome"></i></div>
-            <h3>Cài thủ công</h3>
-            <div class="step-list">
-                <div class="step"><i class="fas fa-ellipsis-v"></i> <span>Nhấn menu góc trên</span></div>
-                <div class="step"><i class="fas fa-mobile-alt"></i> <span>Chọn "Thêm vào màn hình chính"</span></div>
-                <div class="step"><i class="fas fa-plus"></i> <span>Nhấn "Thêm"</span></div>
+            <div style="display:flex; gap:10px; margin-top:12px;">
+                <button onclick="backToSelector()" class="btn-text-only">Quay lại chọn thiết bị</button>
+                <button onclick="closeIOSPopup()" class="btn-primary" style="flex:1;">Đã hiểu, đóng</button>
             </div>
-            <button class="btn-primary full-width" id="a2hs-ok" style="justify-content:center;">Đã hiểu</button>
         </div>
     </div>
-
+</div>
     <script src="script.js"></script>
     <script src="app-banner.js"></script>
 </body>

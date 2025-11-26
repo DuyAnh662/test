@@ -47,6 +47,7 @@
           <button class="nav-tab active" data-tab="tab-btvn"><span class="icon">📝</span> BTVN</button>
           <button class="nav-tab" data-tab="tab-tkb"><span class="icon">📅</span> Thời Khóa Biểu</button>
           <button class="nav-tab" data-tab="tab-changelog"><span class="icon">📜</span> Changelog</button>
+          <button class="nav-tab" data-tab="tab-notification"><span class="icon">📲</span> Thông báo</button>
           <button class="nav-tab" data-tab="tab-data"><span class="icon">📊</span> Dữ liệu</button>
         </nav>
         <div class="sidebar-footer">
@@ -183,6 +184,34 @@
             </div>
           </section>
 
+          <!-- NEW: Gửi Thông Báo Tự Do -->
+          <section id="tab-notification" class="admin-tab-content fade-in">
+            <div class="mac-card">
+              <h3 style="margin-bottom: 20px; font-size: 18px; font-weight: 700;">📲 Gửi Thông Báo Tự Do</h3>
+              <form id="adminNotifForm">
+                <div class="form-group">
+                  <label>Mật khẩu Admin</label>
+                  <input id="admin-notif-pass" type="password" placeholder="Nhập mật khẩu" required>
+                </div>
+                <div class="form-group">
+                  <label>Tiêu đề thông báo</label>
+                  <input id="admin-notif-title" type="text" placeholder="VD: Thông báo quan trọng" required>
+                </div>
+                <div class="form-group">
+                  <label>Nội dung thông báo</label>
+                  <textarea id="admin-notif-body" placeholder="Nhập nội dung thông báo..." rows="5" required></textarea>
+                </div>
+                <div class="btn-group">
+                  <button type="button" id="btn-admin-test-perm" class="mac-btn secondary">✓ Kiểm tra quyền</button>
+                  <button type="button" id="btn-admin-send-notif" class="mac-btn primary">📤 Gửi thông báo</button>
+                </div>
+              </form>
+              <div style="margin-top: 15px; padding: 12px; background: rgba(0,122,255,0.1); border-radius: 10px; border-left: 3px solid #007AFF; font-size: 13px; color: var(--text-secondary);">
+                <strong>ℹ️ Lưu ý:</strong>Thông báo sẽ được gửi đến những người dùng đã cho phép notification.
+              </div>
+            </div>
+          </section>
+
         </div> </main>
     </div>
   </div>
@@ -199,6 +228,10 @@
     <button class="nav-tab" data-tab="tab-changelog">
       <span class="icon">📜</span>
       <span class="label">Log</span>
+    </button>
+    <button class="nav-tab" data-tab="tab-notification">
+      <span class="icon">📲</span>
+      <span class="label">Notif</span>
     </button>
     <button class="nav-tab" data-tab="tab-data">
       <span class="icon">📊</span>
@@ -271,6 +304,7 @@
   </div>
 
   <script>window.isLoading = false;</script>
+  <script src="script.js" defer></script>
   <script src="admin.js" defer></script>
 </body>
 </html>
