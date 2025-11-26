@@ -98,6 +98,34 @@ function isInstalledApp() {
 window.Notif = Notif;
 window.isInstalledApp = isInstalledApp;
 
+// Supabase Realtime subscription: listen to `notifications` table INSERTs
+function setupRealtimeNotifications() {
+    try {
+        if (typeof window.supabase === 'undefined') return;
+        // Create a dedicated channel for notifications
+        const ch = window.supabase.channel('realtime:notifications');
+        ch.on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notifications' }, (payload) => {
+            const n = payload && payload.new ? payload.new : null;
+            if (!n) return;
+            (async () => {
+                try {
+                    // Only show for users who installed the app
+                    if (!isInstalledApp()) return;
+                    await Notif.ensurePermission();
+                    if (Notif.isPermissionGranted) {
+                        Notif.show(n.title || 'Thông báo', n.body || '', { type: 'notification-db', id: n.id });
+                    }
+                } catch (e) {
+                    console.warn('Realtime notification handler error', e);
+                }
+            })();
+        });
+        ch.subscribe().catch(e => console.warn('Subscribe failed', e));
+        // expose for debugging
+        window._notifRealtimeChannel = ch;
+    } catch (e) { console.warn('setupRealtimeNotifications failed', e); }
+}
+
 // --- APP INIT ---
 async function initApp() {
     // Detect touch/mobile device
@@ -120,6 +148,9 @@ async function initApp() {
     setupLiquidEffects();
     DevFeatures.init();
     try { await fetchData(true); } catch (err) { console.error(err); }
+
+    // Setup Supabase Realtime subscription to notifications (index only receives)
+    try { setupRealtimeNotifications(); } catch (e) { console.warn('Realtime init failed', e); }
 
     // Hide loading
     setTimeout(() => {

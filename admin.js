@@ -599,34 +599,44 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         try {
-            // Gửi thông báo qua BroadcastChannel tới index.html
-            let sent = false;
+            // 1) Insert notification into Supabase `notifications` table
+            let dbOk = false;
+            try {
+              if (typeof supabase === 'undefined') throw new Error('Supabase chưa được tải!');
+              const ins = await supabase.from('notifications').insert([{ title, body }]);
+              if (ins.error) throw ins.error;
+              dbOk = true;
+              showToast('✓ Đã gửi thông báo lên server', 'success');
+            } catch (dbErr) {
+              console.warn('DB insert failed', dbErr);
+              showToast('⚠️ Không thể lưu thông báo lên server', 'error');
+            }
+
+            // 2) Post local BroadcastChannel so local tabs receive it immediately
             try {
               const bc = new BroadcastChannel('admin-notif');
-              bc.postMessage({ title, body, data: { type: 'admin-manual' } });
-              sent = true;
-              showToast('✓ Đã gửi thông báo tới trang chính!', 'success');
-            } catch (e) {
-              // Nếu không hỗ trợ BroadcastChannel, gửi local
-              if (window.Notif) {
-                const ok = await window.Notif.requestPermission();
-                if (ok) {
-                  window.Notif.show(title, body, { type: 'admin-manual' });
-                  showToast('✓ Đã gửi thông báo cục bộ!', 'success');
-                  sent = true;
+              bc.postMessage({ title, body, data: { type: 'admin-manual', via: dbOk ? 'db' : 'local' } });
+              showToast('✓ Đã gửi thông báo tới trang chính (cục bộ)', 'success');
+            } catch (bcErr) {
+              // Nếu BroadcastChannel không được hỗ trợ, gửi bằng Notification nếu có quyền
+              try {
+                if (window.Notif) {
+                  const ok = await window.Notif.requestPermission();
+                  if (ok) {
+                    window.Notif.show(title, body, { type: 'admin-manual' });
+                    showToast('✓ Đã gửi thông báo cục bộ', 'success');
+                  }
                 }
-              }
-              if (!sent) showToast('❌ Không gửi được thông báo (trình duyệt không hỗ trợ)', 'error');
+              } catch (e) { console.warn('Fallback local notif failed', e); }
             }
+
             // Clear form nếu gửi thành công
-            if (sent) {
-              adminNotifPass.value = '';
-              adminNotifTitle.value = '';
-              adminNotifBody.value = '';
-            }
+            adminNotifPass.value = '';
+            adminNotifTitle.value = '';
+            adminNotifBody.value = '';
         } catch (e) {
           console.error('Send notification failed', e);
-          showToast('❌ Lỗi gửi thông báo: ' + e.message, 'error');
+          showToast('❌ Lỗi gửi thông báo: ' + (e.message || e), 'error');
         }
       });
     }
